@@ -41,7 +41,7 @@
   4.b) Algún atributo posee un valor fuera del rango permitido (0-100).
   - El sistema informa que el atributo posee un valor fuera del rango permitido.
  
- ### Caso de Uso 4: Eliminar Jugador
+### Caso de Uso 4: Eliminar Jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y se encuentra en la pantalla de gestión de su plantilla.
 - **Escenario exitoso principal:**
@@ -173,7 +173,7 @@
   1. El usuario ingresa a los detalles de la liga  y selecciona la opción de iniciar.
   2. El sistema solicita confirmación para iniciar la liga informando la cantidad de participantes actuales.
   3. El usuario confirma la operación.
-  4. El sistema cambia la liga de estado de "No iniciada" a "Iniciada" ,calcula el fixture con el orden de los partidos a realizarse, se actualiza la vista de ligas del los participantes.
+  4. El sistema cambia la liga de estado de "No iniciada" a "Iniciada", calcula el fixture con el orden de los partidos a realizarse, se actualiza la vista de ligas del los participantes.
 
 ### Caso de Uso 15: Eliminar comportamiento
 - **Actor primario:** Usuario
@@ -187,3 +187,61 @@
   4.a) El comportamiento se encuentra en uso por un jugador jugando un partido:
     - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible eliminarlo.
 
+### Caso de Uso 16: Jugar amistoso
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado
+- **Escenario exitoso principal:**
+1. El usuario acepta desafío amistoso, o envía desafío amistoso y se lo aceptan.
+2. El sistema solicita elegir 3 jugadores titulares y 3 suplentes para el partido.
+3. El usuario selecciona sus 6 jugadores.
+4. El sistema inicia el partido amistoso.
+
+### Caso de uso 17:  Observar partido como espectador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos 1 partido en curso en la liga
+- **Escenario exitoso principal:**
+1. El usuario selecciona la opción de ver partidos en curso.
+2. El sistema muestra los partidos que se están jugando en vivo.
+3. El usuario selecciona el partido que quiere observar
+4. El sistema muestra en tiempo real la interfaz 2D de la cancha con sus jugadores y las habilidades de los mismos.
+  
+### Caso de Uso 18: Responder al desafío amistoso
+- **Actor primario:** Usuario desafiado
+- **Precondición:** El usuario está logueado exitosamente, y tiene un desafío pendiente de aceptar.
+- **Escenario exitoso principal:**
+1. El usuario selecciona el desafío que recibió.
+2. El sistema muestra la información del desafío y opciones para aceptar o rechazar el desafío.
+3. El usuario acepta el desafío.
+4. El sistema registra la aceptación y establece el partido.
+- **Escenarios Excepcionales:**
+4.a) El partido amistoso ya no está disponible:
+- El sistema informa al usuario que el desafío caduco o no se encuentra disponible.
+
+### Caso de Uso 20: Programar sustitución de jugador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado y visualizando un partido en curso de su club.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opción de realizar un cambio táctico.
+  2. El sistema muestra los jugadores titulares, los suplentes disponibles y solicita indicar quién sale y quién entra.
+  3. El usuario selecciona al jugador saliente, al jugador entrante y confirma la sustitución.
+  4. El sistema valida que el usuario disponga de cambios restantes (máximo 3) y registra la solicitud para ejecutarse en la próxima pausa reglamentaria (hidratación o entretiempo).
+- **Escenarios excepcionales:**
+  4.a) El usuario ya agotó sus 3 cambios permitidos:
+  - El sistema informa que no quedan cambios disponibles y deniega la operación.
+
+### Caso de Uso 21: Consultar fixture y tabla de posiciones
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado y es miembro de una liga.
+- **Escenario exitoso principal:**
+  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opcion de consultar fixture y tabla de posiciones.
+  2. El sistema valida que la liga este iniciada, solicita la informacion y actualiza la vista del usuario.
+- **Escenarios excepcionales:**
+  2.a) La liga no comenzo:
+  - El sistema informa que no es posible visualizar el fixture y la tabla de posiciones de una competencia no iniciada y bloquea la acción.
+
+### Caso de Uso 22: Consultar ranking global
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opcion Ranking global.
+  2. El sistema solicita la informacion y actualiza la vista del usuario.
