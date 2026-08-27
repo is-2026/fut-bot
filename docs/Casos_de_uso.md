@@ -214,8 +214,8 @@
 3. El usuario acepta el desafío.
 4. El sistema registra la aceptación y establece el partido.
 - **Escenarios Excepcionales:**
-4.a) El partido amistoso ya no está disponible:
-- El sistema informa al usuario que el desafío caduco o no se encuentra disponible.
+  4.a) El partido amistoso ya no está disponible:
+  - El sistema informa al usuario que el desafío caduco o no se encuentra disponible.
 
 ### Caso de Uso 20: Programar sustitución de jugador
 - **Actor primario:** Usuario
@@ -224,7 +224,7 @@
   1. El usuario selecciona la opción de realizar un cambio táctico.
   2. El sistema muestra los jugadores titulares, los suplentes disponibles y solicita indicar quién sale y quién entra.
   3. El usuario selecciona al jugador saliente, al jugador entrante y confirma la sustitución.
-  4. El sistema valida que el usuario disponga de cambios restantes (máximo 3) y registra la solicitud para ejecutarse en la próxima pausa reglamentaria (hidratación o entretiempo).
+  4. El sistema valida que el usuario disponga de cambios restantes (máximo 3) y registra la solicitud (actualizando los cambios restantes) para ejecutarse en la próxima pausa reglamentaria (hidratación o entretiempo).
 - **Escenarios excepcionales:**
   4.a) El usuario ya agotó sus 3 cambios permitidos:
   - El sistema informa que no quedan cambios disponibles y deniega la operación.
@@ -245,3 +245,69 @@
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opcion Ranking global.
   2. El sistema solicita la informacion y actualiza la vista del usuario.
+
+### Caso de Uso 23: Cancelar sustitución de jugador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene al menos una solicitud de sustitucion registrada.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opción de cancelar un cambio táctico.
+  2. El sistema informa todos los cambios registrados a ejecutarse en la proxima pausa y solicita seleccionar aquel a ser cancelado.
+  3. El usuario selecciona el cambio, el sistema cancela la solicitud de sustitución y actualiza los cambios restantes.
+
+### Caso de Uso 24: Abandonar partido como espectador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, visualizando un partido como espectador.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opcion de abandonar el partido como espectador.
+  2. El sistema actualiza la vista y regresa al apartado de la liga correspondiente al partido que se estaba visualizando.
+
+### Caso de Uso 25: Cerrar sesion
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opcion de cerrar sesion.
+  2. El sistema cierra la sesion del usuario y actualiza la vista al apartado de inicio de sesion.
+
+### Caso de Uso 26: Ver club de un usuario
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, visualizando el ranking global.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el club de interes.
+  2. El sistema solicita la informacion del usuario correspondiente y actualiza a la vista del club.
+
+### Caso de Uso 27: Ver historial de un club
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, en la vista de un club.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado historial del club.
+  2. El sistema recolecta la informacion, actualiza la vista y muestra el historial.
+
+### Caso de Uso 28: Ver historial compartido
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, en la vista de un club.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado historial compartido con el club.
+  2. El sistema recolecta la informacion, actualiza la vista y muestra el historial compartido.
+- **Escenarios excepcionales:**
+  2.a) No se puede visualizar el historial compartido de tu propio club:
+  - El sistema informa la imposibilidad y se rechaza la operacion.
+
+### Caso de Uso 29: Ver mi club
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado mi club.
+  2. El sistema recolecta la informacion, actualiza y muestra la vista mi club, con todos los datos correspondientes.
+
+### Caso de Uso 30: Cambiar contraseña
+- **Actor primario:**
+- **Precondición:** El usuario está logueado.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opcion editar contraseña.
+  2. El sistema solicita la contraseña actual y la nueva contraseña.
+  3. El sistema valida las contraseñas ingresadas y las actualiza en la base de datos.
+- **Escenarios excepcionales:**
+  3.a) La contrseña actual no es correcta:
+  - El sistema informa al usuario que la contraseña actual proporcionada es incorrecta.
+  3.b) La nueva contraseña coincide con la actual:
+  - El sistema informa al usuario que la nueva contraseña no puede ser igual a la actual
