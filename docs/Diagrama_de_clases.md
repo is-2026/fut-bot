@@ -1,5 +1,7 @@
 ```mermaid
 classDiagram
+    direction BT
+
     class Usuario {
         +String username
         +String email
@@ -7,11 +9,13 @@ classDiagram
         +validar_password()
         +cambiar_password()
     }
+
     class Club {
         +String nombre
         +String avatar
+        +cambiar_avatar()
     }
- 
+    
     class Jugador {
         +String nombre
         +int power
@@ -20,45 +24,42 @@ classDiagram
         +int speed
         +int strength
     }
- 
+
     class Comportamiento {
         +String nombre
         +String codigo
         +editar_codigo()
-        +validar()
+        +validar_codigo()
     }
  
     class Liga {
         +String nombre
         +String contraseña
-        +int minClubes
-        +int maxClubes
-        +int duracionPartidoMin
-        +String estado
+        +int min_clubes
+        +int max_clubes
+        +int duracion_min
+        +String estado_partido
         +iniciar()
-        +abandonar()
+        +cancelar()
     }
 
-    class Ranking {
-        +List Club
+    class Alineacion {
+        +boolean es_titular
+        +actualizar()
+    }
+
+    class Amistoso {
+        +String estado_amistoso
     }
 
     class AmistosoPublico{
-        +String Local
-        +String Visitante
-        +cancelar_busqueda????()
+        +buscar_rival()
+        +cancelar_busqueda()
     }
 
     class AmistosoPrivado{
-        +String Local
-        +String Visitante
-        +String password
-        +iniciar_partido()
-        +cancelar_partido???()
-    }
- 
-    class Inscripcion {
-        +boolean es_titular
+        +enviar_desafio()
+        +cancelar_desafio()
     }
  
     class Partido {
@@ -70,32 +71,41 @@ classDiagram
         +finalizar()
         +calcular_prox_mov()
     }
-    %% 
+
     class Cambio {
         +String ventana
         +DateTime momento
         +efectuar()
     }
+
+    class Ranking {
+        +calcular_puntos(club)
+    }
+
+    %% Cada usuario administra un club propio, composición
+    Usuario "1" *-- "1" Club
  
-    %% Usuario tiene jugadore. Los jugadores dependen del usuario, composición
+    %% Un club tiene muchos jugadores. Los jugadores dependen del club, composición
     Club "1" *-- "*" Jugador
  
-    %% Comporatmiento también depende del usuario
+    %% Comportamiento también depende del club y puede tener muchos
     Club "1" *-- "*" Comportamiento
+
+    %% Comportamientos ligados a un jugador
+    Comportamiento "*" -- "*" Jugador
  
-    %% Revisar
-    Club "1" --> "*" Comportamiento
- 
-    %% Club participa en Ligas, y Liga tiene clubes inscriptos asociacion muchos a muchos
+    %% Un club puede jugar muchas ligas, una liga tiene muchos clubes
     Club "*" -- "*" Liga
- 
-    %% Inscripcion es la clase de asociacion que resuelve "6 jugadores convocados por club y por liga"
-    Club "1" --> "*" Inscripcion
-    Liga "1" --> "*" Inscripcion
-    Inscripcion "1" --> "6" Jugador
- 
-    %% Partido depende de ligas
-    Liga "1" *-- "*" Partido : organiza
+
+    %% Alineacion define, para un partido puntual cualquiera, quién es titular de entre los 6 convocados
+    %% Lo decide el usuario en la ventana de 10s previa. Si el usuario está AFK el sistema agarra y le pone los 3 titulares default.
+    Partido "1" -- "6" Alineacion
+    Club "1" -- "*" Alineacion
+    Alineacion "*" -- "1" Jugador
+
+    Comportamiento "*" -- "1" Jugador
+
+    Liga "1" -- "*" Partido
  
     %% Un partido enfrenta a dos clubes (asociacion, el club existe independiente del partido)
     Partido "1" -- "2" Club
@@ -106,16 +116,15 @@ classDiagram
     %% Un cambio involucra a un jugador que sale y otro que entra
     Cambio "1" -- "2" Jugador
 
-    %%Cada usuario tiene 1 club propio
-    Usuario "1" -- "1" Club
-
     %% Un amistoso enfrenta a 2 clubes, puede ser privado o publico
-    AmistosoPublico "1" -- "1" Partido
-    AmistosoPrivado "1" -- "1" Partido
-    AmistosoPublico "1" -- "2" Club
-    AmistosoPrivado "1" -- "2" Club
+    AmistosoPublico --|> Amistoso
+    AmistosoPrivado --|> Amistoso
+
+    Amistoso "1" -- "1" Partido
+    Amistoso "1" -- "2" Club
 
     %%El ranking global toma en cuenta los pts obtenidos en Amistosos Publicos y las Ligas
+    %% ta raro todo lo que tenga que ver con ranking
     Ranking "1" -- "*" AmistosoPublico
     Ranking "1" -- "*" Liga
     Ranking "1" -- "*" Club
