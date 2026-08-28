@@ -17,7 +17,7 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario se registró previamente.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de iniciar sesión.
+  1. El usuario selecciona la opción de iniciar sesión en la pantalla de ingreso del sistema.
   2. El sistema solicita ingresar email y contraseña.
   3. El usuario ingresa los datos solicitados y confirma la operación.
   4. El sistema valida los datos e inicia la sesión.
@@ -31,40 +31,50 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de crear un nuevo jugador.
-  2. El sistema solicita el nombre del jugador y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength).
-  3. El usuario ingresa el nombre, asigna los valores a los atributos y confirma la creación.
-  4. El sistema valida que los atributos sumen exactamente 300, crea al jugador y lo muestra en la plantilla.
+  1. El usuario entra al menú de jugadores.
+  2. El sistema muestra los jugadores creados si los hay, y la opcion crear nuevo jugador.
+  3. El usuario selecciona la opción de crear nuevo jugador.
+  4. El sistema solicita el nombre del jugador y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength).
+  5. El usuario ingresa el nombre, asigna los valores a los atributos y confirma la creación.
+  6. El sistema valida que los atributos sumen exactamente 300, crea al jugador y lo muestra en la plantilla.
 - **Escenarios excepcionales:**
-  4.a) La suma total de los atributos PACSS es distinta a 300.
+  6.a) La suma total de los atributos PACSS es distinta a 300.
   - El sistema informa que la suma total de los atributos de un jugador debe ser de 300.
-  4.b) Algún atributo posee un valor fuera del rango permitido (0-100).
+  6.b) Algún atributo posee un valor fuera del rango permitido (0-100).
   - El sistema informa que el atributo posee un valor fuera del rango permitido.
  
 ### Caso de Uso 4: Eliminar jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y se encuentra en la pantalla de gestión de su plantilla.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona un jugador de su club y elige la opción de eliminar.
-  2. El sistema advierte sobre la acción irreversible y solicita confirmación.
-  3. El usuario confirma la eliminación.
-  4. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, lo elimina de la base de datos y actualiza la plantilla de jugadores.
+  1. El usuario entra al menú de jugadores.
+  2. El sistema muestra los jugadores creados si los hay, y la opcion de crear nuevo jugador.
+  3. El usuario selecciona un jugador de su club.
+  4. El sistema muestra un menú con los atributos del jugador y la opción eliminar jugador.
+  5. El usuario selecciona la opción eliminar jugador.
+  6. El sistema advierte sobre la acción irreversible y solicita confirmación.
+  7. El usuario confirma la eliminación.
+  8. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, lo elimina de la base de datos y actualiza la plantilla de jugadores.
 - **Escenarios excepcionales:**
-  4.a) El jugador se encuentra disputando ligas o partidos activos:
+  8.a) El jugador se encuentra disputando ligas o partidos activos:
   - El sistema informa que el jugador está en uso y cancela la operación de eliminación.
-
-
 
 ### Caso de Uso 5: Crear nuevo comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de crear un nuevo comportamiento.
-  2. El sistema muestra el editor de código integrado.
-  3. El usuario escribe el código en Python, ingresa un nombre para el comportamiento y solicita guardarlo.
-  4. El sistema valida el código (sintaxis y seguridad), guarda el comportamiento y muestra un mensaje de éxito.
+  1. El usuario abre el menú de comportamientos.
+  2. El sistema muestra los comportamientos creados si los hay, y la opción de crear nuevo comportamiento.
+  3. El usuario selecciona la opción de crear un nuevo comportamiento.
+  4. El sistema abre una ventana que presenta el editor de código integrado, una casilla para agregar un nombre descriptivo del nuevo comportamiento y las opciones guardar y cancelar.
+  5. El usuario escribe el código del nuevo comportamiento, ingresa un nombre para el mismo y solicita guardarlo.
+  6. El sistema valida el código (sintaxis y seguridad), guarda el comportamiento y muestra un mensaje de éxito.
 - **Escenarios excepcionales:**
-  **4.a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
+  5.a) No se ingresa ningún nombre:
+  - El sistema informa al usuario que la casilla de nombre está vacía y debe escribir un nombre.
+  5.b) Se ingresa un nombre ya existente:
+  - El sistema informa al usuario que ese nombre de comportamiento ya existe, y solicita cambiarlo.
+  6.a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
   - El sistema informa los errores detectados en el editor y solicita corregirlos.
 
 ### Caso de Uso 6: Eliminar comportamiento
@@ -128,21 +138,23 @@
   4. El sistema inicia el partido amistoso.
 
 
-### Caso de uso 11: cancelar liga
+### Caso de uso 11: Cancelar liga
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y creó la liga
+- **Precondición:** El usuario está logueado y creó una liga
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de cancelar liga.
-  2. El sistema solicita confirmación para cancelar la liga.
-  3. El usuario confirma la cancelación.
-  4. El sistema informa a los usuarios participantes que la liga fue cancelada y los retira de la misma.
+  1. El usuario navega al menú de ligas.
+  2. El sistema muestra las ligas asociadas al usuario.
+  3. El usuario selecciona la liga creada por él y elige la opción de cancelar liga.
+  4. El sistema solicita confirmación para cancelar la liga.
+  5. El usuario confirma la cancelación.
+  6. El sistema informa a los usuarios participantes que la liga fue cancelada y los retira de la misma.
 
 - **Escenarios excepcionales:**
-  1.a) La liga comenzó o está en curso:
+  11.a) La liga comenzó o está en curso:
   -El sistema informa que no es posible eliminar una liga ya iniciada y bloquea la acción.
 
 
-### Caso de uso 12: observar partido como espectador
+### Caso de uso 12: Observar partido como espectador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos 1 partido en curso en la liga
 - **Escenario exitoso principal:** 
