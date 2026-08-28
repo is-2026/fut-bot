@@ -1,0 +1,388 @@
+openapi: 3.0.0
+info:
+  title: FutBot API
+  version: 1.0.0
+  description: API REST para la plataforma FutBot. gestion de usuarios, jugadores, partidos, ligas, gestión y  validación de comportamientos en Python, datos del ranking
+paths:
+  #usuario
+  
+
+  #autenticacion
+  /auth/registro:
+    post:
+      summary: Registrar Usuario y Club
+      operationId: registrar_usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioRegistroInput'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+
+  /auth/login:
+    post:
+      summary: Iniciar sesion
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthLoginInput'
+      responses:
+        '200':
+          description: Token generado
+
+  /usuarios/{username}/password:
+    put:
+      summary: Cambiar contraseña
+      operationId: cambiar_password
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nueva_password:
+                  type: string
+      responses:
+        '200':
+          description: Contraseña actualizada
+
+
+
+  #jugador/es
+
+  /clubes/{club_id}/jugadores:
+    get:
+      summary: Listar jugadores del club
+      description: muestra los jugadores creados del club.
+      operationId: listar_jugadores
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Listado de jugadores del club
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jugador'
+    post:
+      summary: Crear Jugador
+      description: crea un nuevo jugador en el club.
+      operationId: crear_jugador
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JugadorInput'
+      responses:
+        '201':
+          description: Jugador creado exitosamente
+
+  /clubes/{club_id}/jugadores/{jugador_id}:
+    get:
+      summary: Obtener detalle de un jugador
+      description: obtiene un jugador segun su id.
+      operationId: obtener_jugador
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: jugador_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jugador'
+    delete:
+      summary: Eliminar Jugador (CU 9)
+      operationId: eliminar_jugador
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: jugador_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Jugador eliminado
+  
+  #comportamiento
+
+/clubes/{club_id}/comportamientos:
+    get:
+      summary: Listar comportamientos guardados
+      operationId: listar_comportamientos
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comportamiento'
+    post:
+      summary: Crear nuevo Comportamiento
+      operationId: crear_comportamiento
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComportamientoInput'
+      responses:
+        '201':
+          description: Comportamiento creado
+
+  # indiv
+  /clubes/{club_id}/comportamientos/{comportamiento_id}:
+    get:
+      summary: Obtener comportamiento por id
+      operationId: obtener_comportamiento
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: comportamiento_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comportamiento'
+    put:
+      summary: Editar comportamiento
+      operationId: editar_comportamiento
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: comportamiento_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                codigo:
+                  type: string
+      responses:
+        '200':
+          description: Comportamiento editado
+    delete:
+      summary: Eliminar comportamiento
+      operationId: eliminar_comportamiento
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: comportamiento_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comportmiento eliminado
+
+
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >
+        Valor completo del header: la palabra "Token", un espacio y el token opaco.
+
+  schemas:
+    # inputs
+      UsuarioRegistroInput:
+      type: object
+      required: [username, email, password, nombre_club]
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        nombre_club:
+          type: string
+
+    AuthLoginInput:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    JugadorInput:
+      type: object
+      required: [nombre, power, agility, control, speed, strength]
+      properties:
+        nombre:
+          type: string
+        power:
+          type: integer
+        agility:
+          type: integer
+        control:
+          type: integer
+        speed:
+          type: integer
+        strength:
+          type: integer
+
+    ComportamientoInput:
+      type: object
+      required: [nombre, codigo]
+      properties:
+        nombre:
+          type: string
+        codigo:
+          type: string
+
+    # entidades
+    
+    Usuario:
+      type: object
+      required: [id, username, email, password]
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    Jugador:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        power:
+          type: integer
+        agility:
+          type: integer
+        control:
+          type: integer
+        speed:
+          type: integer
+        strength:
+          type: integer
+        comportamiento:
+          $ref: '#/components/schemas/Comportamiento'
+
+    Comportamiento:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        codigo:
+          type: string
+
+
+
+#preguntar sobre foto
+#preguntar codigo y validacion antes de guardar , primitivas , posiciones y forma de computo 
+#delete user ?
+#jwt ?
+#terminar de ordenar bien casos de uso para facilitar contrato
+  
+
+
