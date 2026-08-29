@@ -1,5 +1,6 @@
 ﻿﻿# Casos de Uso: FutBot
 
+## Cuenta y sesión
 
 ### Caso de Uso 1: Registrar Usuario y Club
 - **Actor primario:** Usuario visitante
@@ -10,7 +11,7 @@
   3. El usuario ingresa los datos solicitados y confirma la operación.
   4. El sistema valida los datos y crea la nueva cuenta.
 - **Escenarios excepcionales:**
-  4. a) El email ingresado ya se encuentra registrado. 
+  4. a) El email ingresado ya se encuentra registrado.
   - El sistema informa al usuario que el email proporcionado ya está en uso.
 
 ### Caso de Uso 2: Iniciar sesión
@@ -22,113 +23,102 @@
   3. El usuario ingresa los datos solicitados y confirma la operación.
   4. El sistema valida los datos e inicia la sesión.
 - **Escenarios excepcionales:**
-  4. a) El email ingresado es incorrecto. 
+  4. a) El email ingresado es incorrecto.
   - El sistema informa al usuario que el email proporcionado es incorrecto.
-  4. b) La contraseña ingresada es incorrecta. 
+  4. b) La contraseña ingresada es incorrecta.
   - El sistema informa al usuario que la contraseña proporcionada es incorrecta.
 
-### Caso de Uso 22: Cerrar sesion
+### Caso de Uso 3: Cerrar sesión
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opcion de cerrar sesion.
-  2. El sistema cierra la sesion del usuario y actualiza la vista al apartado de inicio de sesion.
+  1. El usuario selecciona la opción de cerrar sesión.
+  2. El sistema cierra la sesión del usuario y actualiza la vista al apartado de inicio de sesión.
 
-### Caso de Uso 27: Cambiar contraseña
-- **Actor primario:**
+### Caso de Uso 4: Cambiar contraseña
+- **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opcion editar contraseña.
+  1. El usuario selecciona la opción editar contraseña.
   2. El sistema solicita la contraseña actual y la nueva contraseña.
   3. El sistema valida las contraseñas ingresadas y las actualiza en la base de datos.
 - **Escenarios excepcionales:**
-  3.a) La contrseña actual no es correcta:
+  3. a) La contraseña actual no es correcta:
   - El sistema informa al usuario que la contraseña actual proporcionada es incorrecta.
-  3.b) La nueva contraseña coincide con la actual:
+  3. b) La nueva contraseña coincide con la actual:
   - El sistema informa al usuario que la nueva contraseña no puede ser igual a la actual.
 
-### Caso de Uso 23: Ver club de un usuario
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, visualizando el ranking global.
-- **Escenario exitoso principal:**
-  1. El usuario selecciona el club de interes.
-  2. El sistema solicita la informacion del usuario correspondiente y actualiza a la vista del club.
+## Jugadores
 
-### Caso de Uso 24: Ver historial de un club
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, en la vista de un club.
-- **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado historial del club.
-  2. El sistema recolecta la informacion, actualiza la vista y muestra el historial.
-
-### Caso de Uso 25: Ver historial compartido
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, en la vista de un club.
-- **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado historial compartido con el club.
-  2. El sistema recolecta la informacion, actualiza la vista y muestra el historial compartido.
-- **Escenarios excepcionales:**
-  2.a) No se puede visualizar el historial compartido de tu propio club:
-  - El sistema informa la imposibilidad y se rechaza la operacion.
-
-### Caso de Uso 3: Crear jugador
+### Caso de Uso 5: Crear jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario entra al menú de jugadores.
-  2. El sistema muestra los jugadores creados si los hay, y la opcion crear nuevo jugador.
+  2. El sistema muestra los jugadores creados si los hay, y la opción crear nuevo jugador.
   3. El usuario selecciona la opción de crear nuevo jugador.
   4. El sistema solicita el nombre del jugador y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength).
   5. El usuario ingresa el nombre, asigna los valores a los atributos y confirma la creación.
   6. El sistema valida que los atributos sumen exactamente 300, crea al jugador y lo muestra en la plantilla.
 - **Escenarios excepcionales:**
-  6.a) La suma total de los atributos PACSS es distinta a 300.
+  6. a) La suma total de los atributos PACSS es distinta a 300.
   - El sistema informa que la suma total de los atributos de un jugador debe ser de 300.
-  6.b) Algún atributo posee un valor fuera del rango permitido (0-100).
+  6. b) Algún atributo posee un valor fuera del rango permitido (0-100).
   - El sistema informa que el atributo posee un valor fuera del rango permitido.
- 
-### Caso de Uso 4: Eliminar jugador
+
+### Caso de Uso 6: Ver mis jugadores
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y se encuentra en la pantalla de gestión de su plantilla.
+- **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario entra al menú de jugadores.
-  2. El sistema muestra los jugadores creados si los hay, y la opcion de crear nuevo jugador.
-  3. El usuario selecciona un jugador de su club.
-  4. El sistema muestra un menú con los atributos del jugador y la opción eliminar jugador.
+  1. El usuario entra al apartado de gestión de jugadores.
+  2. El sistema muestra los jugadores previamente creados.
+- **Escenarios excepcionales:**
+  2. a) No hay jugadores creados.
+  - El sistema informa que no existen jugadores para mostrar. 
+
+### Caso de Uso 7: Editar comportamiento asignado a un jugador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador previamente creado.
+- **Escenario exitoso principal:**
+  1. El usuario entra al apartado de gestión de jugadores.
+  2. El sistema muestra los jugadores disponibles.
+  3. El usuario selecciona el jugador a asignar/reasignar comportamiento.
+  4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
+  5. El usuario selecciona la opcion editar asignacion de comportamiento.
+  6. El sistema muestra los comportamientos disponibles.
+  7. El usuario elige y cambia el comportamiento.
+  8. El sistema efectua el cambio de comportamiento asociado al jugador.
+- **Escenarios excepcionales:**
+  6. a) No hay comportamientos creados.
+  - El sistema informa que no existen comportamientos para asignar.
+   
+
+### Caso de Uso 8: Eliminar jugador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador previamente creado.
+- **Escenario exitoso principal:**
+  1. El usuario entra al apartado de gestión de jugadores.
+  2. El sistema muestra los jugadores disponibles.
+  3. El usuario selecciona un jugador.
+  4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
   5. El usuario selecciona la opción eliminar jugador.
   6. El sistema advierte sobre la acción irreversible y solicita confirmación.
   7. El usuario confirma la eliminación.
   8. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, lo elimina de la base de datos y actualiza la plantilla de jugadores.
 - **Escenarios excepcionales:**
-  8.a) El jugador se encuentra disputando ligas o partidos activos:
+  8. a) El jugador se encuentra disputando ligas o partidos activos:
   - El sistema informa que el jugador está en uso y cancela la operación de eliminación.
 
-### Caso de Uso 33: Ver jugadores
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema.
-- **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado jugadores.
-  2. El sistema muestra los jugadores creados por el usuario.
+## Comportamientos
 
-### Caso de Uso 34: Editar jugador
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema.
-- **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado jugadores.
-  2. El sistema muestra los jugadores creados por el usuario.
-  3. El usuario selecciona el jugador que desea editar.
-  4. El sistema muestra el jugadores seleccionado.
-  3. El usuario cambia comportamiento asociado al jugador y confirma la operacion.
-  4. El sistema cambia el comportamiento asociado al jugador.
-
-### Caso de Uso 35: ver comportamientos
+### Caso de Uso 9: Ver comportamientos
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario abre el menú de comportamientos.
   2. El sistema muestra los comportamientos creados si los hay.
 
-### Caso de Uso 5: Crear nuevo comportamiento
+### Caso de Uso 10: Crear nuevo comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
@@ -139,86 +129,88 @@
   5. El usuario escribe el código del nuevo comportamiento, ingresa un nombre para el mismo y solicita guardarlo.
   6. El sistema valida el código (sintaxis y seguridad), guarda el comportamiento y muestra un mensaje de éxito.
 - **Escenarios excepcionales:**
-  5.a) No se ingresa ningún nombre:
+  5. a) No se ingresa ningún nombre:
   - El sistema informa al usuario que la casilla de nombre está vacía y debe escribir un nombre.
-  5.b) Se ingresa un nombre ya existente:
+  5. b) Se ingresa un nombre ya existente:
   - El sistema informa al usuario que ese nombre de comportamiento ya existe, y solicita cambiarlo.
-  6.a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
+  6. a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
   - El sistema informa los errores detectados en el editor y solicita corregirlos.
 
-### Caso de Uso 6: Eliminar comportamiento
+### Caso de Uso 11: Editar comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y viendo la lista de comportamientos.
 - **Escenario exitoso principal:**
-1. El usuario selecciona el comportamiento que desea eliminar.
-2. El sistema pide confirmación para eliminar el comportamiento.
-3. El usuario confirma la eliminación del comportamiento.
-4. El sistema verifica que el comportamiento no este en uso, lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
-- **Escenarios Excepcionales:**
-4.a) El comportamiento se encuentra en uso por un jugador jugando un partido:
-- El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible eliminarlo.
+  1. El usuario selecciona el comportamiento que desea editar.
+  2. El sistema verifica que el comportamiento no esté en uso, lo elimina y abre la interfaz de edición del comportamiento.
+  3. El usuario confirma la edición del comportamiento.
+  4. El sistema verifica que el comportamiento sea válido y lo actualiza.
+- **Escenarios excepcionales:**
+  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible editarlo.
+  4. b) El comportamiento no es válido:
+  - El sistema informa al usuario que el comportamiento no es válido y pide al usuario actualizarlo.
 
-### Caso de Uso 7: Editar comportamiento 
+### Caso de Uso 12: Eliminar comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y viendo la lista de comportamientos.
 - **Escenario exitoso principal:**
-1. El usuario selecciona el comportamiento que desea editar.
-4. El sistema verifica que el comportamiento no este en uso, lo elimina y abre la interfaz de edición del comportamiento.
-3. El usuario confirma la edición del comportamiento.
-4. El sistema verifica que el comportamiento sea válido y lo actualiza.
-- **Escenarios Excepcionales:**
-4.a) El comportamiento se encuentra en uso por un jugador jugando un partido:
-- El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible editarlo.
-4.b) El comportamiento no es válido:
-- El sistema informa al usuario que el comportamiento no es válido y pide al usuario actualizarlo.
+  1. El usuario selecciona el comportamiento que desea eliminar.
+  2. El sistema pide confirmación para eliminar el comportamiento.
+  3. El usuario confirma la eliminación del comportamiento.
+  4. El sistema verifica que el comportamiento no esté en uso, lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
+- **Escenarios excepcionales:**
+  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible eliminarlo.
 
-### Caso de Uso 10: Jugar amistoso
+## Club y perfil
+
+### Caso de Uso 13: Ver club de un usuario
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, visualizando el ranking global.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el club de interés.
+  2. El sistema recolecta la información del usuario correspondiente y actualiza a la vista del club.
+
+### Caso de Uso 14: Ver historial de un club
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, en la vista de un club.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado historial del club.
+  2. El sistema recolecta la información, actualiza la vista y muestra el historial.
+
+### Caso de Uso 15: Ver historial compartido
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, en la vista de un club.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado historial compartido con el club.
+  2. El sistema recolecta la información, actualiza la vista y muestra el historial compartido.
+- **Escenarios excepcionales:**
+  2. a) No se puede visualizar el historial compartido de tu propio club:
+  - El sistema informa la imposibilidad y se rechaza la operación.
+
+## Partidos amistosos
+
+### Caso de Uso 16: Enviar desafío amistoso
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado
 - **Escenario exitoso principal:**
-  1. El usuario acepta desafío amistoso, o envía desafío amistoso a otro usuario y éste se lo acepta.
-  2. El sistema solicita elegir 3 jugadores titulares y 3 suplentes para el partido.
-  3. El usuario selecciona sus 6 jugadores.
-  4. El sistema inicia el partido amistoso.
+  1. ...
 
-### Caso de Uso 16: Responder al desafío amistoso
+### Caso de Uso 17: Aceptar desafío amistoso
 - **Actor primario:** Usuario desafiado
 - **Precondición:** El usuario está logueado y tiene un desafío pendiente de aceptar.
 - **Escenario exitoso principal:**
-1. El usuario selecciona el desafío que recibió.
-2. El sistema muestra la información del desafío y opciones para aceptar o rechazar el desafío.
-3. El usuario acepta el desafío.
-4. El sistema registra la aceptación y establece el partido.
-- **Escenarios Excepcionales:**
-  4.a) El partido amistoso ya no está disponible:
+  1. El usuario selecciona el desafío que recibió.
+  2. El sistema muestra la información del desafío y opciones para aceptar o rechazar el desafío.
+  3. El usuario acepta el desafío.
+  4. El sistema registra la aceptación y establece el partido.
+- **Escenarios excepcionales:**
+  4. a) El partido amistoso ya no está disponible:
   - El sistema informa al usuario que el desafío caducó o no se encuentra disponible.
 
-### Caso de uso 12: Observar partido como espectador
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos 1 partido en curso en la liga
-- **Escenario exitoso principal:** 
-  1. El usuario selecciona la opción de ver partidos en curso.
-  2. El sistema muestra los partidos que se están jugando en vivo.
-  3. El usuario selecciona el partido que quiere observar
-  4. El sistema muestra en tiempo real la interfaz 2D de la cancha con sus jugadores y las habilidades de los mismos.
+## Partidos (gestión en vivo)
 
-### Caso de uso 15:  Observar partido como espectador
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos 1 partido en curso en la liga
-- **Escenario exitoso principal:**
-1. El usuario selecciona la opción de ver partidos en curso.
-2. El sistema muestra los partidos que se están jugando en vivo.
-3. El usuario selecciona el partido que quiere observar
-4. El sistema muestra en tiempo real la interfaz 2D de la cancha con sus jugadores y las habilidades de los mismos.
-
-### Caso de Uso 21: Abandonar partido como espectador
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, visualizando un partido como espectador.
-- **Escenario exitoso principal:**
-  1. El usuario selecciona la opcion de abandonar el partido como espectador.
-  2. El sistema actualiza la vista y regresa al apartado de la liga correspondiente al partido que se estaba visualizando.
-
-### Caso de Uso 30: Gestionar alineación pre-partido
+### Caso de Uso 18: Gestionar alineación pre-partido
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y se encuentra en la ventana temporal previa a un partido de su liga.
 - **Escenario exitoso principal:**
@@ -227,10 +219,10 @@
   3. El usuario selecciona los titulares, asigna los comportamientos y confirma su alineación.
   4. El sistema valida que el tiempo no haya expirado, registra la alineación y muestra la pantalla de espera.
 - **Escenarios excepcionales:**
-  4.a) El tiempo de la cuenta regresiva expiró antes de la confirmación:
+  4. a) El tiempo de la cuenta regresiva expiró antes de la confirmación:
   - El sistema selecciona automáticamente a los primeros 3 jugadores del club, les asigna sus comportamientos por defecto y registra la alineación.
 
-### Caso de Uso 17: Programar sustitución de jugador
+### Caso de Uso 19: Programar sustitución de jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
@@ -239,18 +231,18 @@
   3. El usuario selecciona al jugador saliente, al jugador entrante y confirma la sustitución.
   4. El sistema valida que el usuario disponga de cambios restantes (máximo 3) y registra la solicitud (actualizando los cambios restantes) para ejecutarse en la próxima pausa reglamentaria (hidratación o entretiempo).
 - **Escenarios excepcionales:**
-  4.a) El usuario ya agotó sus 3 cambios permitidos:
+  4. a) El usuario ya agotó sus 3 cambios permitidos:
   - El sistema informa que no quedan cambios disponibles y deniega la operación.
 
 ### Caso de Uso 20: Cancelar sustitución de jugador
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene al menos una solicitud de sustitucion registrada.
+- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene al menos una solicitud de sustitución registrada.
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opción de cancelar un cambio táctico.
-  2. El sistema informa todos los cambios registrados a ejecutarse en la proxima pausa y solicita seleccionar aquel a ser cancelado.
+  2. El sistema informa todos los cambios registrados a ejecutarse en la próxima pausa y solicita seleccionar aquel a ser cancelado.
   3. El usuario selecciona el cambio, el sistema cancela la solicitud de sustitución y actualiza los cambios restantes.
 
-### Caso de Uso 8: Cambiar comportamiento durante el partido
+### Caso de Uso 21: Cambiar comportamiento durante el partido
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
@@ -259,65 +251,56 @@
   3. El usuario selecciona el nuevo comportamiento y confirma el cambio.
   4. El sistema valida la existencia del comportamiento, lo asigna al jugador y actualiza sus acciones para el siguiente "tick" del simulador.
 - **Escenarios excepcionales:**
-  4.a) El comportamiento seleccionado fue eliminado o es inválido:
+  4. a) El comportamiento seleccionado fue eliminado o es inválido:
   - El sistema informa el error y mantiene el comportamiento anterior del jugador.
 
-### Caso de Uso 28: Crear Liga
+### Caso de Uso 22: Observar partido como espectador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos 1 partido en curso en la liga
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opción de ver partidos en curso.
+  2. El sistema muestra los partidos que se están jugando en vivo.
+  3. El usuario selecciona el partido que quiere observar
+  4. El sistema muestra en tiempo real la interfaz 2D de la cancha con sus jugadores y las habilidades de los mismos.
+
+### Caso de Uso 23: Abandonar partido como espectador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado, visualizando un partido como espectador.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opción de abandonar el partido como espectador.
+  2. El sistema actualiza la vista y regresa al apartado de la liga correspondiente al partido que se estaba visualizando.
+
+## Ligas
+
+### Caso de Uso 24: Crear Liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opción de crear una nueva liga.
-  2. El sistema solicita nombre, contraseña, cantidad máxima de clubes, duración de los partidos y seguridad.
+  2. El sistema solicita nombre, contraseña, cantidad máxima de clubes, duración de los partidos y privacidad.
   3. El usuario ingresa los datos solicitados y confirma la creación.
   4. El sistema valida los datos, crea la liga en estado "No iniciada" y anota al club del usuario creador en ella.
 - **Escenarios excepcionales:**
-  4.a) El usuario omite campos obligatorios:
+  4. a) El usuario omite campos obligatorios:
   - El sistema informa los campos faltantes.
 
-
-### Caso de Uso 9: Abandonar Liga
+### Caso de Uso 25: Buscar ligas
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y se encuentra inscripto en una liga.
+- **Precondición:** El usuario está logueado exitosamente.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de abandonar.
-  2. El sistema solicita confirmación para darse de baja.
-  3. El usuario confirma la operación.
-  4. El sistema valida que la liga se encuentre en estado "No iniciada", retira al club del torneo y actualiza la vista de ligas del usuario.
+  1. El usuario selecciona el apartado ligas.
+  2. El usuario selecciona la opción de buscar una liga.
+  3. El sistema muestra ligas recomendadas y disponibles.
+  4. El usuario ingresa los criterios de búsqueda.
+  5. El sistema busca las ligas que coinciden con los criterios de búsqueda.
+  6. El sistema muestra las ligas.
 - **Escenarios excepcionales:**
-  4.a) La liga ya comenzó o está en curso:
-  - El sistema informa que no es posible abandonar una competencia iniciada y bloquea la acción.
+  3. a) No existen ligas disponibles.
+  - El sistema informa que no existen ligas disponibles para buscar.
+  6. a) No existen coincidencias de búsqueda.
+  - El sistema informa que no se encontraron ligas con las coincidencias que pide el usuario.
 
-
-
-
-### Caso de uso 11: Cancelar liga
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y creó una liga
-- **Escenario exitoso principal:**
-  1. El usuario navega al menú de ligas.
-  2. El sistema muestra las ligas asociadas al usuario.
-  3. El usuario selecciona la liga creada por él y elige la opción de cancelar liga.
-  4. El sistema solicita confirmación para cancelar la liga.
-  5. El usuario confirma la cancelación.
-  6. El sistema informa a los usuarios participantes que la liga fue cancelada y los retira de la misma.
-
-- **Escenarios excepcionales:**
-  11.a) La liga comenzó o está en curso:
-  -El sistema informa que no es posible eliminar una liga ya iniciada y bloquea la acción.
-
-
-
-
-### Caso de Uso 13: Iniciar liga
-- **Actor primario:** Usuario
-- **Precondición:** El usuario es dueño de  la liga y la liga posee mas de 3 jugadores
-- **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de la liga  y selecciona la opción de iniciar.
-  2. El sistema solicita confirmación para iniciar la liga informando la cantidad de participantes actuales.
-  3. El usuario confirma la operación.
-  4. El sistema cambia la liga de estado de "No iniciada" a "Iniciada", calcula el fixture con el orden de los partidos a realizarse, se actualiza la vista de ligas del los participantes.
-
-### Caso de Uso 29: Unirse a Liga Privada
+### Caso de Uso 26: Unirse a Liga Privada
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
@@ -331,12 +314,11 @@
   8. El sistema valida la contraseña y solicita seleccionar los 6 jugadores para el torneo.
   9. El usuario selecciona a sus 6 jugadores y confirma la inscripción.
   10. El sistema inscribe al usuario en la liga y lo dirige hacia la liga.
-  - **Escenarios Excepcionales:**
-  8.a) La contraseña ingresada por el usuario es incorrecta.
+- **Escenarios excepcionales:**
+  8. a) La contraseña ingresada por el usuario es incorrecta.
   - El sistema informa que la contraseña es incorrecta y solicita ingresarla nuevamente.
 
-
-### Caso de Uso 32: Unirse a Liga Publica
+### Caso de Uso 27: Unirse a Liga Pública
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
@@ -345,51 +327,60 @@
   3. El usuario selecciona unirse a una ligas.
   4. El sistema muestra ligas recomendadas y disponibles.
   5. El usuario selecciona una liga en estado "No iniciada" y elige unirse.
-  8. El sistema solicita seleccionar los 6 jugadores para el torneo.
-  9. El usuario selecciona a sus 6 jugadores y confirma la inscripción.
-  10. El sistema inscribe al usuario en la liga y lo dirige hacia la liga.
-  - **Escenarios Excepcionales:**
+  6. El sistema solicita seleccionar los 6 jugadores para el torneo.
+  7. El usuario selecciona a sus 6 jugadores y confirma la inscripción.
+  8. El sistema inscribe al usuario en la liga y lo dirige hacia la liga.
 
+### Caso de Uso 28: Abandonar Liga
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado y se encuentra inscripto en una liga.
+- **Escenario exitoso principal:**
+  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de abandonar.
+  2. El sistema solicita confirmación para darse de baja.
+  3. El usuario confirma la operación.
+  4. El sistema valida que la liga se encuentre en estado "No iniciada", retira al club del torneo y actualiza la vista de ligas del usuario.
+- **Escenarios excepcionales:**
+  4. a) La liga ya comenzó o está en curso:
+  - El sistema informa que no es posible abandonar una competencia iniciada y bloquea la acción.
 
-### Caso de Uso 18: Consultar fixture y tabla de posiciones
+### Caso de Uso 29: Cancelar liga
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado y creó una liga
+- **Escenario exitoso principal:**
+  1. El usuario navega al menú de ligas.
+  2. El sistema muestra las ligas asociadas al usuario.
+  3. El usuario selecciona la liga creada por él y elige la opción de cancelar liga.
+  4. El sistema solicita confirmación para cancelar la liga.
+  5. El usuario confirma la cancelación.
+  6. El sistema informa a los usuarios participantes que la liga fue cancelada y los retira de la misma.
+- **Escenarios excepcionales:**
+  6. a) La liga comenzó o está en curso:
+  - El sistema informa que no es posible eliminar una liga ya iniciada y bloquea la acción.
+
+### Caso de Uso 30: Iniciar liga
+- **Actor primario:** Usuario
+- **Precondición:** El usuario es dueño de la liga y la liga posee más de 3 jugadores
+- **Escenario exitoso principal:**
+  1. El usuario ingresa a los detalles de la liga y selecciona la opción de iniciar.
+  2. El sistema solicita confirmación para iniciar la liga informando la cantidad de participantes actuales.
+  3. El usuario confirma la operación.
+  4. El sistema cambia la liga de estado de "No iniciada" a "Iniciada", calcula el fixture con el orden de los partidos a realizarse, se actualiza la vista de ligas de los participantes.
+
+### Caso de Uso 31: Consultar fixture y tabla de posiciones
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y es miembro de una liga.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opcion de consultar fixture y tabla de posiciones.
-  2. El sistema valida que la liga este iniciada, solicita la informacion y actualiza la vista del usuario.
+  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de consultar fixture y tabla de posiciones.
+  2. El sistema valida que la liga esté iniciada, solicita la información y actualiza la vista del usuario.
 - **Escenarios excepcionales:**
-  2.a) La liga no comenzo:
+  2. a) La liga no comenzó:
   - El sistema informa que no es posible visualizar el fixture y la tabla de posiciones de una competencia no iniciada y bloquea la acción.
 
-### Caso de Uso 31: Buscar ligas
-- **Actor primario:** Usuario
-- **Precondición:** El usuario esta logueado exitosamente.
-- **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado ligas.
-  2. El usuario selecciona la opción de buscar una liga.
-  3. El sistema muestra ligas recomendadas y disponibles.
-  4. El usuario ingresa los criterios de búsqueda.
-  5. El sistema busca las ligas que coinciden con los criterios de búsqueda.
-  6. El sistema muestra las ligas.
-- **Escenarios Excepcionales:**
-  3.a) No existen ligas disponibles.
-  - El sistema informa que no existen ligas disponibles para buscar.
-  6.a) No existen coincidencias de búsqueda.
-  - El sistema informa que no se encontraron ligas con las coincidencias que pide el usuario.
+## Ranking
 
-
-### Caso de Uso 19: Consultar ranking global
+### Caso de Uso 32: Consultar ranking global
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opcion Ranking global.
-  2. El sistema solicita la informacion y actualiza la vista del usuario.
-
-
-
-
-
-
-
-
-
+  1. El usuario selecciona la opción Ranking global.
+  2. El sistema solicita la información y actualiza la vista del usuario.
