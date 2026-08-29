@@ -1,0 +1,251 @@
+asyncapi: 3.0.0
+
+info:
+  title: FutBot - API de tiempo real
+  version: 1.0.0
+  description: API realizada para la comunicación en tiempo real de los partidos de FutBot.
+
+servers:
+  desarrollo:
+    host: localhost:8080
+    protocol: ws
+
+channels:
+
+  partidoStream:
+    address: /ws/partidos/{partidoId}/stream
+    description: API realizada para la comunicación en tiempo real de los partidos de FutBot.
+    parameters:
+      partidoId:
+        description: ID único del partido en curso.
+    messages:
+      partidoIniciado:
+        $ref: '#/components/messages/PartidoIniciado'
+      movimientoJugador:
+        $ref: '#/components/messages/MovimientoJugador'
+      movimientoPelota:
+        $ref: '#/components/messages/MovimientoPelota'
+      gol:
+        $ref: '#/components/messages/Gol'
+      coolingBreakInit:
+        $ref: '#/components/messages/CoolingBreakInit'
+      descansoInit:
+        $ref: '#/components/messages/DescansoInit'
+      cambioRealizado:
+        $ref: '#/components/messages/CambioRealizado'
+      partidoFinalizado:
+        $ref: '#/components/messages/PartidoFinalizado'
+
+  busquedaAmistoso:
+    address: /ws/amistosos/busqueda
+    description: Canal para notificar el estado del emparejamiento público.
+    messages:
+      partidoEncontrado:
+        $ref: '#/components/messages/PartidoEncontrado'
+  
+
+
+
+operations:
+
+  recibirEventodePartido:
+    action: receive
+    channel:
+      $ref: '#/channels/partidoStream'
+    summary: El usuario recibe todos los eventos que ocurren durante la simulación del partido.
+
+  recibirEmparejamiento:
+    action: receive
+    channel: 
+      $ref: '#/channels/busquedaAmistoso'
+
+
+components:
+
+  messages:
+    
+    PartidoIniciado:
+      description: Notifica al usuario que el partido ha comenzado.
+      payload:
+        type: object
+        required:
+          - partidoID
+          - inicioPartido
+          - marcador_local
+          - marcador_visitante
+          - estado
+        properties:
+          partidoID:
+            type: string
+            description: ID del partido.
+          inicioPartido:
+            type: string
+            format: date-time
+            description: Fecha y hora de incio del partido.
+          marcador_local:
+            type: integer
+            description: Marcador del equipo local.
+          marcador_visitante:
+            type: integer
+            description: Marcador del equipo visitante.
+          estado:
+            type: string
+            description: Estado actual del partido.
+    
+    MovimientoJugador:
+      description: Notifica al usaurio el movimiento de un jugador durante el partido.
+      payload:
+        type: object
+        requied:
+          - partidoID
+          - jugadorID
+          - posicion
+        properties:
+          jugadorID:
+            type: string
+            description: id o nombre de jugador (a confirmar) que se ha movido.
+          posicion:
+            type: object
+            description: Posición del jugador actual en el campo.
+            properties:
+              x:
+                type: number
+                description: Coordenada x (horizontal) del jugador.
+              y:
+                type: number
+                description: Coordenada y (vertical) del jugador.
+    
+    MovimientoPelota:
+      description: Notifica al usuario el movimiento de la pelota durante el partido.
+      payload:
+        type: object
+        required: 
+          - partidoID
+          - posicion
+        properties:
+          posicion:
+            type: object
+            description: Posición actual de la pelota en el campo.
+            properties:
+              x: 
+                type: number
+                description: Cordenada x (horizontal) de la pelota.
+              y:
+                type: number
+                description: Coordenada y (vertical) de la pelota.
+    
+    Gol:
+      description: Notifica al usuario que se ha marcado un gol en el partido.
+      payload:
+        type: object
+        required:
+          - partidoID
+          - jugadorID
+          - minuto
+          - equipoID
+        properties:
+          jugador:
+            type: string
+            description: Nombre o ID del jugador que marcó.
+          minuto:
+            type: integer
+            description: Minuto en el cual ocurrió el gol.
+          equipoID:
+            type: string
+            description: ID del equipo que marcó.
+          
+    CoolingBreakInit:
+      description: Notifica al usuario que ha iniciado un partido.
+      payload:
+        type: object
+        required:
+          - partidoID
+          - coolingbreak_numero
+          - inicio_cooling
+        properties:
+          partidoID:
+            type: string
+            description: ID del partido.
+          coolingbreak_numero:
+            type: integer
+            description: Numero del cooling break, primero o segundo.
+          inicio_cooling: 
+            type: string
+            format: date-time
+            description: Fecha y hora del inicio del cooling break.
+  
+    DescansoInit:
+      payload:
+        type: object
+        required:
+          - partidoID
+          - inicio_descanso
+        properties:
+          partidoID:
+            type: string
+            description: ID del partido.
+          inicio_descanso:
+            type: string 
+            format: date-time
+            description: Fecha y hora del inicio del descanso.
+  
+    CambioRealizado:
+      payload:
+        type: object
+        required: 
+          - partidoID
+          - jugadorEntraID
+          - jugadorSaleID
+        properties:
+          partidoID:
+            type: string
+            description: ID del partido.
+          jugadorEntraID: 
+            type: string
+            description: ID del jugador que entra.
+          jugadorSaleID:
+            type: string
+            description: ID del jugador que sale.
+
+    PartidoFinalizado:
+      description: Notifica al usuario que el partido ha terminado.
+      payload:
+        type: object
+        required: 
+          - partidoID
+          - finPartido
+          - marcador_local
+          - marcador_visitante
+          - estado
+        properties:
+          partidoID:
+            type: string
+            description: ID del partido.
+          finPartido:
+            type: string
+            format: date-time
+            description: Fecha y hora del final del partido.
+          marcador_local:
+            type: integer
+            description: Marcador final del equipo local.
+          marcador_visitante:
+            type: integer
+            description: Marcador final del equipo visitante.
+          estado:
+            type: string
+            description: Estado final del partido.
+
+    PartidoEncontrado:
+      description: Notifica al usuario cuando se ha encontrado un oponente en la busqueda de amistoso.
+      payload:
+        type: object
+        required:
+          - partidoID
+          - rivalID
+        properties:
+          partidoID: 
+            type: string
+            description: ID del partido.
+          rivalID:
+            type: string
+            description: ID del usuario rival.
