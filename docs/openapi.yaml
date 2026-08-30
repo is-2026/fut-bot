@@ -1,6 +1,3 @@
-# revisar códigos de error
-# por ejempo, para no tener ambigüedad podríamos agregar 401 para los endpoints protegidos
-# 403 para iniciar liga ponele
 openapi: 3.2.0
 info:
   title: FutBot API
@@ -394,7 +391,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/component/schemas/Error'
+                $ref: '#/components/schemas/Error'
     put:
       tags: [Comportamientos]
       summary: Editar comportamiento
@@ -417,7 +414,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/component/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '409':
           description: El comportamiento está en uso por un jugador en un partido en curso
           content:
@@ -436,7 +433,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/component/schemas/Error'
+                $ref: '#/components/schemas/Error'
         '409':
           description: El comportamiento está en uso por un jugador en un partido en curso
           content:
@@ -444,6 +441,264 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+# -----------------------------------------------------------------------------
+# Ligas
+# -----------------------------------------------------------------------------
+  /ligas:
+    post:
+      tags: [Ligas]
+      summary: Crear liga
+      description: Notar que la cantidad de clubes tiene un mínimo duro de 3. Si se envía password, la liga se considera privada.
+      operationId: crear_liga
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearLigaInput'
+      responses:
+        '201':
+          description: Liga creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liga'
+        '400':
+          description: min_clubes es menor a 3, o max_clubes excede el límite del sistema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags: [Ligas]
+      summary: Listar ligas
+      description: Devuelve tanto ligas públicas como privadas. Hay dos parámetros de query:\ estado y nombre.
+      operationId: listar_ligas
+      parameters:
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [no_iniciada, iniciada, finalizada]
+        - name: nombre
+          in: query
+          description: Filtro de búsqueda por nombre
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ligas disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Liga'
+
+  /ligas/{liga_id}:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Ligas]
+      summary: Obtener detalle de una liga
+      operationId: obtener_liga
+      responses:
+        '200':
+          description: Datos de la liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liga'
+        '404':
+          description: Liga no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Ligas]
+      summary: Cancelar liga
+      description: Solo el creador puede cancelarla, y solo si no está iniciada.
+      operationId: cancelar_liga
+      responses:
+        '200':
+          description: Liga cancelada
+        '403':
+          description: El usuario no es el creador de la liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: La liga ya se encuentra iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ligas/{liga_id}/inscripciones:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Ligas]
+      summary: Unirse a una liga
+      description: Reserva un cupo para la liga. Se definen 6 jugadores convocados para toda la liga (3 marcados como titulares por defecto, 3 como suplentes). Los titulares enviados se usan como fallback si el club no define la alineación antes de alguno de sus partidos.
+      operationId: unirse_liga
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearInscripcionInput'
+      responses:
+        '200':
+          description: Inscripción registrada
+        '400':
+          description: La contraseña de la liga privada es incorrecta, o no se enviaron exactamente 3 titulares y 3 suplentes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: El club ya está inscripto en esta liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Ligas]
+      summary: Abandonar liga
+      operationId: abandonar_liga
+      responses:
+        '200':
+          description: Inscripción eliminada
+        '409':
+          description: La liga ya se encuentra iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ligas/{liga_id}/inicio:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Ligas]
+      summary: Iniciar liga
+      description: Solo el creador puede iniciarla. Cambia el estado a "iniciada" y genera el fixture.
+      operationId: iniciar_liga
+      responses:
+        '200':
+          description: Liga iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liga'
+        '403':
+          description: El usuario no es el creador de la liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ligas/{liga_id}/fixture:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Ligas]
+      summary: Consultar fixture
+      description: Requiere que la liga esté iniciada.
+      operationId: obtener_fixture
+      responses:
+        '200':
+          description: Fixture de la liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FixtureResponse'
+        '409':
+          description: La liga aún no fue iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ligas/{liga_id}/tabla:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Ligas]
+      summary: Tabla de posiciones
+      operationId: obtener_tabla
+      responses:
+        '200':
+          description: Tabla de posiciones de la liga
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TablaPosicionesItem'
+        '409':
+          description: La liga aún no fue iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ligas/{liga_id}/partidos:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Ligas]
+      summary: Listar partidos de una liga
+      parameters:
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [programado, en_curso, finalizado]
+      description: Revisar, solapamiento con fixture!!
+      operationId: listar_partidos_liga
+      responses:
+        '200':
+          description: Partidos de la liga
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PartidoResumen'
 
 components:
   securitySchemes:
@@ -642,3 +897,100 @@ components:
           type: string
         codigo:
           type: string
+    
+    # --- Ligas ---
+    CrearLigaInput:
+      type: object
+      required: [nombre, min_clubs, max_clubes, duracion_partido_minutos]
+      properties:
+        nombre_club:
+          type: string
+        password:
+          type: [string, "null"]
+        min_clubes:
+          type: integer
+          minimum: 3
+        max_clubes:
+          type: integer
+        duracion_partido_minutos:
+          type: integer
+    
+    Liga:
+      type: object
+      properties: 
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        es_privada:
+          type: boolean
+          description: derivado de si la liga tiene password
+        min_clubes:
+          type: integer
+        max_clubes:
+          type: integer
+        estado:
+          type: string
+          enum: [no_iniciada, iniciada, finalizada]
+    
+    CrearInscripcionInput:
+      type: object
+      required: [jugadores]
+      properties:
+        password:
+          type: string
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          description: Exactamente 3 con es_titular_default en true y 3 en false.
+          items:
+            type: object
+            required: [jugador_id, es_titular_default]
+            properties: 
+              jugador_id:
+                type: string
+                format: uuid
+              es_titular_default:
+                type: boolean
+
+    FixtureResponse:
+      type: object
+      properties:
+        liga_id:
+          type: string
+          format: uuid
+        partidos:
+          type: array
+          items:
+            $ref: '#/components/schemas/PartidoResumen' # por definir abajo
+
+    TablaPosicionesItem:
+      type: object
+      properties:
+        club_id:
+          type: string
+          format: uuid
+        nombre_club:
+          type: string
+        puntos:
+          type: integer
+        partidos_jugados:
+          type: integer
+        ganados:
+          type: integer
+        empatados:
+          type: integer
+        perdidos:
+          type: integer
+        goles_favor:
+          type: integer
+        goles_contra:
+          type: integer
+
+      # --- Partidos ---
+      PartidoResumen:
+        # por definir, pero sería una versión breve de partido para mostrar en el fixture
+        # ideas: Datos de los partidos Rivales, Fecha y hora, Condición de localía y fecha
+        # no se si meterle los resultados apenas termina, es una complicacion más
