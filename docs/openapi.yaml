@@ -59,7 +59,7 @@ paths:
     post:
       tags: [Autenticación]
       summary: Iniciar sesion
-      operationId: login
+      operationId: iniciar_sesion
       security: []
       requestBody:
         required: true
@@ -85,6 +85,7 @@ paths:
     post:
       tags: [Autenticación]
       summary: Cerrar sesión
+      operationId: cerrar_sesion
       responses:
         '200':
           description: Sesión cerrada
@@ -93,6 +94,7 @@ paths:
     patch:
       tags: [Usuario]
       summary: Modificar contraseña
+      operationId: cambiar_password
       requestBody:
         required: true
         content:
@@ -111,42 +113,173 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /usuarios/{username}/password:
-    put:
-      summary: Cambiar contraseña
-      operationId: cambiar_password
-      security:
-        - TokenAuth: []
+  # -----------------------------------------------------------------------------
+  # Club
+  # -----------------------------------------------------------------------------
+  /club:
+    post:
+      tags: [Club]
+      summary: Crear club (segundo paso del registro)
+      operationId: crear_club
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CrearClubInput'
+      responses:
+        '201':
+          description: Club creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '409':
+          description: El usuario ya tiene un club creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags: [Club]
+      summary: Obtener mi club
+      operationId: obtener_mi_club 
+      description: Identifica al club mediante el token de sesión.
+      responses:
+        '200':
+          description: Datos del club propio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+    patch:
+      tags: [Club]
+      summary: Modificar avatar del club
+      operationId: modificar_avatar
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClubAvatarUpdateRequest'
+      responses:
+        '200':
+          description: Avatar actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+
+  /clubes/{club_id}:
+    get:
+      tags: [Club]
+      summary: Ver club de un usuario
+      operationId: obtener_club
       parameters:
-        - name: username
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ClubIdPath'
+      responses:
+        '200':
+          description: Datos públicos del club
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '404':
+          $ref: '#/components/responses/NotFound' 
+  
+  # ---------------------------------------------------------------------------
+  # Jugadores
+  # ---------------------------------------------------------------------------
+  /club/jugadores:
+    post:
+      tags: [Jugadores]
+      summary: Crear jugador
+      description: Crea un nuevo jugador en el club del usuario. Notar que la suma de sus PACSS debe ser exactamente 300.
+      operationId: crear_jugador
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                nueva_password:
-                  type: string
+              $ref: '#/components/schemas/CrearJugadorInput'
+      responses:
+        '201':
+          description: Jugador creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jugador'
+        '400':
+          description: La suma de los PACSS no es 300, o alguno está fuera de rango (20-100)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags: [Jugadores]
+      summary: Listar jugadores del club
+      operationId: listar_mis_jugadores
       responses:
         '200':
-          description: Contraseña actualizada
+          description: Plantilla completa del club.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jugador'
 
+  /club/jugadores/{jugador_id}:
+    parameters:
+      - name: jugador_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Jugadores]
+      summary: Obtener jugador
+      operationId: obtener_mi_jugador
+      responses:
+        '200':
+          description: Datos del jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jugador'
+        '404':
+          description: Jugador no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Jugadores]
+      summary: Eliminar jugador
+      operationId: eliminar_jugador
+      responses:
+        '200':
+          description: Jugador eliminado
+        '404':
+          description: Jugador no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: El jugador está participando en una liga activa o un partido en curso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
-
-  #jugador/es
-
+  # no estoy seguro que este endpoint lo necesitemos, lo dejo y lo charlamos
   /clubes/{club_id}/jugadores:
     get:
       summary: Listar jugadores del club
       description: muestra los jugadores creados del club.
       operationId: listar_jugadores
-      security:
-        - TokenAuth: []
       parameters:
         - name: club_id
           in: path
@@ -162,35 +295,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Jugador'
-    post:
-      summary: Crear Jugador
-      description: crea un nuevo jugador en el club.
-      operationId: crear_jugador
-      security:
-        - TokenAuth: []
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/JugadorInput'
-      responses:
-        '201':
-          description: Jugador creado exitosamente
-
+    
+  # lo mismo este, pero puede servir para cuando tenes que ver los datos del jugador de otro en un partido (eliminar jugador lo saco, no tiene sentido si usamos el de arriba)
   /clubes/{club_id}/jugadores/{jugador_id}:
     get:
       summary: Obtener detalle de un jugador
       description: obtiene un jugador segun su id.
       operationId: obtener_jugador
-      security:
-        - TokenAuth: []
       parameters:
         - name: club_id
           in: path
@@ -209,28 +320,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Jugador'
-    delete:
-      summary: Eliminar Jugador (CU 9)
-      operationId: eliminar_jugador
-      security:
-        - TokenAuth: []
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: jugador_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Jugador eliminado
-  
-  #comportamiento
 
+# ----------------------------------------------------------------------------- 
+# Comportamiento
+# -----------------------------------------------------------------------------
 /clubes/{club_id}/comportamientos:
     get:
       summary: Listar comportamientos guardados
@@ -381,7 +474,7 @@ components:
           type: string
       required: [codigo, mensaje]
 
-      # -- Autenticación / Usuario ---
+    # -- Autenticación / Usuario ---
     UsuarioRegistroInput:
       type: object
       required: [username, email, password]
@@ -423,12 +516,77 @@ components:
           format: password
     
     # --- Club ---
+    CrearClubInput:
+      type: object
+      required: [nombre_club, avatar]
+      properties:
+        nombre_club:
+          type: string
+        avatar:
+          type: string
+          format: binary
 
+    CambiarAvatarClubInput:
+      type: object
+      required: [avatar]
+      properties:
+        avatar:
+          type: string
+          format: binary
+    
+    Club:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre_club:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        usuario_id:
+          type: string
+          format: uuid
+        fecha_creacion:
+          type: string
+          format: date-time
 
-    JugadorInput:
+    # --- Jugadores ---
+    CrearJugadorInput:
       type: object
       required: [nombre, power, agility, control, speed, strength]
+      description: La suma de los 5 atributos debe ser exactamente 300.
       properties:
+        nombre:
+          type: string
+        power:
+          type: integer
+          minimun: 20
+          maximum: 100
+        agility:
+          type: integer
+          minimun: 20
+          maximum: 100
+        control:
+          type: integer
+          minimun: 20
+          maximum: 100
+        speed:
+          type: integer
+          minimun: 20
+          maximum: 100
+        strength:
+          type: integer
+          minimun: 20
+          maximum: 100
+
+    Jugador:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uuid
         nombre:
           type: string
         power:
@@ -441,6 +599,8 @@ components:
           type: integer
         strength:
           type: integer
+        comportamiento:
+          $ref: '#/components/schemas/Comportamiento'
 
     ComportamientoInput:
       type: object
@@ -465,26 +625,6 @@ components:
           type: string
         password:
           type: string
-
-    Jugador:
-      type: object
-      properties:
-        id:
-          type: integer
-        nombre:
-          type: string
-        power:
-          type: integer
-        agility:
-          type: integer
-        control:
-          type: integer
-        speed:
-          type: integer
-        strength:
-          type: integer
-        comportamiento:
-          $ref: '#/components/schemas/Comportamiento'
 
     Comportamiento:
       type: object
