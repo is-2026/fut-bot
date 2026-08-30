@@ -300,3 +300,69 @@
   - El sistema informa al usuario que la contraseña actual proporcionada es incorrecta.
   3.b) La nueva contraseña coincide con la actual:
   - El sistema informa al usuario que la nueva contraseña no puede ser igual a la actual
+
+### Caso de Uso 28: Ver jugadores
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado en el sistema.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado jugadores.
+  2. El sistema muestra los jugadores creados por el usuario.
+
+### Caso de Uso 29: Editar jugador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado en el sistema.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado jugadores.
+  2. El sistema muestra los jugadores creados por el usuario.
+  3. El usuario selecciona el jugador que desea editar.
+  4. El sistema muestra el jugadores seleccionado.
+  3. El usuario cambia comportamiento asociado al jugador y confirma la operacion.
+  4. El sistema cambia el comportamiento asociado al jugador.
+
+### Caso de Uso 30: ver comportamientos
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado en el sistema.
+- **Escenario exitoso principal:**
+  1. El usuario abre el menú de comportamientos.
+  2. El sistema muestra los comportamientos creados si los hay.
+
+
+### Caso de Uso 31: Gestionar alineación pre-partido
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado y se encuentra en la ventana temporal previa a un partido de su liga.
+- **Escenario exitoso principal:**
+  1. El usuario ingresa a la sala de preparación del partido.
+  2. El sistema muestra la cuenta regresiva, la plantilla disponible y solicita elegir 3 titulares y sus comportamientos.
+  3. El usuario selecciona los titulares, asigna los comportamientos y confirma su alineación.
+  4. El sistema valida que el tiempo no haya expirado, registra la alineación y muestra la pantalla de espera.
+- **Escenarios excepcionales:**
+  4.a) El tiempo de la cuenta regresiva expiró antes de la confirmación:
+  - El sistema selecciona automáticamente a los primeros 3 jugadores del club, les asigna sus comportamientos por defecto y registra la alineación.
+
+### Caso de Uso 32: Crear Liga
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado en el sistema.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona la opción de crear una nueva liga.
+  2. El sistema solicita nombre, contraseña, cantidad máxima de clubes, duración de los partidos y seguridad.
+  3. El usuario ingresa los datos solicitados y confirma la creación.
+  4. El sistema valida los datos, crea la liga en estado "No iniciada" y anota al club del usuario creador en ella.
+- **Escenarios excepcionales:**
+  4.a) El usuario omite campos obligatorios:
+  - El sistema informa los campos faltantes.
+
+### Caso de Uso 33: Buscar ligas
+- **Actor primario:** Usuario
+- **Precondición:** El usuario esta logueado exitosamente.
+- **Escenario exitoso principal:**
+  1. El usuario selecciona el apartado ligas.
+  2. El usuario selecciona la opción de buscar una liga.
+  3. El sistema muestra ligas recomendadas y disponibles.
+  4. El usuario ingresa los criterios de búsqueda.
+  5. El sistema busca las ligas que coinciden con los criterios de búsqueda.
+  6. El sistema muestra las ligas.
+- **Escenarios Excepcionales:**
+  3.a) No existen ligas disponibles.
+  - El sistema informa que no existen ligas disponibles para buscar.
+  6.a) No existen coincidencias de búsqueda.
+  - El sistema informa que no se encontraron ligas con las coincidencias que pide el usuario.
