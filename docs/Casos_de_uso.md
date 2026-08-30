@@ -166,12 +166,14 @@
 - **Precondición:** El usuario está logueado y viendo la lista de comportamientos.
 - **Escenario exitoso principal:**
   1. El usuario selecciona el comportamiento que desea eliminar y elige la opción eliminar.
-  2. El sistema pide confirmación para eliminar el comportamiento.
+  2. El sistema verifica que el comportamiento no esté en uso y pide confirmación para eliminar el comportamiento.
   3. El usuario confirma la eliminación del comportamiento.
-  4. El sistema verifica que el comportamiento no esté en uso, lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
+  4. El sistema lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
 - **Escenarios excepcionales:**
-  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  2. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
   - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible eliminarlo.
+  3. a) El usuario cancela la eliminación del comportamiento:
+  - El sistema vuelve a mostrar el comportamiento elegido.
 
 ## Club y perfil
 
@@ -205,19 +207,27 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado
 - **Escenario exitoso principal:**
-  1. ...
+  1. El usuario abre el menú del ranking global.
+  2. El sistema muestra los clubes en el ranking global.
+  3. El usuario selecciona un club del ranking y elige la opción desafío amistoso.
+  4. El sistema solicita confirmar la acción.
+  5. El usuario confirma el envío del desafío amistoso.
+  4. El sistema envía el desafío al usuario del club seleccionado y avisa que el desafío fue enviado con éxito.
+- **Escenarios excepcionales:**
+  5. a) El usuario cancela el envío del desafío amistoso:
+  - El sistema vuelve a mostrar el club elegido.
 
 ### Caso de Uso 17: Aceptar desafío amistoso
 - **Actor primario:** Usuario desafiado
 - **Precondición:** El usuario está logueado y tiene un desafío pendiente de aceptar.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el desafío que recibió.
-  2. El sistema muestra la información del desafío y opciones para aceptar o rechazar el desafío.
-  3. El usuario acepta el desafío.
+  1. El usuario abre la sección desafíos pendientes en el menú de usuario.
+  2. El sistema muestra los desafíos amistosos pendientes.
+  3. El usuario elige, en un desafío pendiente, la opción aceptar desafío amistoso.
   4. El sistema registra la aceptación y establece el partido.
 - **Escenarios excepcionales:**
-  4. a) El partido amistoso ya no está disponible:
-  - El sistema informa al usuario que el desafío caducó o no se encuentra disponible.
+  3. a) El usuario rechaza el desafío amistoso:
+  - El sistema elimina el desafío amistoso de la sección desafíos pendientes.
 
 ## Partidos (gestión en vivo)
 
@@ -226,12 +236,12 @@
 - **Precondición:** El usuario está logueado y se encuentra en la ventana temporal previa a un partido de su liga.
 - **Escenario exitoso principal:**
   1. El usuario ingresa a la sala de preparación del partido.
-  2. El sistema muestra la cuenta regresiva, la plantilla disponible y solicita elegir 3 titulares y sus comportamientos.
-  3. El usuario selecciona los titulares, asigna los comportamientos y confirma su alineación.
+  2. El sistema muestra la cuenta regresiva, la plantilla disponible y solicita elegir 3 titulares, 3 suplentes y sus comportamientos.
+  3. El usuario selecciona los titulares y suplentes, asigna los comportamientos y confirma su alineación.
   4. El sistema valida que el tiempo no haya expirado, registra la alineación y muestra la pantalla de espera.
 - **Escenarios excepcionales:**
   4. a) El tiempo de la cuenta regresiva expiró antes de la confirmación:
-  - El sistema selecciona automáticamente a los primeros 3 jugadores del club, les asigna sus comportamientos por defecto y registra la alineación.
+  - El sistema selecciona automáticamente a los primeros 3 jugadores del club como titulares, y los siguientes 3 como suplentes, les asigna sus comportamientos por defecto y registra la alineación.
 
 ### Caso de Uso 19: Programar sustitución de jugador
 - **Actor primario:** Usuario
