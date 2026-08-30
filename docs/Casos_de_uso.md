@@ -76,13 +76,10 @@
 
 ### Caso de Uso 6: Ver mis jugadores
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador previamente creado.
 - **Escenario exitoso principal:**
   1. El usuario entra al apartado de gestión de jugadores.
   2. El sistema muestra los jugadores previamente creados.
-- **Escenarios excepcionales:**
-  2. a) No hay jugadores creados.
-  - El sistema informa que no existen jugadores para mostrar. 
 
 ### Caso de Uso 7: Editar comportamiento asignado a un jugador
 - **Actor primario:** Usuario
@@ -94,11 +91,9 @@
   4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
   5. El usuario selecciona la opcion editar asignacion de comportamiento.
   6. El sistema muestra los comportamientos disponibles.
-  7. El usuario elige y cambia el comportamiento.
+  7. El usuario elige el nuevo comportamiento.
   8. El sistema efectua el cambio de comportamiento asociado al jugador.
 - **Escenarios excepcionales:**
-  6. a) No hay comportamientos creados.
-  - El sistema informa que no existen comportamientos para asignar y vuelve al menú del jugador elegido.
   7. a) El usuario cancela el cambio de comportamiento:
   - El sistema vuelve al menú del jugador elegido.
 
@@ -149,30 +144,34 @@
 
 ### Caso de Uso 11: Editar comportamiento
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y viendo la lista de comportamientos.
+- **Precondición:** El usuario está logueado y tiene al menos un comportamiento previamente creado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el comportamiento que desea cambiar y elige la opción editar.
-  2. El sistema verifica que el comportamiento no esté en uso, lo elimina y abre la interfaz de edición del comportamiento.
-  3. El usuario edita los datos del comportamiento y confirma la edición.
-  4. El sistema verifica que el comportamiento sea válido y lo actualiza en la base de datos.
+  1. El usuario va al menú de usuario y abre la sección comportamientos.
+  2. El sistema despliega una lista con los comportamientos creados.
+  3. El usuario selecciona el comportamiento que desea cambiar y elige la opción editar.
+  4. El sistema verifica que el comportamiento no esté en uso, lo elimina y abre la interfaz de edición del comportamiento.
+  5. El usuario edita los datos del comportamiento y confirma la edición.
+  6. El sistema verifica que el comportamiento sea válido y lo actualiza en la base de datos.
 - **Escenarios excepcionales:**
-  2. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
   - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible editarlo.
-  4. a) El comportamiento no es válido:
+  6. a) El comportamiento no es válido:
   - El sistema informa al usuario que el comportamiento no es válido y pide al usuario actualizarlo.
 
 ### Caso de Uso 12: Eliminar comportamiento
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y viendo la lista de comportamientos.
+- **Precondición:** El usuario está logueado y tiene al menos un comportamiento previamente creado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el comportamiento que desea eliminar y elige la opción eliminar.
-  2. El sistema verifica que el comportamiento no esté en uso y pide confirmación para eliminar el comportamiento.
-  3. El usuario confirma la eliminación del comportamiento.
-  4. El sistema lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
+  1. El usuario va al menú de usuario y abre la sección comportamientos.
+  2. El sistema despliega una lista con los comportamientos creados.
+  3. El usuario selecciona el comportamiento que desea eliminar y elige la opción eliminar.
+  4. El sistema verifica que el comportamiento no esté en uso y pide confirmación para eliminar el comportamiento.
+  5. El usuario confirma la eliminación del comportamiento.
+  6. El sistema lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
 - **Escenarios excepcionales:**
-  2. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
   - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible eliminarlo.
-  3. a) El usuario cancela la eliminación del comportamiento:
+  5. a) El usuario cancela la eliminación del comportamiento:
   - El sistema vuelve a mostrar el comportamiento elegido.
 
 ## Club y perfil
@@ -233,7 +232,7 @@
 
 ### Caso de Uso 18: Gestionar alineación pre-partido
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y se encuentra en la ventana temporal previa a un partido de su liga.
+- **Precondición:** El usuario está logueado, se encuentra en la ventana temporal previa a un partido de su liga y tiene al menos seis jugadores.
 - **Escenario exitoso principal:**
   1. El usuario ingresa a la sala de preparación del partido.
   2. El sistema muestra la cuenta regresiva, la plantilla disponible y solicita elegir 3 titulares, 3 suplentes y sus comportamientos.
@@ -265,7 +264,7 @@
 
 ### Caso de Uso 21: Cambiar comportamiento durante el partido
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y visualizando un partido en curso de su club.
+- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club y tiene más de un comportamiento creado.
 - **Escenario exitoso principal:**
   1. El usuario selecciona a uno de sus jugadores titulares y elige la opción de cambiar su comportamiento.
   2. El sistema muestra la lista de comportamientos guardados por el usuario y solicita elegir uno.
@@ -277,7 +276,7 @@
 
 ### Caso de Uso 22: Observar partido como espectador
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos 1 partido en curso en la liga
+- **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos un partido en curso en la liga
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opción de ver partidos en curso.
   2. El sistema muestra los partidos que se están jugando en vivo.
