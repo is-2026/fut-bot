@@ -1,3 +1,6 @@
+# revisar códigos de error
+# por ejempo, para no tener ambigüedad podríamos agregar 401 para los endpoints protegidos
+# 403 para iniciar liga ponele
 openapi: 3.2.0
 info:
   title: FutBot API
@@ -176,7 +179,12 @@ paths:
       summary: Ver club de un usuario
       operationId: obtener_club
       parameters:
-        - $ref: '#/components/parameters/ClubIdPath'
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: Datos públicos del club
@@ -324,21 +332,14 @@ paths:
 # ----------------------------------------------------------------------------- 
 # Comportamiento
 # -----------------------------------------------------------------------------
-/clubes/{club_id}/comportamientos:
+  /club/comportamientos:
     get:
+      tags: [Comportamientos]
       summary: Listar comportamientos guardados
       operationId: listar_comportamientos
-      security:
-        - TokenAuth: []
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
-          description: OK
+          description: Comportamientos disponibles (OK)
           content:
             application/json:
               schema:
@@ -346,98 +347,102 @@ paths:
                 items:
                   $ref: '#/components/schemas/Comportamiento'
     post:
+      tags: [Comportamientos]
       summary: Crear nuevo Comportamiento
       operationId: crear_comportamiento
-      security:
-        - TokenAuth: []
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ComportamientoInput'
+              $ref: '#/components/schemas/CrearComportamientoInput'
       responses:
         '201':
           description: Comportamiento creado
-
-  # indiv
-  /clubes/{club_id}/comportamientos/{comportamiento_id}:
-    get:
-      summary: Obtener comportamiento por id
-      operationId: obtener_comportamiento
-      security:
-        - TokenAuth: []
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: comportamiento_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comportamiento'
+        '400':
+          description: El código contiene errores de sintaxis o instrucciones prohibidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /club/comportamientos/{comportamiento_id}:
+    parameters:
+      - name: comportamiento_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Comportamientos]
+      summary: Obtener comportamiento por id
+      operationId: obtener_comportamiento
+      responses:
+        '200':
+          description: Detalle del comportamiento (OK)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comportamiento'
+        '404':
+          description: Comportamiento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/component/schemas/Error'
     put:
+      tags: [Comportamientos]
       summary: Editar comportamiento
       operationId: editar_comportamiento
-      security:
-        - TokenAuth: []
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: comportamiento_id
-          in: path
-          required: true
-          schema:
-            type: integer
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                codigo:
-                  type: string
+              $ref: '#/components/schemas/CrearComportamientoInput'
       responses:
         '200':
           description: Comportamiento editado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comportamiento'
+        '404':
+          description: Comportamiento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/component/schemas/Error'
+        '409':
+          description: El comportamiento está en uso por un jugador en un partido en curso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
+      tags: [Comportamientos]
       summary: Eliminar comportamiento
       operationId: eliminar_comportamiento
-      security:
-        - TokenAuth: []
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: comportamiento_id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
-          description: Comportmiento eliminado
+          description: Comportamiento eliminado
+        '404':
+          description: Comportamiento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/component/schemas/Error'
+        '409':
+          description: El comportamiento está en uso por un jugador en un partido en curso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 
 components:
@@ -515,6 +520,20 @@ components:
           type: string
           format: password
     
+    Usuario:
+      type: object
+      required: [id, username, email, password]
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    
     # --- Club ---
     CrearClubInput:
       type: object
@@ -585,7 +604,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
           format: uuid
         nombre:
           type: string
@@ -600,9 +619,10 @@ components:
         strength:
           type: integer
         comportamiento:
-          $ref: '#/components/schemas/Comportamiento'
-
-    ComportamientoInput:
+          $ref: '#/components/schemas/Comportamiento' # tal vez esto no va, ahora mismo sería composición de properties.
+    
+    # --- Comportamientos ---
+    CrearComportamientoInput:
       type: object
       required: [nombre, codigo]
       properties:
@@ -610,27 +630,14 @@ components:
           type: string
         codigo:
           type: string
-
-    # entidades
-    
-    Usuario:
-      type: object
-      required: [id, username, email, password]
-      properties:
-        id:
-          type: integer
-        username:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
+          description: Código en Python del comportamiento. Se debe verificar.
 
     Comportamiento:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         nombre:
           type: string
         codigo:
