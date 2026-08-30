@@ -699,6 +699,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PartidoResumen'
+  
+# -----------------------------------------------------------------------------
+# Ranking
+# -----------------------------------------------------------------------------
+  /ranking:
+    get:
+      tags: [Ranking]
+      summary: Ver ranking global
+      description: Calculado a partir de los partidos jugados en instancias públicas (ligas públicas y amistosos).
+      operationId: obtener_ranking
+      responses:
+        '200':
+          description: Ranking mundial
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RankingItem'
 
 components:
   securitySchemes:
@@ -990,7 +1009,21 @@ components:
           type: integer
 
       # --- Partidos ---
-      PartidoResumen:
+      #PartidoResumen:
         # por definir, pero sería una versión breve de partido para mostrar en el fixture
         # ideas: Datos de los partidos Rivales, Fecha y hora, Condición de localía y fecha
         # no se si meterle los resultados apenas termina, es una complicacion más
+      
+      # --- Ranking ---
+    RankingItem:
+      type: object
+      properties:
+        posicion:
+          type: integer
+        club_id:
+          type: string
+          format: uuid
+        nombre_club:
+          type: string
+        puntos:
+          type: integer
