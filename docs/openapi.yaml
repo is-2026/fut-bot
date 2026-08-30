@@ -1,17 +1,38 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   title: FutBot API
   version: 1.0.0
   description: API REST para la plataforma FutBot. gestion de usuarios, jugadores, partidos, ligas, gestión y  validación de comportamientos en Python, datos del ranking
-paths:
-  #usuario
-  
+servers:
+  - url: https://localhost:5000
+    description: placeholder, cambiar luego
 
-  #autenticacion
+tags:
+  - name: Autenticación
+  - name: Usuario
+  - name: Club
+  - name: Jugadores
+  - name: Comportamientos
+  - name: Ligas
+  - name: Amistosos
+  - name: Partido
+  - name: Ranking
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ---------------------------------------------------------------------------
+  # Autenticación y Usuario
+  # ---------------------------------------------------------------------------
   /auth/registro:
     post:
-      summary: Registrar Usuario y Club
+      tags: [Autenticación]
+      summary: Registrar Usuario
+      description: >
+        Crea la cuenta de usuario. El club se crea en un paso separado (POST /club) inmediatamente después, dentro del mismo flujo de onboarding del cliente.
       operationId: registrar_usuario
+      security: []
       requestBody:
         required: true
         content:
@@ -21,11 +42,25 @@ paths:
       responses:
         '201':
           description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '409':
+          description: El email ya está registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          $ref: '#/components/responses/BadRequest'
 
   /auth/login:
     post:
+      tags: [Autenticación]
       summary: Iniciar sesion
       operationId: login
+      security: []
       requestBody:
         required: true
         content:
@@ -34,7 +69,47 @@ paths:
               $ref: '#/components/schemas/AuthLoginInput'
       responses:
         '200':
-          description: Token generado
+          description: Sesión iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Email o contraseña incorrectos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+  /auth/logout:
+    post:
+      tags: [Autenticación]
+      summary: Cerrar sesión
+      responses:
+        '200':
+          description: Sesión cerrada
+
+  /usuarios/me/password:
+    patch:
+      tags: [Usuario]
+      summary: Modificar contraseña
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CambiarPasswordInput'
+      responses:
+        '200':
+          description: Contraseña actualizada
+        '400':
+          description: >
+            La contraseña actual es incorrecta, o la nueva coincide con la
+            actual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /usuarios/{username}/password:
     put:
@@ -274,36 +349,81 @@ paths:
 
 components:
   securitySchemes:
-    TokenAuth:
-      type: apiKey
-      in: header
-      name: Authorization
-      description: >
-        Valor completo del header: la palabra "Token", un espacio y el token opaco.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    
+  #parameters:
+    # por definir
+
+  responses:
+    BadRequest:
+      description: Solicitud inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
 
   schemas:
-    # inputs
-      UsuarioRegistroInput:
+    Error:
       type: object
-      required: [username, email, password, nombre_club]
+      properties:
+        codigo:
+          type: string
+        mensaje:
+          type: string
+      required: [codigo, mensaje]
+
+      # -- Autenticación / Usuario ---
+    UsuarioRegistroInput:
+      type: object
+      required: [username, email, password]
       properties:
         username:
           type: string
         email:
           type: string
+          format: email
         password:
           type: string
-        nombre_club:
-          type: string
+          format: password
 
     AuthLoginInput:
       type: object
-      required: [username, password]
+      required: [email, password]
       properties:
-        username:
+        email:
           type: string
+          format: email
         password:
           type: string
+    
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    
+    CambiarPasswordInput:
+      type: object
+      required: [password_actual, nueva_password]
+      properties:
+        password_actual:
+          type: string
+          format: password
+        nueva_password:
+          type: string
+          format: password
+    
+    # --- Club ---
+
 
     JugadorInput:
       type: object
@@ -375,14 +495,3 @@ components:
           type: string
         codigo:
           type: string
-
-
-
-#preguntar sobre foto
-#preguntar codigo y validacion antes de guardar , primitivas , posiciones y forma de computo 
-#delete user ?
-#jwt ?
-#terminar de ordenar bien casos de uso para facilitar contrato
-  
-
-
