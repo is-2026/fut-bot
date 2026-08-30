@@ -32,21 +32,27 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de cerrar sesión.
+  1. El usuario abre el menú de usuario y selecciona la opción de cerrar sesión.
   2. El sistema cierra la sesión del usuario y actualiza la vista al apartado de inicio de sesión.
 
 ### Caso de Uso 4: Cambiar contraseña
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción editar contraseña.
-  2. El sistema solicita la contraseña actual y la nueva contraseña.
-  3. El sistema valida las contraseñas ingresadas y las actualiza en la base de datos.
+  1. El usuario abre el menú de usuario y selecciona la opción editar perfil.
+  2. El sistema muestra un menú con la opción cambiar contraseña.
+  3. El usuario selecciona la opción cambiar contraseña.
+  4. El sistema solicita la contraseña actual y la nueva contraseña.
+  5. El usuario ingresa la información solicitada.
+  6. El sistema valida las contraseñas ingresadas y las actualiza en la base de datos.
 - **Escenarios excepcionales:**
-  3. a) La contraseña actual no es correcta:
-  - El sistema informa al usuario que la contraseña actual proporcionada es incorrecta.
-  3. b) La nueva contraseña coincide con la actual:
-  - El sistema informa al usuario que la nueva contraseña no puede ser igual a la actual.
+  5. c) El usuario cancela el cambio de contraseña:
+  - El sistema vuelve a mostrar el menú de editar perfil.
+  6. a) La contraseña actual no es correcta:
+  - El sistema informa al usuario que la contraseña actual proporcionada es incorrecta y solicita reingresar la contraseña.
+  6. b) La nueva contraseña coincide con la actual:
+  - El sistema informa al usuario que la nueva contraseña no puede ser igual a la actual y solicita ingresar otra contraseña.
+
 
 ## Jugadores
 
@@ -61,9 +67,11 @@
   5. El usuario ingresa el nombre, asigna los valores a los atributos y confirma la creación.
   6. El sistema valida que los atributos sumen exactamente 300, crea al jugador y lo muestra en la plantilla.
 - **Escenarios excepcionales:**
+  5. a) El usuario cancela la creación del nuevo jugador:
+  - El sistema vuelve a mostrar el menú de jugadores.
   6. a) La suma total de los atributos PACSS es distinta a 300.
   - El sistema informa que la suma total de los atributos de un jugador debe ser de 300.
-  6. b) Algún atributo posee un valor fuera del rango permitido (0-100).
+  6. b) Algún atributo posee un valor fuera del rango permitido (20-100).
   - El sistema informa que el atributo posee un valor fuera del rango permitido.
 
 ### Caso de Uso 6: Ver mis jugadores
@@ -78,7 +86,7 @@
 
 ### Caso de Uso 7: Editar comportamiento asignado a un jugador
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador previamente creado.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador y un comportamiento previamente creado.
 - **Escenario exitoso principal:**
   1. El usuario entra al apartado de gestión de jugadores.
   2. El sistema muestra los jugadores disponibles.
@@ -90,8 +98,9 @@
   8. El sistema efectua el cambio de comportamiento asociado al jugador.
 - **Escenarios excepcionales:**
   6. a) No hay comportamientos creados.
-  - El sistema informa que no existen comportamientos para asignar.
-   
+  - El sistema informa que no existen comportamientos para asignar y vuelve al menú del jugador elegido.
+  7. a) El usuario cancela el cambio de comportamiento:
+  - El sistema vuelve al menú del jugador elegido.
 
 ### Caso de Uso 8: Eliminar jugador
 - **Actor primario:** Usuario
@@ -106,8 +115,10 @@
   7. El usuario confirma la eliminación.
   8. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, lo elimina de la base de datos y actualiza la plantilla de jugadores.
 - **Escenarios excepcionales:**
-  8. a) El jugador se encuentra disputando ligas o partidos activos:
+  6. a) El jugador se encuentra disputando ligas o partidos activos:
   - El sistema informa que el jugador está en uso y cancela la operación de eliminación.
+  7. a) El usuario cancela la eliminación del jugador:
+  - El sistema vuelve a mostrar el menú del jugador.
 
 ## Comportamientos
 
@@ -123,8 +134,8 @@
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario abre el menú de comportamientos.
-  2. El sistema muestra los comportamientos creados si los hay, y la opción de crear nuevo comportamiento.
-  3. El usuario selecciona la opción de crear un nuevo comportamiento.
+  2. El sistema muestra los comportamientos creados si los hay, y la opción crear nuevo comportamiento.
+  3. El usuario selecciona la opción crear nuevo comportamiento.
   4. El sistema abre una ventana que presenta el editor de código integrado, una casilla para agregar un nombre descriptivo del nuevo comportamiento y las opciones guardar y cancelar.
   5. El usuario escribe el código del nuevo comportamiento, ingresa un nombre para el mismo y solicita guardarlo.
   6. El sistema valida el código (sintaxis y seguridad), guarda el comportamiento y muestra un mensaje de éxito.
@@ -140,21 +151,21 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y viendo la lista de comportamientos.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el comportamiento que desea editar.
+  1. El usuario selecciona el comportamiento que desea cambiar y elige la opción editar.
   2. El sistema verifica que el comportamiento no esté en uso, lo elimina y abre la interfaz de edición del comportamiento.
-  3. El usuario confirma la edición del comportamiento.
-  4. El sistema verifica que el comportamiento sea válido y lo actualiza.
+  3. El usuario edita los datos del comportamiento y confirma la edición.
+  4. El sistema verifica que el comportamiento sea válido y lo actualiza en la base de datos.
 - **Escenarios excepcionales:**
-  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  2. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
   - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible editarlo.
-  4. b) El comportamiento no es válido:
+  4. a) El comportamiento no es válido:
   - El sistema informa al usuario que el comportamiento no es válido y pide al usuario actualizarlo.
 
 ### Caso de Uso 12: Eliminar comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y viendo la lista de comportamientos.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el comportamiento que desea eliminar.
+  1. El usuario selecciona el comportamiento que desea eliminar y elige la opción eliminar.
   2. El sistema pide confirmación para eliminar el comportamiento.
   3. El usuario confirma la eliminación del comportamiento.
   4. El sistema verifica que el comportamiento no esté en uso, lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
