@@ -699,6 +699,123 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PartidoResumen'
+
+# -----------------------------------------------------------------------------
+# Amistosos
+# -----------------------------------------------------------------------------
+  /amistosos/desafios:
+    post:
+      tags: [Amistosos]
+      summary: Enviar desafío amistoso
+      description: Incluye el pool de 6 convocados del club retador.
+      operationId: enviar_desafio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearDesafioInput'
+      responses:
+        '201':
+          description: Desafío creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desafio'
+    get:
+      tags: [Amistosos]
+      summary: Listar desafíos propios
+      operationId: listar_desafios
+      parameters:
+        - name: direccion
+          in: query
+          description: Filtra por desafíos enviados o recibidos por el club
+          schema:
+            type: string
+            enum: [enviados, recibidos]
+      responses:
+        '200':
+          description: Desafíos del club
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Desafio'
+
+  /amistosos/desafios/{desafio_id}:
+    parameters:
+    - name: desafio_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    delete:
+      tags: [Amistosos]
+      summary: Cancelar desafío enviado
+      description: Solo el club retador puede cancelarlo, y solo si sigue pendiente.
+      operationId: cancelar_desafio
+      responses:
+        '200':
+          description: Desafío cancelado
+        '409':
+          description: El desafío ya fue respondido o caducó
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags: [Amistosos]
+      summary: Responder desafío amistoso
+      description: Si se acepta, se debe incluir el pool de 6 convocados del club desafiado, y se crea el partido.
+      operationId: responder_desafio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DesafioRespuestaInput'
+      responses:
+        '200':
+          description: Desafío respondido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desafio'
+        '409':
+          description: El desafío caducó o ya no está disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /amistosos/busqueda:
+    post:
+      tags: [Amistosos]
+      summary: Iniciar búsqueda de rival (matchmaking público)
+      description: Devuelve el ticket nomás. La notificación de emparejamiento exitoso se recibe de forma asíncrona vía WebSocket en el canal `/ws/amistosos/busqueda` (ver especificación AsyncAPI, mensaje 'PartidoEncontrado').
+      operationId: iniciar_matchmaking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearBusquedaInput'
+      responses:
+        '202':
+          description: Búsqueda iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Busqueda'
+    delete:
+      tags: [Amistosos]
+      summary: Cancelar búsqueda de rival
+      operationId: cancelar_matchmaking
+      responses:
+        '200':
+          description: Búsqueda cancelada
   
 # -----------------------------------------------------------------------------
 # Ranking
@@ -953,6 +1070,16 @@ components:
           type: string
           enum: [no_iniciada, iniciada, finalizada]
     
+    ConvocadoInput:
+      type: object
+      required: [jugador_id, es_titular_default]
+      properties: 
+        jugador_id:
+          type: string
+          format: uuid
+        es_titular_default:
+          type: boolean
+
     CrearInscripcionInput:
       type: object
       required: [jugadores]
@@ -965,14 +1092,7 @@ components:
           maxItems: 6
           description: Exactamente 3 con es_titular_default en true y 3 en false.
           items:
-            type: object
-            required: [jugador_id, es_titular_default]
-            properties: 
-              jugador_id:
-                type: string
-                format: uuid
-              es_titular_default:
-                type: boolean
+            $ref: '#components/schemas/ConvocadoInput'
 
     FixtureResponse:
       type: object
@@ -1007,6 +1127,92 @@ components:
           type: integer
         goles_contra:
           type: integer
+      
+    # --- Amistosos ---
+    CrearDesafioInput:
+      type: object
+      required: [club_rival_id, jugadores]
+      properties:
+        club_rival_id:
+          type: string
+          format: uuid
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+
+    DesafioRespuestaInput:
+      type: object
+      required: [estado]
+      properties:
+        estado:
+          type: string
+          enum: [aceptado, rechazado]
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          description: Requerido si estado es "aceptado".
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+    
+    Desafio:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        club_retador_id:
+          type: string
+          format: uuid
+        club_desafiado_id:
+          type: string
+          format: uuid
+        estado:
+          type: string
+          enum: [pendiente, aceptado, rechazado, caducado, cancelado]
+        partido_id:
+          type: [string, "null"]
+          format: uuid
+        fecha_creacion:
+          type: string
+          format: date-time
+        fecha_caducidad:
+          type: string
+          format: date-time
+    
+    CrearBusquedaInput:
+      type: object
+      required: [jugadores]
+      properties:
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+    
+    Busqueda:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        club_id:
+          type: string
+          format: uuid
+        jugadores:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+        estado:
+          type: string
+          enum: [buscando, emparejado, cancelada]
+        partido_id:
+          type: [string, "null"]
+          format: uuid
 
       # --- Partidos ---
       #PartidoResumen:
