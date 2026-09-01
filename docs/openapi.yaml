@@ -1021,7 +1021,10 @@ components:
           type: string
         codigo:
           type: string
-          description: Código en Python del comportamiento. Se debe verificar.
+          description: |
+              Código del comportamiento en Python. Se debe verificar. Primitivas válidas: 
+              Sensores: my-pos(), ball-pos(), has-ball(), team-pos(), enemy-pos()
+              Acciones: move(x,y), pass(jugador_id), shoot(), tackle(), carryball(x,y)
 
     Comportamiento:
       type: object
