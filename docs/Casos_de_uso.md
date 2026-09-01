@@ -1,8 +1,51 @@
 ﻿﻿# Casos de Uso: FutBot
 
+### Índice de Contenidos
+  - [Cuenta y sesión](#cuenta-y-sesión)
+    - [CU1: Registrar usuario y club](#caso-de-uso-1-registrar-usuario-y-club)
+    - [CU2: Iniciar sesión](#caso-de-uso-2-iniciar-sesión)
+    - [CU3: Cerrar sesión](#caso-de-uso-3-cerrar-sesión)
+    - [CU4: Cambiar contraseña](#caso-de-uso-4-cambiar-contraseña)
+  - [Jugadores](#jugadores)
+    - [CU5: Crear jugador](#caso-de-uso-5-crear-jugador)
+    - [CU6: Ver mis jugadores](#caso-de-uso-6-ver-mis-jugadores)
+    - [CU7: Editar comportamiento asignado a un jugador](#caso-de-uso-7-editar-comportamiento-asignado-a-un-jugador)
+    - [CU8: Eliminar jugador](#caso-de-uso-8-eliminar-jugador)
+  - [Comportamientos](#comportamientos)
+    - [CU9: Ver comportamientos](#caso-de-uso-9-ver-comportamientos)
+    - [CU10: Crear nuevo comportamiento](#caso-de-uso-10-crear-nuevo-comportamiento)
+    - [CU11: Editar comportamiento](#caso-de-uso-11-editar-comportamiento)
+    - [CU12: Eliminar comportamiento](#caso-de-uso-12-eliminar-comportamiento)
+  - [Club y perfil](#club-y-perfil)
+    - [CU13: Ver club de un usuario](#caso-de-uso-13-ver-club-de-un-usuario)
+    - [CU14: Ver historial de un club](#caso-de-uso-14-ver-historial-de-un-club)
+    - [CU15: Ver historial compartido](#caso-de-uso-15-ver-historial-compartido)
+  - [Partidos amistosos](#partidos-amistosos)
+    - [CU16: Enviar desafío amistoso](#caso-de-uso-16-enviar-desafío-amistoso)
+    - [CU17: Aceptar desafío amistoso](#caso-de-uso-17-aceptar-desafío-amistoso)
+    - [CU18: Cancelar desafío amistoso enviado](#caso-de-uso-18-cancelar-desafío-amistoso-enviado)
+  - [Partidos (gestión en vivo)](#partidos-gestión-en-vivo)
+    - [CU19: Gestionar alineación pre-partido](#caso-de-uso-19-gestionar-alineación-pre-partido)
+    - [CU20: Programar sustitución de jugador](#caso-de-uso-20-programar-sustitución-de-jugador)
+    - [CU21: Cancelar sustitución de jugador](#caso-de-uso-21-cancelar-sustitución-de-jugador)
+    - [CU22: Cambiar comportamiento durante el partido](#caso-de-uso-22-cambiar-comportamiento-durante-el-partido)
+    - [CU23: Observar partido como espectador](#caso-de-uso-23-observar-partido-como-espectador)
+    - [CU24: Abandonar partido como espectador](#caso-de-uso-24-abandonar-partido-como-espectador)
+  - [Ligas](#ligas)
+    - [CU25: Crear liga](#caso-de-uso-25-crear-liga)
+    - [CU26: Buscar ligas](#caso-de-uso-26-buscar-ligas)
+    - [CU27: Unirse a liga privada](#caso-de-uso-27-unirse-a-liga-privada)
+    - [CU28: Unirse a liga pública](#caso-de-uso-28-unirse-a-liga-pública)
+    - [CU29: Abandonar liga](#caso-de-uso-29-abandonar-liga)
+    - [CU30: Cancelar liga](#caso-de-uso-30-cancelar-liga)
+    - [CU31: Iniciar liga](#caso-de-uso-31-iniciar-liga)
+    - [CU32: Consultar fixture y tabla de posiciones](#caso-de-uso-32-consultar-fixture-y-tabla-de-posiciones)
+  - [Ranking](#ranking)
+    - [CU33: Consultar ranking global](#caso-de-uso-33-consultar-ranking-global)
+
 ## Cuenta y sesión
 
-### Caso de Uso 1: Registrar Usuario y Club
+### Caso de Uso 1: Registrar usuario y club
 - **Actor primario:** Usuario visitante
 - **Precondición:** El usuario se encuentra en la pantalla de ingreso del sistema.
 - **Escenario exitoso principal:**
@@ -227,10 +270,21 @@
 - **Escenarios excepcionales:**
   3. a) El usuario rechaza el desafío amistoso:
   - El sistema elimina el desafío amistoso de la sección desafíos pendientes.
+  3. b) El desafio amistoso expiró:
+  - El sistema informa que el desafio ya no esta disponible y lo elimina de la seccion pendientes.
+
+  ### Caso de Uso 18: Cancelar desafío amistoso enviado
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado y tiene un desafío enviado que aun no ha sido aceptado
+- **Escenario exitoso principal:**
+  1. El usuario abre la sección desafíos enviados en el menú de usuario.
+  2. El sistema muestra los desafíos amistosos enviados.
+  3. El usuario elige, en un desafío enviado, la opción eliminar desafío.
+  4. El sistema registra la eliminacion y expira el desafio.
 
 ## Partidos (gestión en vivo)
 
-### Caso de Uso 18: Gestionar alineación pre-partido
+### Caso de Uso 19: Gestionar alineación pre-partido
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, se encuentra en la ventana temporal previa a un partido de su liga y tiene al menos seis jugadores.
 - **Escenario exitoso principal:**
@@ -242,7 +296,7 @@
   4. a) El tiempo de la cuenta regresiva expiró antes de la confirmación:
   - El sistema selecciona automáticamente a los primeros 3 jugadores del club como titulares, y los siguientes 3 como suplentes, les asigna sus comportamientos por defecto y registra la alineación.
 
-### Caso de Uso 19: Programar sustitución de jugador
+### Caso de Uso 20: Programar sustitución de jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
@@ -254,7 +308,7 @@
   4. a) El usuario ya agotó sus 3 cambios permitidos:
   - El sistema informa que no quedan cambios disponibles y deniega la operación.
 
-### Caso de Uso 20: Cancelar sustitución de jugador
+### Caso de Uso 21: Cancelar sustitución de jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene al menos una solicitud de sustitución registrada.
 - **Escenario exitoso principal:**
@@ -262,7 +316,7 @@
   2. El sistema informa todos los cambios registrados a ejecutarse en la próxima pausa y solicita seleccionar aquel a ser cancelado.
   3. El usuario selecciona el cambio, el sistema cancela la solicitud de sustitución y actualiza los cambios restantes.
 
-### Caso de Uso 21: Cambiar comportamiento durante el partido
+### Caso de Uso 22: Cambiar comportamiento durante el partido
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido en curso de su club y tiene más de un comportamiento creado.
 - **Escenario exitoso principal:**
@@ -274,7 +328,7 @@
   4. a) El comportamiento seleccionado fue eliminado o es inválido:
   - El sistema informa el error y mantiene el comportamiento anterior del jugador.
 
-### Caso de Uso 22: Observar partido como espectador
+### Caso de Uso 23: Observar partido como espectador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos un partido en curso en la liga
 - **Escenario exitoso principal:**
@@ -283,7 +337,7 @@
   3. El usuario selecciona el partido que quiere observar
   4. El sistema muestra en tiempo real la interfaz 2D de la cancha con sus jugadores y las habilidades de los mismos.
 
-### Caso de Uso 23: Abandonar partido como espectador
+### Caso de Uso 24: Abandonar partido como espectador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido como espectador.
 - **Escenario exitoso principal:**
@@ -292,7 +346,7 @@
 
 ## Ligas
 
-### Caso de Uso 24: Crear Liga
+### Caso de Uso 25: Crear liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
@@ -304,7 +358,7 @@
   4. a) El usuario omite campos obligatorios:
   - El sistema informa los campos faltantes.
 
-### Caso de Uso 25: Buscar ligas
+### Caso de Uso 26: Buscar ligas
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado exitosamente.
 - **Escenario exitoso principal:**
@@ -320,7 +374,7 @@
   6. a) No existen coincidencias de búsqueda.
   - El sistema informa que no se encontraron ligas con las coincidencias que pide el usuario.
 
-### Caso de Uso 26: Unirse a Liga Privada
+### Caso de Uso 27: Unirse a liga privada
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
@@ -338,7 +392,7 @@
   8. a) La contraseña ingresada por el usuario es incorrecta.
   - El sistema informa que la contraseña es incorrecta y solicita ingresarla nuevamente.
 
-### Caso de Uso 27: Unirse a Liga Pública
+### Caso de Uso 28: Unirse a liga pública
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
@@ -351,7 +405,7 @@
   7. El usuario selecciona a sus 6 jugadores y confirma la inscripción.
   8. El sistema inscribe al usuario en la liga y lo dirige hacia la liga.
 
-### Caso de Uso 28: Abandonar Liga
+### Caso de Uso 29: Abandonar liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y se encuentra inscripto en una liga.
 - **Escenario exitoso principal:**
@@ -363,7 +417,7 @@
   4. a) La liga ya comenzó o está en curso:
   - El sistema informa que no es posible abandonar una competencia iniciada y bloquea la acción.
 
-### Caso de Uso 29: Cancelar liga
+### Caso de Uso 30: Cancelar liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y creó una liga
 - **Escenario exitoso principal:**
@@ -377,7 +431,7 @@
   6. a) La liga comenzó o está en curso:
   - El sistema informa que no es posible eliminar una liga ya iniciada y bloquea la acción.
 
-### Caso de Uso 30: Iniciar liga
+### Caso de Uso 31: Iniciar liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario es dueño de la liga y la liga posee más de 3 jugadores
 - **Escenario exitoso principal:**
@@ -386,7 +440,7 @@
   3. El usuario confirma la operación.
   4. El sistema cambia la liga de estado de "No iniciada" a "Iniciada", calcula el fixture con el orden de los partidos a realizarse, se actualiza la vista de ligas de los participantes.
 
-### Caso de Uso 31: Consultar fixture y tabla de posiciones
+### Caso de Uso 32: Consultar fixture y tabla de posiciones
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y es miembro de una liga.
 - **Escenario exitoso principal:**
@@ -398,7 +452,7 @@
 
 ## Ranking
 
-### Caso de Uso 32: Consultar ranking global
+### Caso de Uso 33: Consultar ranking global
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
