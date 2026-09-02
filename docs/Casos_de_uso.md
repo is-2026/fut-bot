@@ -124,13 +124,29 @@
   1. El usuario entra al apartado de gestión de jugadores.
   2. El sistema muestra los jugadores previamente creados.
 
+### Caso de Uso 7: asignar comportamiento a un jugador
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador y un comportamiento previamente creado.
+- **Escenario exitoso principal:**
+  1. El usuario entra al apartado gestión de jugadores.
+  2. El sistema muestra los jugadores disponibles.
+  3. El usuario selecciona el jugador al que quiere asignar comportamiento.
+  4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
+  5. El usuario selecciona la opcion asignar comportamiento.
+  6. El sistema muestra los comportamientos disponibles.
+  7. El usuario elige el nuevo comportamiento.
+  8. El sistema asigna el comportamiento al jugador.
+- **Escenarios excepcionales:**
+  7. a) El usuario cancela la asignación de comportamiento:
+  - El sistema vuelve al menú del jugador elegido.
+
 ### Caso de Uso 7: Editar comportamiento asignado a un jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador y un comportamiento previamente creado.
 - **Escenario exitoso principal:**
   1. El usuario entra al apartado de gestión de jugadores.
   2. El sistema muestra los jugadores disponibles.
-  3. El usuario selecciona el jugador a asignar/reasignar comportamiento.
+  3. El usuario selecciona el jugador al que quiere asignar/reasignar comportamiento.
   4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
   5. El usuario selecciona la opcion editar asignacion de comportamiento.
   6. El sistema muestra los comportamientos disponibles.
@@ -245,26 +261,27 @@
 
 ## Partidos amistosos
 
-### Caso de Uso 16: Enviar desafío amistoso
+### Caso de Uso 16: Enviar desafío amistoso privado
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado
 - **Escenario exitoso principal:**
   1. El usuario abre el menú del ranking global.
   2. El sistema muestra los clubes en el ranking global.
-  3. El usuario selecciona un club del ranking y elige la opción desafío amistoso.
+  3. El usuario selecciona un club del ranking y elige la opción desafío amistoso privado.
   4. El sistema solicita confirmar la acción.
-  5. El usuario confirma el envío del desafío amistoso.
+  5. El usuario confirma el envío del desafío amistoso privado.
   4. El sistema envía el desafío al usuario del club seleccionado y avisa que el desafío fue enviado con éxito.
 - **Escenarios excepcionales:**
-  5. a) El usuario cancela el envío del desafío amistoso:
+  5. a) El usuario cancela el envío del desafío amistoso privado:
   - El sistema vuelve a mostrar el club elegido.
 
-### Caso de Uso 17: Aceptar desafío amistoso
+### Caso de Uso 17: Aceptar desafío amistoso privado
 - **Actor primario:** Usuario desafiado
-- **Precondición:** El usuario está logueado y tiene un desafío pendiente de aceptar.
+- **Precondición:** 
+ El usuario está logueado, tiene al menos seis jugadores con un comportamiento asignado cada uno y un desafío amistoso privado pendiente de aceptar.
 - **Escenario exitoso principal:**
   1. El usuario abre la sección desafíos pendientes en el menú de usuario.
-  2. El sistema muestra los desafíos amistosos pendientes.
+  2. El sistema muestra los desafíos amistosos privados pendientes.
   3. El usuario elige, en un desafío pendiente, la opción aceptar desafío amistoso.
   4. El sistema registra la aceptación y establece el partido.
 - **Escenarios excepcionales:**
@@ -273,7 +290,7 @@
   3. b) El desafio amistoso expiró:
   - El sistema informa que el desafio ya no esta disponible y lo elimina de la seccion pendientes.
 
-  ### Caso de Uso 18: Cancelar desafío amistoso enviado
+  ### Caso de Uso 18: Cancelar desafío amistoso privado enviado
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y tiene un desafío enviado que aun no ha sido aceptado
 - **Escenario exitoso principal:**
@@ -282,6 +299,17 @@
   3. El usuario elige, en un desafío enviado, la opción eliminar desafío.
   4. El sistema registra la eliminacion y expira el desafio.
 
+ ### Caso de uso 20: Iniciar desafío amistoso público
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado
+  - logueado 
+- **Escenario exitoso principal:**
+  1. El usuario abre la sección partido amistoso público en el menú de usuario.
+  2. El sistema muestra un menú con los desafíos públicos disponibles y la opción crear desafío amistoso público.
+  3. El usuario elige la opción crear desafío amistoso público.
+  4. El sistema solicita confirmar la acción.
+  5. El usuario confirma la creación del desafío.
+  6. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles. 
 ## Partidos (gestión en vivo)
 
 ### Caso de Uso 19: Gestionar alineación pre-partido
@@ -348,10 +376,10 @@
 
 ### Caso de Uso 25: Crear liga
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos seis jugadores con un comportamiento asignado cada uno.
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opción de crear una nueva liga.
-  2. El sistema solicita nombre, contraseña, cantidad máxima de clubes, duración de los partidos y privacidad.
+  2. El sistema solicita nombre, contraseña, cantidad máxima de clubes, duración de los partidos y privacidad, así como seleccionar tres jugadores titulares y tres jugadores suplentes, cada uno con un comportamiento asignado.
   3. El usuario ingresa los datos solicitados y confirma la creación.
   4. El sistema valida los datos, crea la liga en estado "No iniciada" y anota al club del usuario creador en ella.
 - **Escenarios excepcionales:**
@@ -376,33 +404,35 @@
 
 ### Caso de Uso 27: Unirse a liga privada
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos seis jugadores con un comportamiento asignado cada uno.
 - **Escenario exitoso principal:**
   1. El usuario selecciona el apartado ligas.
   2. El sistema muestra el apartado de ligas.
-  3. El usuario selecciona unirse a una ligas.
+  3. El usuario selecciona unirse a una liga.
   4. El sistema muestra ligas recomendadas y disponibles.
   5. El usuario selecciona una liga en estado "No iniciada" y elige unirse.
   6. El sistema solicita la contraseña de acceso a la liga.
   7. El usuario ingresa la contraseña y confirma.
-  8. El sistema valida la contraseña y solicita seleccionar los 6 jugadores para el torneo.
-  9. El usuario selecciona a sus 6 jugadores y confirma la inscripción.
-  10. El sistema inscribe al usuario en la liga y lo dirige hacia la liga.
+  8. El sistema valida la contraseña y solicita seleccionar tres jugadores titulares y tres jugadores suplentes, cada uno con un comportamiento asignado.
+  9. El usuario selecciona tres jugadores titulares y tres jugadores suplentes con un comportamiento asignado cada uno, y confirma la elección.
+  10. El sistema inscribe al usuario en la liga y lo dirige hacia ella.
 - **Escenarios excepcionales:**
   8. a) La contraseña ingresada por el usuario es incorrecta.
   - El sistema informa que la contraseña es incorrecta y solicita ingresarla nuevamente.
 
 ### Caso de Uso 28: Unirse a liga pública
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos seis jugadores con un comportamiento asignado cada uno.
 - **Escenario exitoso principal:**
   1. El usuario selecciona el apartado ligas.
   2. El sistema muestra el apartado de ligas.
   3. El usuario selecciona unirse a una ligas.
   4. El sistema muestra ligas recomendadas y disponibles.
   5. El usuario selecciona una liga en estado "No iniciada" y elige unirse.
-  6. El sistema solicita seleccionar los 6 jugadores para el torneo.
-  7. El usuario selecciona a sus 6 jugadores y confirma la inscripción.
+  8. El sistema solicita seleccionar tres jugadores titulares y tres jugadores suplentes, cada uno con un comportamiento asignado.
+  9. El usuario selecciona tres jugadores titulares y tres jugadores suplentes con un comportamiento asignado cada uno, y confirma la elección.
+  10. El sistema inscribe al usuario en la liga y lo dirige hacia ella.
+  7. El usuario selecciona tres jugadores titulares y tres jugadores suplentes y confirma la inscripción.
   8. El sistema inscribe al usuario en la liga y lo dirige hacia la liga.
 
 ### Caso de Uso 29: Abandonar liga
