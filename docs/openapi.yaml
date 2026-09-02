@@ -760,7 +760,7 @@ paths:
         '200':
           description: Desafío cancelado
         '409':
-          description: El desafío ya fue respondido o caducó
+          description: El desafío ya fue respondido
           content:
             application/json:
               schema:
@@ -784,7 +784,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Desafio'
         '409':
-          description: El desafío caducó o ya no está disponible
+          description: El desafío ya no está disponible
           content:
             application/json:
               schema:
@@ -842,9 +842,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-    
-  #parameters:
-    # por definir
 
   responses:
     BadRequest:
@@ -970,6 +967,10 @@ components:
       properties:
         nombre:
           type: string
+        numero:
+          type: integer
+          minimun: 1
+          maximum: 99
         power:
           type: integer
           minimun: 20
@@ -999,6 +1000,8 @@ components:
           format: uuid
         nombre:
           type: string
+        numero:
+          type: integer
         power:
           type: integer
         agility:
@@ -1175,14 +1178,11 @@ components:
           format: uuid
         estado:
           type: string
-          enum: [pendiente, aceptado, rechazado, caducado, cancelado]
+          enum: [pendiente, aceptado, rechazado, cancelado]
         partido_id:
           type: [string, "null"]
           format: uuid
         fecha_creacion:
-          type: string
-          format: date-time
-        fecha_caducidad:
           type: string
           format: date-time
     
