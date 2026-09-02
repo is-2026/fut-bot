@@ -75,21 +75,21 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el menú de usuario y selecciona la opción de cerrar sesión.
+  1. El usuario abre el apartado mi cuenta y selecciona la opción de cerrar sesión.
   2. El sistema cierra la sesión del usuario y actualiza la vista al apartado de inicio de sesión.
 
 ### Caso de Uso 4: Cambiar contraseña
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el menú de usuario y selecciona la opción editar perfil.
-  2. El sistema muestra un menú con la opción cambiar contraseña.
+  1. El usuario abre el apartado mi cuenta.
+  2. El sistema muestra las acciones que puede realizar el usuario con su cuenta.
   3. El usuario selecciona la opción cambiar contraseña.
   4. El sistema solicita la contraseña actual y la nueva contraseña.
   5. El usuario ingresa la información solicitada.
   6. El sistema valida las contraseñas ingresadas y las actualiza en la base de datos.
 - **Escenarios excepcionales:**
-  5. c) El usuario cancela el cambio de contraseña:
+  5. a) El usuario cancela el cambio de contraseña:
   - El sistema vuelve a mostrar el menú de editar perfil.
   6. a) La contraseña actual no es correcta:
   - El sistema informa al usuario que la contraseña actual proporcionada es incorrecta y solicita reingresar la contraseña.
@@ -105,8 +105,8 @@
 - **Escenario exitoso principal:**
   1. El usuario entra al apartado mi equipo desde el menú principal.
   2. El sistema muestra los jugadores creados si los hay, y la opción crear nuevo jugador.
-  3. El usuario selecciona la opción de crear nuevo jugador.
-  4. El sistema solicita el nombre del jugador y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength).
+  3. El usuario selecciona la opción crear nuevo jugador.
+  4. El sistema solicita el nombre del jugador y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength), con un valor mínimo de 20 y un valor máximo de 100 para cada uno, y su suma debe ser igual a 300.
   5. El usuario ingresa el nombre, asigna los valores a los atributos y confirma la creación.
   6. El sistema valida que los atributos sumen exactamente 300, crea al jugador y lo muestra en la plantilla.
 - **Escenarios excepcionales:**
@@ -316,30 +316,29 @@
   3. El usuario elige, en un desafío enviado, la opción eliminar desafío.
   4. El sistema registra la eliminacion y expira el desafio.
 
-### Caso de uso 21: Iniciar desafío amistoso público
+### Caso de uso 21: Buscar desafío amistoso público
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado viendo el apartado mi club
+- **Precondición:** El usuario está logueado viendo el apartado mi club y tiene al menos seis jugadores, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
   1. El usuario abre la sección partido amistoso público.
-  2. El sistema muestra un menú con los desafíos públicos disponibles y la opción crear desafío amistoso público.
+  2. El sistema muestra un menú con las opciones buscar partido.
   3. El usuario elige la opción crear desafío amistoso público.
-  4. El sistema solicita confirmar la acción.
-  5. El usuario confirma la creación del desafío.
-  6. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles. 
+  4. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
+  5. El usuario elige sus titulares y suplentes, y confirma el desafío amistoso público.
+  6. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles.  
 - **Escenarios excepcionales:**
   5.a) El usuario cancela la creación del desafío:
   - El sistema regresa al menú con todos los desafíos públicos disponibles.
 
-### Caso de uso 21: aceptar desafío amistoso público
+### Caso de uso 21: Iniciar desafío amistoso público
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado viendo el apartado mi club
+- **Actor secundario:** Oponente
+- **Precondición:** El usuario está logueado y buscando un partido amistoso público.
 - **Escenario exitoso principal:**
-  1. El usuario abre la sección partido amistoso público.
-  2. El sistema muestra un menú con los desafíos públicos disponibles y la opción crear desafío amistoso público.
-  3. El usuario elige la opción aceptar en uno de los desafíos disponibles.
-  4. El sistema solicita elegir 3 jugadores.
-  5. El usuario confirma que quiere aceptar el desafío.
-  6. El sistema crea 
+  1. Un oponente selecciona la opción de buscar partido amistoso público.
+  2. El sistema encuentra oponente para el usuario, y crea una instancia de partido amistoso para ambos. Ingresa a ambos al lobby del partido si están conectados, mostrando la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y suplentes que jugarán el partido, así como sus comportamientos y formaciones.
+
+  
 
 ## Partidos (gestión en vivo)
 
