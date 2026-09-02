@@ -31,6 +31,8 @@ channels:
         $ref: '#/components/messages/CoolingBreakInit'
       descansoInit:
         $ref: '#/components/messages/DescansoInit'
+      renaudacionPartido:
+        $ref: '#/components/messages/RenaudacionPartido'
       cambioRealizado:
         $ref: '#/components/messages/CambioRealizado'
       partidoFinalizado:
@@ -78,6 +80,10 @@ components:
           partidoID:
             type: string
             description: ID del partido.
+          alineacion_local:
+            $ref: '#/components/schemas/Alineacion'
+          alineacion_visitante:
+            $ref: '#/components/schemas/Alineacion'
           inicioPartido:
             type: string
             format: date-time
@@ -91,19 +97,20 @@ components:
           estado:
             type: string
             description: Estado actual del partido.
+          
     
     MovimientoJugador:
       description: Notifica al usaurio el movimiento de un jugador durante el partido.
       payload:
         type: object
-        requied:
+        required:
           - partidoID
           - jugadorID
           - posicion
         properties:
           jugadorID:
             type: string
-            description: id o nombre de jugador (a confirmar) que se ha movido.
+            description: ID del jugador que marcó.
           posicion:
             type: object
             description: Posición del jugador actual en el campo.
@@ -144,9 +151,9 @@ components:
           - minuto
           - equipoID
         properties:
-          jugador:
+          jugadorID:
             type: string
-            description: Nombre o ID del jugador que marcó.
+            description: ID del jugador que marcó.
           minuto:
             type: integer
             description: Minuto en el cual ocurrió el gol.
@@ -188,6 +195,20 @@ components:
             type: string 
             format: date-time
             description: Fecha y hora del inicio del descanso.
+    
+    RenaudacionPartido:
+      description: Notifica la renaudación del partido luego de una pausa.
+      payload: 
+        type: object
+        required:
+          - partidoID
+          - tipo_renaudacion
+        propierties:
+          partidoID:
+            type: string
+          tipo_renaudacion:
+            type: string
+            enum: [postCooling_1, postCooling_2, postDescanso]
   
     CambioRealizado:
       payload:
@@ -249,3 +270,53 @@ components:
           rivalID:
             type: string
             description: ID del usuario rival.
+
+  schemas:
+    Alineacion:
+      type: array
+      description: Lista de jugadores del equipo con sus atributos PACSS.
+      items:
+        type: object
+        required:
+          - jugadorID
+          - nombre
+          - esTitular
+        properties:
+          jugadorID:
+              type: string
+              description: ID del jugador que marcó.
+          esTitular:
+            type: boolean
+            description: true si es Titular, false si no.
+          power: 
+            type: integer
+            description: Atributo Power.
+            minimum: 20
+            maximum: 100
+          agility: 
+            type: integer
+            description: Atributo Agility.
+            minimum: 20
+            maximum: 100
+          control: 
+            type: integer
+            description: Atributo Control.
+            minimum: 20
+            maximum: 100
+          speed: 
+            type: integer
+            description: Atributo Speed.
+            minimum: 20
+            maximum: 100
+          strength: 
+            type: integer
+            description: Atributo Strength
+            minimum: 20
+            maximum: 100
+          comportamientoID:
+            type: string
+            description: ID del comportamiento.
+          comportamientoNombre:
+            type: string
+            description: Nombre visible del comportamiento.
+      
