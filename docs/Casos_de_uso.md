@@ -1,5 +1,5 @@
-﻿﻿# Casos de Uso: FutBot
-
+﻿﻿
+# <center> Casos de Uso: FutBot </center>
 ### Índice de Contenidos
   - [Cuenta y sesión](#cuenta-y-sesión)
     - [CU1: Registrar usuario y club](#caso-de-uso-1-registrar-usuario-y-club)
@@ -255,9 +255,9 @@
 
 ### Caso de Uso 16: Ver historial de mi club
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, en la vista de mi club.
+- **Precondición:** El usuario está logueado, en la vista del apartado mi club.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado historial del club.
+  1. El usuario selecciona el apartado historial.
   2. El sistema recolecta la información, actualiza la vista y muestra el historial.
 
 ### Caso de Uso 17: Ver historial compartido
@@ -274,53 +274,73 @@
 
 ### Caso de Uso 18: Enviar desafío amistoso privado
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado
+- **Precondición:** El usuario está logueado y tiene al menos seis jugadores, cada uno con un comportamiento asignado
 - **Escenario exitoso principal:**
-  1. El usuario abre el menú del ranking global.
+  1. El usuario abre el ranking global desde el menú principal.
   2. El sistema muestra los clubes en el ranking global.
   3. El usuario selecciona un club del ranking y elige la opción desafío amistoso privado.
-  4. El sistema solicita confirmar la acción.
-  5. El usuario confirma el envío del desafío amistoso privado.
-  4. El sistema envía el desafío al usuario del club seleccionado y avisa que el desafío fue enviado con éxito.
+  4. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
+  5. El usuario elige sus titulares y suplentes, y confirma el envío del desafío amistoso privado.
+  6. El sistema valida la elección, envía el desafío al usuario del club seleccionado y avisa que el desafío fue enviado con éxito.
 - **Escenarios excepcionales:**
   5. a) El usuario cancela el envío del desafío amistoso privado:
   - El sistema vuelve a mostrar el club elegido.
+  6. a) El usuario elige menos de 5 jugadores:
+  - El sistema avisa que deben elegirse 6 jugadores, y vuelve a pedir que elija 6 jugadores que tengan comportamiento asignado.
 
 ### Caso de Uso 19: Aceptar desafío amistoso privado
 - **Actor primario:** Usuario desafiado
 - **Precondición:** 
- El usuario está logueado, tiene al menos seis jugadores con un comportamiento asignado cada uno y un desafío amistoso privado pendiente de aceptar.
+ El usuario está logueado, viendo el apartado mi club, y tiene al menos seis jugadores, cada uno con un comportamiento asignado, y un desafío amistoso privado pendiente de aceptar.
 - **Escenario exitoso principal:**
-  1. El usuario abre la sección desafíos pendientes en el menú de usuario.
+  1. El usuario abre la sección desafíos pendientes.
   2. El sistema muestra los desafíos amistosos privados pendientes.
   3. El usuario elige, en un desafío pendiente, la opción aceptar desafío amistoso.
-  4. El sistema registra la aceptación y establece el partido.
+  4. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
+  5. El usuario elige sus titulares y suplentes, y confirma la aceptación del desafío amistoso privado.
+  6. El sistema valida la elección, e ingresa a los usuarios al lobby del partido si están conectados, mostrando la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y suplentes que jugarán el partido, así como sus comportamientos.
 - **Escenarios excepcionales:**
   3. a) El usuario rechaza el desafío amistoso:
   - El sistema elimina el desafío amistoso de la sección desafíos pendientes.
   3. b) El desafio amistoso expiró:
   - El sistema informa que el desafio ya no esta disponible y lo elimina de la seccion pendientes.
+  4. a) El usuario decide cancelar la acción:
+  - El sistema vuelve a la sección de desafíos pendientes sin eliminar el desafío.
 
-  ### Caso de Uso 20: Cancelar desafío amistoso privado enviado
+### Caso de Uso 20: Cancelar desafío amistoso privado enviado
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y tiene un desafío enviado que aun no ha sido aceptado
+- **Precondición:** El usuario está logueado, viendo el apartado mi club, y tiene un desafío enviado que aun no ha sido aceptado
 - **Escenario exitoso principal:**
-  1. El usuario abre la sección desafíos enviados en el menú de usuario.
+  1. El usuario abre la sección desafíos enviados.
   2. El sistema muestra los desafíos amistosos enviados.
   3. El usuario elige, en un desafío enviado, la opción eliminar desafío.
   4. El sistema registra la eliminacion y expira el desafio.
 
- ### Caso de uso 21: Iniciar desafío amistoso público
+### Caso de uso 21: Iniciar desafío amistoso público
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado
-  - logueado 
+- **Precondición:** El usuario está logueado viendo el apartado mi club
 - **Escenario exitoso principal:**
-  1. El usuario abre la sección partido amistoso público en el menú de usuario.
+  1. El usuario abre la sección partido amistoso público.
   2. El sistema muestra un menú con los desafíos públicos disponibles y la opción crear desafío amistoso público.
   3. El usuario elige la opción crear desafío amistoso público.
   4. El sistema solicita confirmar la acción.
   5. El usuario confirma la creación del desafío.
   6. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles. 
+- **Escenarios excepcionales:**
+  5.a) El usuario cancela la creación del desafío:
+  - El sistema regresa al menú con todos los desafíos públicos disponibles.
+
+### Caso de uso 21: aceptar desafío amistoso público
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado viendo el apartado mi club
+- **Escenario exitoso principal:**
+  1. El usuario abre la sección partido amistoso público.
+  2. El sistema muestra un menú con los desafíos públicos disponibles y la opción crear desafío amistoso público.
+  3. El usuario elige la opción aceptar en uno de los desafíos disponibles.
+  4. El sistema solicita elegir 3 jugadores.
+  5. El usuario confirma que quiere aceptar el desafío.
+  6. El sistema crea 
+
 ## Partidos (gestión en vivo)
 
 ### Caso de Uso 22: Gestionar alineación pre-partido
@@ -328,7 +348,7 @@
 - **Precondición:** El usuario está logueado, se encuentra en la ventana temporal previa a un partido de su liga y tiene al menos seis jugadores.
 - **Escenario exitoso principal:**
   1. El usuario ingresa a la sala de preparación del partido.
-  2. El sistema muestra la cuenta regresiva, la plantilla disponible y solicita elegir 3 titulares, 3 suplentes y sus comportamientos.
+  2. El sistema muestra la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y jugadores que jugarán el partido, así como sus comportamientos.
   3. El usuario selecciona los titulares y suplentes, asigna los comportamientos y confirma su alineación.
   4. El sistema valida que el tiempo no haya expirado, registra la alineación y muestra la pantalla de espera.
 - **Escenarios excepcionales:**
