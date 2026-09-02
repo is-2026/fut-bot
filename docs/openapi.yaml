@@ -152,19 +152,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Club'
+  
+  /club/avatar:
     patch:
       tags: [Club]
-      summary: Modificar avatar del club
-      operationId: modificar_avatar
+      summary: Cambiar avatar del club
+      operationId: cambiar_avatar
       requestBody:
         required: true
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ClubAvatarUpdateRequest'
+              $ref: '#/components/schemas/CambiarAvatarInput'
       responses:
         '200':
           description: Avatar actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+
+  /club/formacion:
+    patch:
+      tags: [Club]
+      summary: Cambiar formación default del club
+      operationId: cambiar_formacion_default
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CambiarFormacionDefaultInput'
+      responses:
+        '200':
+          description: Formación default actualizada
           content:
             application/json:
               schema:
@@ -698,7 +719,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PartidoResumen'
+                  $ref: '#/components/schemas/Partido'
 
 # -----------------------------------------------------------------------------
 # Amistosos
@@ -816,7 +837,130 @@ paths:
       responses:
         '200':
           description: Búsqueda cancelada
-  
+
+# -----------------------------------------------------------------------------
+# Partidos
+# -----------------------------------------------------------------------------
+  /partidos/{partido_id}/alineacion:
+    parameters:
+      - name: partido_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Partido]
+      summary: Definir nuevos titulares, sus comportamientos y la formación antes de jugar el partido.
+      description: Ventana de 30 segundos antes de cada partido (liga y amistoso). Los jugadores incluidos deben pertenecer al pool de convocados de la inscripción (liga) o el desafío/búsqueda (amistoso) correspondiente. Si no se completa a tiempo, el sistema asigna automáticamente los titulares/suplentes por defecto enviados al momento de inscribirse, los 3 comportamientos asignados a los jugadores por defecto, y la formación default del club.
+      operationId: definir_alineacion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnviarAlineacionInput'
+      responses:
+        '200':
+          description: Alineación registrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partido'
+        '400':
+          description: Alguno de los jugadores no pertenece al pool de convocados, o no se enviaron exactamente 3 titulares y 3 suplentes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /partidos/{partido_id}/jugadores/{jugador_id}:
+    parameters:
+      - name: partido_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: jugador_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags: [Partido]
+      summary: Cambiar comportamiento en vivo
+      description: Se aplica desde el siguiente tick del simulador.
+      operationId: cambiar_comportamiento_en_vivo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [comportamiento_id]
+              properties:
+                comportamiento_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Comportamiento actualizado
+        '400':
+          description: El comportamiento seleccionado fue eliminado o es inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /partidos/{partido_id}/sustituciones:
+    parameters:
+      - name: partido_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Partido]
+      summary: Programar sustitución
+      description: Se agenda para la próxima ventana disponible (pausa de hidratación o entretiempo). Solo puede haber una sustitución pendiente por club a la vez.
+      operationId: programar_sustitucion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgramarSustitucionInput'
+      responses:
+        '201':
+          description: Sustitución programada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sustitucion'
+        '409':
+          description: Ya se agotaron los 3 cambios permitidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Partido]
+      summary: Desprogramar sustitución
+      description: Cancela la sustitución pendiente del club antes de que se alcance la ventana de cambio.
+      operationId: desprogramar_sustitucion
+      responses:
+        '200':
+          description: Sustitución cancelada
+        '404':
+          description: No hay ninguna sustitución pendiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 # -----------------------------------------------------------------------------
 # Ranking
 # -----------------------------------------------------------------------------
@@ -933,13 +1077,25 @@ components:
           type: string
           format: binary
 
-    CambiarAvatarClubInput:
+    CambiarAvatarInput:
       type: object
       required: [avatar]
       properties:
         avatar:
           type: string
           format: binary
+
+    FormacionPreset:
+      type: string
+      enum: [TRIANGULO, LINEA_OFENSIVA, DEFENSIVO, DIAGONAL] 
+      description: Formaciones predefinidas por el sistema.
+    
+    CambiarFormacionDefaultInput:
+      type: object
+      required: [formacion_default_id]
+      properties:
+        formacion_default_id:
+          $ref: '#/components/schemas/FormacionPreset'
     
     Club:
       type: object
@@ -952,6 +1108,9 @@ components:
         avatar_url:
           type: string
           format: uri
+        formacion_default_id:
+          type: string
+          format: uuid
         usuario_id:
           type: string
           format: uuid
@@ -1012,8 +1171,9 @@ components:
           type: integer
         strength:
           type: integer
-        comportamiento:
-          $ref: '#/components/schemas/Comportamiento' # tal vez esto no va, ahora mismo sería composición de properties.
+        comportamiento_default:
+          type: string
+          format: uuid
     
     # --- Comportamientos ---
     CrearComportamientoInput:
@@ -1217,13 +1377,121 @@ components:
           type: [string, "null"]
           format: uuid
 
-      # --- Partidos ---
-      #PartidoResumen:
-        # por definir, pero sería una versión breve de partido para mostrar en el fixture
-        # ideas: Datos de los partidos Rivales, Fecha y hora, Condición de localía y fecha
-        # no se si meterle los resultados apenas termina, es una complicacion más
+    # --- Partidos ---
+    PartidoEstado:
+      type: string
+      enum: [en_curso, pausado, finalizado]
+
+    Partido:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        club_local_id:
+          type: string
+          format: uuid
+        club_visitante_id:
+          type: string
+          format: uuid
+        estado:
+          $ref: '#/components/schemas/PartidoEstado'
+        resultado_local:
+          type: [integer, "null"]
+        resultado_visitante:
+          type: [integer, "null"]
+
+    AlineacionJugadorTitular:
+      type: object
+      required: [jugador_id, comportamiento_id]
+      properties:
+        jugador_id:
+          type: string
+          format: uuid
+        comportamiento_id:
+          type: string
+          format: uuid
+
+    AlineacionJugadorSuplente:
+      type: object
+      required: [jugador_id, comportamiento_id]
+      properties:
+        jugador_id:
+          type: string
+          format: uuid
+        comportamiento_id:
+          type: string
+          format: uuid
+
+    EnviarAlineacionInput:
+      type: object
+      required: [formacion_id, titulares, suplentes]
+      properties:
+        formacion:
+          $ref: '#/components/schemas/FormacionPreset'
+        titulares:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            type: object
+            required: [jugador_id, comportamiento_id]
+            properties:
+              jugador_id:
+                type: string
+                format: uuid
+              comportamiento_id:
+                type: string
+                format: uuid
+        suplentes:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            type: object
+            required: [jugador_id, comportamiento_id]
+            properties:
+              jugador_id:
+                type: string
+                format: uuid
+              comportamiento_id:
+                type: string
+                format: uuid
+    
+    ProgramarSustitucionInput:
+      type: object
+      required: [jugador_sale_id, jugador_entra_id, comportamiento_sustitucion]
+      properties:
+        jugador_sale_id:
+          type: string
+          format: uuid
+        jugador_entra_id:
+          type: string
+          format: uuid
+        comportamiento_sustitucion:
+          type: string
+          format: uuid
+    
+    Sustitucion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        jugador_sale_id:
+          type: string
+          format: uuid
+        jugador_entra_id:
+          type: string
+          format: uuid
+        ventana:
+          type: string
+          enum: [pausa_hidratacion_1, entretiempo, pausa_hidratacion_2]
+        estado:
+          type: string
+          enum: [pendiente, ejecutada, cancelada]
       
-      # --- Ranking ---
+    # --- Ranking ---
     RankingItem:
       type: object
       properties:
