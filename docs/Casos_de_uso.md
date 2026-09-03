@@ -96,18 +96,32 @@
   6. b) La nueva contraseña coincide con la actual:
   - El sistema informa al usuario que la nueva contraseña no puede ser igual a la actual y solicita ingresar otra contraseña.
 
+### Caso de Uso 5: Cambiar avatar del club/usuario
+- **Actor primario:** Usuario
+- **Precondición:** El usuario esta logueado.
+- **Escenario exitoso principal:**
+  1. El usuario abre el apartado mi cuenta.
+  2. El sistema muestra las acciones que puede realizar el usuario con su cuenta.
+  3. El usuario selecciona la opción cambiar avatar.
+  4. El usuario selecciona un nuevo avatar para modificar y confirma.
+  5. El sistema valida el avatar, actualiza el avatar en la base de datos y refleja el cambio en la vista del usuario.
+- **Escenarios excepcionales:**
+  4.a) El usuario cancela el cambio de avatar:
+    - El sistema vuelve a mostrar el menú de editar perfil.
+  5.a) El archivo no cumple con los requisitos:
+    - El sistema informa error y solicita un nuevo archivo.
 
 ## Jugadores
 
-### Caso de Uso 5: Crear jugador
+### Caso de Uso 6: Crear jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario entra al apartado mi equipo desde el menú principal.
-  2. El sistema muestra los jugadores creados si los hay, y la opción crear nuevo jugador.
+  2. El sistema muestra los jugadores creados si los hay y la opción crear nuevo jugador.
   3. El usuario selecciona la opción crear nuevo jugador.
-  4. El sistema solicita el nombre del jugador y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength), con un valor mínimo de 20 y un valor máximo de 100 para cada uno, y su suma debe ser igual a 300.
-  5. El usuario ingresa el nombre, asigna los valores a los atributos y confirma la creación.
+  4. El sistema solicita el nombre del jugador, número de camiseta y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength), con un valor mínimo de 20 y un valor máximo de 100 para cada uno, y avisa que su suma debe ser igual a 300.
+  5. El usuario ingresa el nombre, el número de camiseta, asigna los valores a los atributos y confirma la creación.
   6. El sistema valida que los atributos sumen exactamente 300, crea al jugador y lo muestra en la plantilla.
 - **Escenarios excepcionales:**
   5. a) El usuario cancela la creación del nuevo jugador:
@@ -117,22 +131,25 @@
   6. b) Algún atributo posee un valor fuera del rango permitido (20-100).
   - El sistema informa que el atributo posee un valor fuera del rango permitido.
 
-### Caso de Uso 6: Ver mis jugadores
+### Caso de Uso 7: Ver mis jugadores
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador previamente creado.
+- **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario entra al apartado mi equipo desde el menú principal.
   2. El sistema muestra los jugadores previamente creados.
+- **Escenarios excepcionales:**
+  2. a) El usuario no posee ningún jugador:
+  - El sistema muestra una plantilla vacía.
 
-### Caso de Uso 7: Asignar comportamiento a un jugador
+### Caso de Uso 8: Asignar comportamiento a un jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador y un comportamiento previamente creado.
 - **Escenario exitoso principal:**
   1. El usuario entra al apartado mi equipo desde el menú principal.
   2. El sistema muestra los jugadores y la opción gestionar formaciones.
-  3. El usuario selecciona el jugador al que quiere asignar comportamiento.
-  4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
-  5. El usuario selecciona la opcion asignar comportamiento.
+  3. El usuario selecciona el jugador al que quiere asignar/reasignar comportamiento.
+  4. El sistema muestra la información del jugador y las acciones realizables.
+  5. El usuario selecciona la opción asignar comportamiento.
   6. El sistema muestra los comportamientos disponibles.
   7. El usuario elige el nuevo comportamiento.
   8. El sistema asigna el comportamiento al jugador.
@@ -140,21 +157,6 @@
   7. a) El usuario cancela la asignación de comportamiento:
   - El sistema vuelve al menú del jugador elegido.
 
-### Caso de Uso 8: Editar comportamiento asignado a un jugador
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador y un comportamiento previamente creado.
-- **Escenario exitoso principal:**
-  1. El usuario entra al apartado mi equipo desde el menú principal.
-  2. El sistema muestra los jugadores y la opción gestionar formaciones.
-  3. El usuario selecciona el jugador al que quiere asignar/reasignar comportamiento.
-  4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
-  5. El usuario selecciona la opcion editar asignacion de comportamiento.
-  6. El sistema muestra los comportamientos disponibles.
-  7. El usuario elige el nuevo comportamiento.
-  8. El sistema efectua el cambio de comportamiento asociado al jugador.
-- **Escenarios excepcionales:**
-  7. a) El usuario cancela el cambio de comportamiento:
-  - El sistema vuelve al menú del jugador elegido.
 
 ### Caso de Uso 9: Eliminar jugador
 - **Actor primario:** Usuario
@@ -163,11 +165,11 @@
   1. El usuario entra al apartado mi equipo desde el menú principal.
   2. El sistema muestra los jugadores y la opción gestionar formaciones.
   3. El usuario selecciona un jugador.
-  4. El sistema muestra un menú con la informacion del jugador y las acciones realizables.
+  4. El sistema muestra la información del jugador y las acciones realizables.
   5. El usuario selecciona la opción eliminar jugador.
-  6. El sistema advierte sobre la acción irreversible y solicita confirmación.
+  6. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, advierte sobre la acción irreversible y solicita confirmación.
   7. El usuario confirma la eliminación.
-  8. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, lo elimina de la base de datos y actualiza la plantilla de jugadores.
+  8. El sistema lo elimina de la base de datos y actualiza la plantilla de jugadores.
 - **Escenarios excepcionales:**
   6. a) El jugador se encuentra disputando ligas o partidos activos:
   - El sistema informa que el jugador está en uso y cancela la operación de eliminación.
@@ -189,10 +191,13 @@
 
 ### Caso de Uso 11: Ver comportamientos
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema y tiene al menos un comportamiento creado.
+- **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario abre el apartado comportamientos desde el menú principal.
   2. El sistema despliega una lista con los comportamientos creados, y las acciones que puede realizar con ellos.
+- **Escenarios excepcionales:**
+  2. a) El usuario no posee ningún comportamiento:
+  - El sistema muestra una lista vacía.
 
 ### Caso de Uso 12: Crear nuevo comportamiento
 - **Actor primario:** Usuario
@@ -316,7 +321,7 @@
   3. El usuario elige, en un desafío enviado, la opción eliminar desafío.
   4. El sistema registra la eliminacion y expira el desafio.
 
-### Caso de uso 21: Buscar desafío amistoso público
+### Caso de uso 21: Buscar partido amistoso público
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado viendo el apartado mi club y tiene al menos seis jugadores, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
@@ -327,16 +332,19 @@
   5. El usuario elige sus titulares y suplentes, y confirma el desafío amistoso público.
   6. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles.  
 - **Escenarios excepcionales:**
-  5.a) El usuario cancela la creación del desafío:
+  5.a) El usuario cancela la búsqueda:
   - El sistema regresa al menú con todos los desafíos públicos disponibles.
 
-### Caso de uso 21: Iniciar desafío amistoso público
+### Caso de uso 21: Iniciar partido amistoso público
 - **Actor primario:** Usuario
 - **Actor secundario:** Oponente
 - **Precondición:** El usuario está logueado y buscando un partido amistoso público.
 - **Escenario exitoso principal:**
   1. Un oponente selecciona la opción de buscar partido amistoso público.
   2. El sistema encuentra oponente para el usuario, y crea una instancia de partido amistoso para ambos. Ingresa a ambos al lobby del partido si están conectados, mostrando la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y suplentes que jugarán el partido, así como sus comportamientos y formaciones.
+
+### Caso de uso 22: Cancelar busqueda
+- **Actor primario:** Usuario
 
   
 
