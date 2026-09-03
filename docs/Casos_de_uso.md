@@ -106,10 +106,10 @@
   4. El usuario selecciona un nuevo avatar para modificar y confirma.
   5. El sistema valida el avatar, actualiza el avatar en la base de datos y refleja el cambio en la vista del usuario.
 - **Escenarios excepcionales:**
-  4.a) El usuario cancela el cambio de avatar:
-    - El sistema vuelve a mostrar el menú de editar perfil.
-  5.a) El archivo no cumple con los requisitos:
-    - El sistema informa error y solicita un nuevo archivo.
+  4. a) El usuario cancela el cambio de avatar:
+  - El sistema vuelve a mostrar el menú de editar perfil.
+  5. a) El archivo no cumple con los requisitos:
+  - El sistema informa error y solicita un nuevo archivo.
 
 ## Jugadores
 
