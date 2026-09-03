@@ -324,25 +324,29 @@
 
 ### Caso de Uso 20: Cancelar desafío amistoso privado enviado
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, viendo el apartado mi club, y tiene un desafío enviado que aun no ha sido aceptado.
+- **Precondición:** El usuario está logueado,  y tiene un desafío enviado que aún no ha sido aceptado.
 - **Escenario exitoso principal:**
-  1. El usuario abre la sección desafíos enviados.
-  2. El sistema muestra los desafíos amistosos enviados.
-  3. El usuario elige, en un desafío enviado, la opción eliminar desafío.
-  4. El sistema registra la eliminacion y expira el desafio.
+  1. El usuario abre el apartado jugar.
+  2. El sistema muestra las opciones de ver ligas, partido amistoso público, desafíos pendientes y enviados.
+  3. El usuario abre la sección desafíos enviados.
+  4. El sistema muestra los desafíos amistosos enviados.
+  5. El usuario elige, en un desafío enviado, la opción eliminar desafío.
+  6. El sistema registra la eliminación y expira el desafío.
 
 ### Caso de uso 21: Buscar partido amistoso público
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado viendo el apartado mi club y tiene al menos seis jugadores, cada uno con un comportamiento asignado.
+- **Precondición:** El usuario está logueado viendo el apartado mi club y tiene al menos 6 jugadores, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
-  1. El usuario abre la sección partido amistoso público.
-  2. El sistema muestra un menú con las opciones buscar partido.
-  3. El usuario elige la opción crear desafío amistoso público.
-  4. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
-  5. El usuario elige sus titulares y suplentes, y confirma el desafío amistoso público.
-  6. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles.  
+  1. El usuario abre el apartado jugar.
+  2. El sistema muestra las opciones de ver ligas, partido amistoso público, desafíos pendientes y enviados.
+  3. El usuario abre la sección partido amistoso público.
+  4. El sistema muestra un menú con las opciones buscar partido.
+  5. El usuario elige la opción crear desafío amistoso público.
+  6. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
+  7. El usuario elige sus titulares y suplentes, y confirma el desafío amistoso público.
+  8. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles.
 - **Escenarios excepcionales:**
-  5.a) El usuario cancela la búsqueda:
+  7. a) El usuario cancela el inicio de la búsqueda:
   - El sistema regresa al menú con todos los desafíos públicos disponibles.
 
 ### Caso de uso 21: Iniciar partido amistoso público
@@ -351,132 +355,143 @@
 - **Precondición:** El usuario está logueado y buscando un partido amistoso público.
 - **Escenario exitoso principal:**
   1. Un oponente selecciona la opción de buscar partido amistoso público.
-  2. El sistema encuentra oponente para el usuario, y crea una instancia de partido amistoso para ambos. Ingresa a ambos al lobby del partido si están conectados, mostrando la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y suplentes que jugarán el partido, así como sus comportamientos y formaciones.
+  2. El sistema empareja este oponente contra el usuario, y crea una instancia de partido amistoso para ambos. Los ingresa al lobby del partido si están conectados, mostrando la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y suplentes que jugarán el partido, así como sus comportamientos y formaciones.
 
 ### Caso de uso 22: Cancelar busqueda
 - **Actor primario:** Usuario
-
-  
+- **Precondición:** El usuario está logueado y está buscando partido amistoso público.
+- **Escenario exitoso principal:**
+  1. El usuario cancela la búsqueda de partido amistoso público.
+  2. El sistema frena el emparejamiento y devuelve al usuario a la sección partido amistoso público.
 
 ## Partidos (gestión en vivo)
 
 ### Caso de Uso 22: Gestionar alineación pre-partido
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, se encuentra en la ventana temporal previa a un partido de su liga y tiene al menos seis jugadores.
+- **Precondición:** El usuario está logueado, se encuentra en la ventana temporal previa a un partido de su liga y convocó previamente sus 6 jugadores con comportamiento asociado.
 - **Escenario exitoso principal:**
   1. El usuario ingresa a la sala de preparación del partido.
-  2. El sistema muestra la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y jugadores que jugarán el partido, así como sus comportamientos.
+  2. El sistema muestra la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y jugadores que jugarán el partido, así como sus comportamientos y formación.
   3. El usuario selecciona los titulares y suplentes, asigna los comportamientos y confirma su alineación.
-  4. El sistema valida que el tiempo no haya expirado, registra la alineación y muestra la pantalla de espera.
-- **Escenarios excepcionales:**
-  4. a) El tiempo de la cuenta regresiva expiró antes de la confirmación:
-  - El sistema selecciona automáticamente a los primeros 3 jugadores del club como titulares, y los siguientes 3 como suplentes, les asigna sus comportamientos por defecto y registra la alineación.
+  4. El sistema registra la alineación y muestra la pantalla de espera. <!-- El menú para modificar elementos se cierra al terminar el timer -->
 
 ### Caso de Uso 23: Programar sustitución de jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opción de realizar un cambio táctico.
-  2. El sistema muestra los jugadores titulares, los suplentes disponibles y solicita indicar quién sale y quién entra.
-  3. El usuario selecciona al jugador saliente, al jugador entrante y confirma la sustitución.
-  4. El sistema valida que el usuario disponga de cambios restantes (máximo 3) y registra la solicitud (actualizando los cambios restantes) para ejecutarse en la próxima pausa reglamentaria (hidratación o entretiempo).
+  2. El sistema valida que queden cambios, muestra los jugadores titulares, los suplentes disponibles y solicita indicar quién sale y quién entra y un cambio opcional de comportamiento para el nuevo jugador.
+  3. El usuario selecciona al jugador saliente, al jugador entrante, pudiendo llegar a elegir nuevo comportamiento para el entrante, y confirma la sustitución.
+  4. El sistema registra la solicitud, la prepara para ejecutarse en la próxima pausa reglamentaria (hidratación o entretiempo).
 - **Escenarios excepcionales:**
-  4. a) El usuario ya agotó sus 3 cambios permitidos:
+  2. a) El usuario ya agotó sus 3 cambios permitidos:
   - El sistema informa que no quedan cambios disponibles y deniega la operación.
+  2. b) Hay una solicitud de cambio previo:
+  - El sistema reemplaza la solicitud previa por la actual.
+  3. a) El usuario cancela la sustitución:
+  - El sistema cierra la ventana de sustitución y vuelve a mostrar el partido.
 
 ### Caso de Uso 24: Cancelar sustitución de jugador
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene al menos una solicitud de sustitución registrada.
+- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene una solicitud de sustitución registrada.
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opción de cancelar un cambio táctico.
-  2. El sistema informa todos los cambios registrados a ejecutarse en la próxima pausa y solicita seleccionar aquel a ser cancelado.
-  3. El usuario selecciona el cambio, el sistema cancela la solicitud de sustitución y actualiza los cambios restantes.
+  2. El sistema cancela el cambio.
 
 ### Caso de Uso 25: Cambiar comportamiento durante el partido
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club y tiene más de un comportamiento creado.
+- **Precondición:** El usuario está logueado, visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona a uno de sus jugadores titulares y elige la opción de cambiar su comportamiento.
+  1. El usuario selecciona a uno de sus jugadores titulares y elige la opción cambiar comportamiento.
   2. El sistema muestra la lista de comportamientos guardados por el usuario y solicita elegir uno.
   3. El usuario selecciona el nuevo comportamiento y confirma el cambio.
-  4. El sistema valida la existencia del comportamiento, lo asigna al jugador y actualiza sus acciones para el siguiente "tick" del simulador.
-- **Escenarios excepcionales:**
-  4. a) El comportamiento seleccionado fue eliminado o es inválido:
-  - El sistema informa el error y mantiene el comportamiento anterior del jugador.
+  4. El sistema lo asigna al jugador y actualiza sus acciones para el siguiente "tick" del simulador.
 
 ### Caso de Uso 26: Observar partido como espectador
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, pertenece a la liga y hay al menos un partido en curso en la liga
+- **Precondición:** El usuario está logueado, está viendo una liga a la que pertenece y hay al menos un partido en curso en la misma
 - **Escenario exitoso principal:**
   1. El usuario selecciona la opción de ver partidos en curso.
   2. El sistema muestra los partidos que se están jugando en vivo.
-  3. El usuario selecciona el partido que quiere observar
+  3. El usuario selecciona el partido que quiere observar.
   4. El sistema muestra en tiempo real la interfaz 2D de la cancha con sus jugadores y las habilidades de los mismos.
 
 ### Caso de Uso 27: Abandonar partido como espectador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido como espectador.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de abandonar el partido como espectador.
+  1. El usuario selecciona la opción dejar de observar.
   2. El sistema actualiza la vista y regresa al apartado de la liga correspondiente al partido que se estaba visualizando.
 
 ## Ligas
 
 ### Caso de Uso 28: Crear liga
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema y tiene al menos seis jugadores con un comportamiento asignado cada uno.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos 6 jugadores con un comportamiento asignado cada uno.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa al apartado ligas desde el menú principal.
-  2. El sistema muestra el apartado de ligas.
-  3. El usuario selecciona la opción de crear una nueva liga.
-  4. El sistema solicita nombre, contraseña, cantidad máxima de clubes, duración de los partidos y privacidad, así como seleccionar tres jugadores titulares y tres jugadores suplentes, cada uno con un comportamiento asignado.
+  1. El usuario ingresa al apartado ligas desde el menú jugar.
+  2. El sistema muestra el apartado ligas.
+  3. El usuario selecciona la opción crear liga.
+  4. El sistema solicita nombre, contraseña, cantidad máxima de clubes, duración de los partidos, así como seleccionar 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado.
   5. El usuario ingresa los datos solicitados y confirma la creación.
   6. El sistema valida los datos, crea la liga en estado "No iniciada" y anota al club del usuario creador en ella.
 - **Escenarios excepcionales:**
+  5. a) El usuario cancela la creación de la liga:
+  - El sistema regresa al apartado ligas.
   6. a) El usuario omite campos obligatorios:
   - El sistema informa los campos faltantes y solicita completarlos para crear la liga.
+  6. b) El usuario elige menos de 6 jugadores:
+  - El sistema informa que deben elegirse 6 jugadores para participar en la liga y solicita elegir los jugadores faltantes.
 
 ### Caso de Uso 29: Ver ligas disponibles
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado exitosamente.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa al apartado ligas desde el menú principal.
+  1. El usuario ingresa al apartado ligas desde el menú jugar.
   2. El sistema muestra el apartado de ligas.
-  3. El usuario selecciona la opción de buscar una liga.
+  3. El usuario selecciona la opción buscar liga.
   4. El sistema muestra las ligas no iniciadas.
 
 ### Caso de Uso 30: Unirse a liga privada
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema y tiene al menos seis jugadores con un comportamiento asignado cada uno.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos 6 jugadores con un comportamiento asignado cada uno.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa al apartado ligas desde el menú principal.
-  2. El sistema muestra el apartado de ligas.
-  3. El usuario selecciona unirse a una liga.
-  4. El sistema muestra ligas recomendadas y disponibles.
-  5. El usuario selecciona una liga en estado "No iniciada" y elige unirse.
-  6. El sistema solicita la contraseña de acceso a la liga.
-  7. El usuario ingresa la contraseña y confirma.
-  8. El sistema valida la contraseña y solicita seleccionar tres jugadores titulares y tres jugadores suplentes, cada uno con un comportamiento asignado.
-  9. El usuario selecciona tres jugadores titulares y tres jugadores suplentes con un comportamiento asignado cada uno, y confirma la elección.
-  10. El sistema inscribe al usuario en la liga y lo dirige hacia ella.
+  1. El usuario ingresa al apartado ligas desde el menú jugar.
+  2. El sistema muestra el apartado ligas.
+  3. El usuario selecciona la opción buscar liga.
+  4. El sistema muestra las ligas disponibles.
+  5. El usuario selecciona unirse a una liga privada.
+  8. El sistema solicita la contraseña de acceso a la liga.
+  9. El usuario ingresa la contraseña y confirma.
+  10. El sistema valida la contraseña y solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, para confirmar la elección.
+  11. El usuario selecciona 3 jugadores titulares y 3 jugadores suplentes con un comportamiento asignado cada uno, y confirma la elección.
+  12. El sistema valida la elección, inscribe al usuario en la liga y lo dirige hacia ella.
 - **Escenarios excepcionales:**
-  8. a) La contraseña ingresada por el usuario es incorrecta.
+  10. a) La contraseña ingresada por el usuario es incorrecta.
   - El sistema informa que la contraseña es incorrecta y solicita ingresarla nuevamente.
+  11. a) El usuario cancela la confirmación para unirse:
+  - El sistema vuelve a mostrar las ligas disponibles.
+  12. a) El usuario elige menos de 6 jugadores:
+  - El sistema informa que deben elegirse 6 jugadores para participar en la liga y solicita elegir los jugadores faltantes.
 
 ### Caso de Uso 31: Unirse a liga pública
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado en el sistema y tiene al menos seis jugadores con un comportamiento asignado cada uno.
+- **Precondición:** El usuario está logueado en el sistema y tiene al menos 6 jugadores con un comportamiento asignado cada uno.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa al apartado ligas desde el menú principal.
+  1. El usuario ingresa al apartado ligas desde el menú jugar.
   2. El sistema muestra el apartado de ligas.
-  3. El usuario selecciona unirse a una ligas.
-  4. El sistema muestra ligas recomendadas y disponibles.
-  5. El usuario selecciona una liga en estado "No iniciada" y elige unirse.
-  8. El sistema solicita seleccionar tres jugadores titulares y tres jugadores suplentes, cada uno con un comportamiento asignado.
-  9. El usuario selecciona tres jugadores titulares y tres jugadores suplentes con un comportamiento asignado cada uno, y confirma la elección.
-  10. El sistema inscribe al usuario en la liga y lo dirige hacia ella.
-  7. El usuario selecciona tres jugadores titulares y tres jugadores suplentes y confirma la inscripción.
-  8. El sistema inscribe al usuario en la liga y lo dirige hacia la liga.
+  3. El usuario selecciona la opción buscar liga.
+  4. El sistema muestra las ligas disponibles.
+  3. El usuario selecciona unirse a una liga pública.
+  8. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, para confirmar la elección.
+  9. El usuario selecciona 3 jugadores titulares y 3 jugadores suplentes con un comportamiento asignado cada uno, y confirma la elección.
+  10. El sistema valida la elección, inscribe al usuario en la liga y lo dirige hacia ella.
+- **Escenarios excepcionales:**
+  9. a) El usuario cancela la confirmación para unirse:
+  - El sistema vuelve a mostrar las ligas disponibles.
+  10. a) El usuario eligió menos de 6 jugadores:
+  - El sistema informa que deben elegirse 6 jugadores para participar en la liga y solicita elegir los jugadores faltantes.
+
 
 ### Caso de Uso 32: Abandonar liga
 - **Actor primario:** Usuario
