@@ -49,7 +49,7 @@
 - **Actor primario:** Usuario visitante
 - **Precondición:** El usuario se encuentra en la pantalla de ingreso del sistema.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de registrarse.
+  1. El usuario selecciona registrarse.
   2. El sistema solicita ingresar nombre de usuario, email, contraseña, avatar y el nombre del club.
   3. El usuario ingresa los datos solicitados y confirma la operación.
   4. El sistema valida los datos y crea la nueva cuenta.
@@ -59,9 +59,9 @@
 
 ### Caso de Uso 2: Iniciar sesión
 - **Actor primario:** Usuario
-- **Precondición:** El usuario se registró previamente.
+- **Precondición:** El usuario se registró previamente y no está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción de iniciar sesión en la pantalla de ingreso del sistema.
+  1. El usuario selecciona iniciar sesión .
   2. El sistema solicita ingresar email y contraseña.
   3. El usuario ingresa los datos solicitados y confirma la operación.
   4. El sistema valida los datos e inicia la sesión.
@@ -75,40 +75,32 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el apartado mi cuenta y selecciona la opción de cerrar sesión.
+  1. El usuario selecciona cerrar sesión.
   2. El sistema cierra la sesión del usuario y actualiza la vista al apartado de inicio de sesión.
 
 ### Caso de Uso 4: Cambiar contraseña
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el apartado mi cuenta.
-  2. El sistema muestra las acciones que puede realizar el usuario con su cuenta.
-  3. El usuario selecciona la opción cambiar contraseña.
-  4. El sistema solicita la contraseña actual y la nueva contraseña.
-  5. El usuario ingresa la información solicitada.
-  6. El sistema valida las contraseñas ingresadas y las actualiza en la base de datos.
+  1. El usuario selecciona cambiar contraseña.
+  2. El sistema solicita la contraseña actual y la nueva contraseña.
+  3. El usuario ingresa la información solicitada.
+  4. El sistema valida las contraseñas ingresadas y las actualiza en la base de datos.
 - **Escenarios excepcionales:**
-  5. a) El usuario cancela el cambio de contraseña:
-  - El sistema vuelve a mostrar el menú de editar perfil.
-  6. a) La contraseña actual no es correcta:
+  4. a) La contraseña actual no es correcta:
   - El sistema informa al usuario que la contraseña actual proporcionada es incorrecta y solicita reingresar la contraseña.
-  6. b) La nueva contraseña coincide con la actual:
+  4. b) La nueva contraseña coincide con la actual:
   - El sistema informa al usuario que la nueva contraseña no puede ser igual a la actual y solicita ingresar otra contraseña.
 
-### Caso de Uso 5: Cambiar avatar del club/usuario
+### Caso de Uso 5: Cambiar avatar del club
 - **Actor primario:** Usuario
 - **Precondición:** El usuario esta logueado.
-- **Escenario exitoso principal:**
-  1. El usuario abre el apartado mi cuenta.
-  2. El sistema muestra las acciones que puede realizar el usuario con su cuenta.
-  3. El usuario selecciona la opción cambiar avatar.
-  4. El usuario selecciona un nuevo avatar para modificar y confirma.
-  5. El sistema valida el avatar, actualiza el avatar en la base de datos y refleja el cambio en la vista del usuario.
+  1. El usuario selecciona cambiar avatar del club.
+  2. El sistema solicita elegir la nueva imagen para el avatar. 
+  3. El usuario selecciona un nuevo avatar y confirma el cambio.
+  4. El sistema valida el avatar, lo actualiza en la base de datos y refleja el cambio en la vista del usuario.
 - **Escenarios excepcionales:**
-  4. a) El usuario cancela el cambio de avatar:
-  - El sistema vuelve a mostrar el menú de editar perfil.
-  5. a) El archivo no cumple con los requisitos:
+  4. a) El archivo no cumple con los requisitos:
   - El sistema informa error y solicita un nuevo archivo.
 
 ## Jugadores
@@ -117,25 +109,21 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario entra al apartado mi equipo desde el menú principal.
-  2. El sistema muestra los jugadores creados si los hay y la opción crear nuevo jugador.
-  3. El usuario selecciona la opción crear nuevo jugador.
-  4. El sistema solicita el nombre del jugador, número de camiseta y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength), con un valor mínimo de 20 y un valor máximo de 100 para cada uno, y avisa que su suma debe ser igual a 300.
-  5. El usuario ingresa el nombre, el número de camiseta, asigna los valores a los atributos y confirma la creación.
-  6. El sistema valida que los atributos sumen exactamente 300, crea al jugador y lo muestra en la plantilla.
+  1. El usuario selecciona crear nuevo jugador.
+  2. El sistema solicita el nombre del jugador, número de camiseta y los valores para los atributos PACSS (Power, Agility, Control, Speed, Strength), indicando que hay un valor mínimo y un valor máximo permitido para cada uno, y que que su suma debe ser igual a un valor determinado.
+  3. El usuario ingresa la información solicitada y confirma la creación.
+  4. El sistema valida que los atributos sumen exactamente el valor determinado, crea al jugador y lo muestra en la plantilla.
 - **Escenarios excepcionales:**
-  5. a) El usuario cancela la creación del nuevo jugador:
-  - El sistema vuelve a mostrar el menú de jugadores.
-  6. a) La suma total de los atributos PACSS es distinta a 300.
-  - El sistema informa que la suma total de los atributos de un jugador debe ser de 300.
-  6. b) Algún atributo posee un valor fuera del rango permitido (20-100).
-  - El sistema informa que el atributo posee un valor fuera del rango permitido.
+  6. a) La suma total de los atributos PACSS es distinta al valor determinado.
+  - El sistema informa que la suma total de los atributos de un jugador debe ser igual al valor determinado y solicita modificar los valores de los atributos.
+  6. b) Algún atributo posee un valor fuera del rango permitido.
+  - El sistema informa que el atributo posee un valor fuera del rango permitido, y solicita modificarlo.
 
 ### Caso de Uso 7: Ver mis jugadores
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario entra al apartado mi equipo desde el menú principal.
+  1. El usuario selecciona visualizar jugadores.
   2. El sistema muestra los jugadores previamente creados.
 - **Escenarios excepcionales:**
   2. a) El usuario no posee ningún jugador:
@@ -145,47 +133,31 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador y un comportamiento previamente creado.
 - **Escenario exitoso principal:**
-  1. El usuario entra al apartado mi equipo desde el menú principal.
-  2. El sistema muestra los jugadores y la opción gestionar formaciones.
-  3. El usuario selecciona el jugador al que quiere asignar/reasignar comportamiento.
-  4. El sistema muestra la información del jugador y las acciones realizables.
-  5. El usuario selecciona la opción asignar comportamiento.
-  6. El sistema muestra los comportamientos disponibles.
-  7. El usuario elige el nuevo comportamiento.
-  8. El sistema asigna el comportamiento al jugador.
-- **Escenarios excepcionales:**
-  7. a) El usuario cancela la asignación de comportamiento:
-  - El sistema vuelve al menú del jugador elegido.
-
+  1. El usuario selecciona asignar/reasignar comportamiento a un jugador.
+  2. El sistema muestra los comportamientos disponibles.
+  3. El usuario selecciona el nuevo comportamiento.
+  4. El sistema asigna/reasigna el comportamiento al jugador.
 
 ### Caso de Uso 9: Eliminar jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema y tiene al menos un jugador previamente creado.
 - **Escenario exitoso principal:**
-  1. El usuario entra al apartado mi equipo desde el menú principal.
-  2. El sistema muestra los jugadores y la opción gestionar formaciones.
-  3. El usuario selecciona un jugador.
-  4. El sistema muestra la información del jugador y las acciones realizables.
-  5. El usuario selecciona la opción eliminar jugador.
-  6. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, advierte sobre la acción irreversible y solicita confirmación.
-  7. El usuario confirma la eliminación.
-  8. El sistema lo elimina de la base de datos y actualiza la plantilla de jugadores.
+  1. El usuario selecciona eliminar jugador.
+  2. El sistema valida que el jugador no esté inscripto en una liga activa ni jugando un partido, advierte sobre la acción irreversible y solicita confirmación.
+  3. El usuario confirma la eliminación.
+  4. El sistema lo elimina de la base de datos y actualiza la plantilla de jugadores.
 - **Escenarios excepcionales:**
-  6. a) El jugador se encuentra disputando ligas o partidos activos:
+  2. a) El jugador se encuentra disputando ligas o partidos activos:
   - El sistema informa que el jugador está en uso y cancela la operación de eliminación.
-  7. a) El usuario cancela la eliminación del jugador:
-  - El sistema vuelve a mostrar el menú del jugador.
 
 ### Caso de Uso 10: Elegir nueva formación 
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario entra al apartado mi equipo desde el menú principal.
-  2. El sistema muestra los jugadores y la opción gestionar formaciones.
-  3. El usuario selecciona la opción gestionar formaciones.
-  4. El sistema muestra todas las formaciones, indicando cuál está equipada, y la opción equipar.
-  5. El usuario elige una formación distinta de la que tiene equipada y selecciona la opción equipar.
-  6. El sistema desequipa la formación anterior y equipa la formación elegida.
+  1. El usuario selecciona gestionar formaciones.
+  2. El sistema muestra todas las formaciones, indicando cuál está equipada, y la opción equipar.
+  3. El usuario selecciona una formación distinta de la que tiene equipada y selecciona la opción equipar.
+  4. El sistema desequipa la formación anterior y equipa la formación elegida.
 
 ## Comportamientos
 
@@ -497,7 +469,7 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y se encuentra inscripto en una liga.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de abandonar.
+  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción abandonar.
   2. El sistema solicita confirmación para darse de baja.
   3. El usuario confirma la operación.
   4. El sistema valida que la liga se encuentre en estado "No iniciada", retira al club del torneo y actualiza la vista de ligas del usuario.
@@ -507,42 +479,59 @@
 
 ### Caso de Uso 33: Cancelar liga
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y creó una liga
+- **Precondición:** El usuario está logueado y creó una liga, y está en el apartado ligas
 - **Escenario exitoso principal:**
-  1. El usuario ingresa al apartado ligas desde el menú principal.
+  1. El usuario ingresa a la sección mis ligas.
   2. El sistema muestra las ligas asociadas al usuario.
-  3. El usuario selecciona la liga creada por él y elige la opción de cancelar liga.
+  3. El usuario selecciona una de las ligas creadas por él y elige la opción de cancelar liga.
   4. El sistema solicita confirmación para cancelar la liga.
   5. El usuario confirma la cancelación.
-  6. El sistema informa a los usuarios participantes que la liga fue cancelada y los retira de la misma.
+  6. El sistema informa a los usuarios participantes que la liga fue cancelada, los retira de la misma y elimina la liga de la base de datos.
 - **Escenarios excepcionales:**
+  5. a) El usuario cancela la confirmación:
+  - El sistem avuelve a mostrar las ligas creadas por el usuario.
   6. a) La liga comenzó o está en curso:
   - El sistema informa que no es posible eliminar una liga ya iniciada y bloquea la acción.
 
 ### Caso de Uso 34: Iniciar liga
 - **Actor primario:** Usuario
-- **Precondición:** El usuario es dueño de la liga y la liga posee más de 3 jugadores
+- **Precondición:** El usuario es dueño de al menos una liga, y está viendo sus ligas creadas.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de la liga y selecciona la opción de iniciar.
-  2. El sistema solicita confirmación para iniciar la liga informando la cantidad de participantes actuales.
+  1. El usuario ingresa a los detalles de una liga y selecciona la opción iniciar.
+  2. El sistema valida la elección, solicita confirmación para iniciar la liga informando la cantidad de participantes actuales.
   3. El usuario confirma la operación.
-  4. El sistema cambia la liga de estado de "No iniciada" a "Iniciada", calcula el fixture con el orden de los partidos a realizarse, se actualiza la vista de ligas de los participantes.
+  4. El sistema cambia el estado de la liga a "Iniciada", calcula el fixture con el orden de los partidos a realizarse, y se actualiza la liga en la base de datos.
+- **Escenarios excepcionales:**
+  2. a) La liga tiene menos de 3 jugadores:
+  - El sistema informa que la cantidad de participantes es insuficiente y cancela la operación, volviendo a mostrar la lista de ligas creadas.
+  3. a) El usuario cancela la confirmación:
+  - El sistema vuelve a mostrar las ligas creadas por el usuario.
 
-### Caso de Uso 35: Consultar fixture y tabla de posiciones
+### Caso de Uso 35: Consultar fixture
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y es miembro de una liga.
+- **Precondición:** El usuario está logueado y es miembro de al menos una liga.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de consultar fixture y tabla de posiciones.
-  2. El sistema valida que la liga esté iniciada, solicita la información y actualiza la vista del usuario.
+  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de consultar fixture.
+  2. El sistema valida que la liga esté iniciada, solicita la información y actualiza la vista del usuario al fixture de la misma.
 - **Escenarios excepcionales:**
   2. a) La liga no comenzó:
-  - El sistema informa que no es posible visualizar el fixture y la tabla de posiciones de una competencia no iniciada y bloquea la acción.
+  - El sistema informa que no es posible visualizar el fixture de una competencia no iniciada y bloquea la acción.
+
+### Caso de Uso 36: Consultar tabla de puntos
+- **Actor primario:** Usuario
+- **Precondición:** El usuario está logueado y es miembro de al menos una liga.
+- **Escenario exitoso principal:**
+  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de consultar tabla de puntos.
+  2. El sistema valida que la liga esté iniciada, solicita la información y actualiza la vista del usuario a la tabla de puntos de la misma.
+- **Escenarios excepcionales:**
+  2. a) La liga no comenzó:
+  - El sistema informa que no es posible visualizar la tabla de puntos de una competencia no iniciada y bloquea la acción.
 
 ## Ranking
 
-### Caso de Uso 36: Consultar ranking global
+### Caso de Uso 37: Consultar ranking global
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción Ranking global.
-  2. El sistema solicita la información y actualiza la vista del usuario.
+  1. El usuario selecciona la opción ranking.
+  2. El sistema solicita la información y actualiza la vista del usuario mostrando el ranking de clubes.
