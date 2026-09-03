@@ -165,63 +165,51 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario abre el apartado comportamientos desde el menú principal.
-  2. El sistema despliega una lista con los comportamientos creados, y las acciones que puede realizar con ellos.
-- **Escenarios excepcionales:**
-  2. a) El usuario no posee ningún comportamiento:
-  - El sistema muestra una lista vacía.
+  1. El usuario selecciona ver comportamientos.
+  2. El sistema muestra los comportamientos creados por el usuario.
+
 
 ### Caso de Uso 12: Crear nuevo comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
-  1. El usuario abre el apartado comportamientos desde el menú principal.
-  2. El sistema despliega una lista con los comportamientos creados si los hay, y las acciones que puede realizar con ellos.
-  3. El usuario selecciona la opción crear nuevo comportamiento.
-  4. El sistema abre una ventana que presenta el editor de código integrado, una casilla para agregar un nombre descriptivo del nuevo comportamiento y las opciones guardar y cancelar.
-  5. El usuario escribe el código del nuevo comportamiento, ingresa un nombre para el mismo y solicita guardarlo.
-  6. El sistema valida el código (sintaxis y seguridad), guarda el comportamiento y muestra un mensaje de éxito.
+  1. El usuario selecciona crear nuevo comportamiento.
+  2. El sistema solicita escribir código para el comportamiento así como un nombre descriptivo.
+  3. El usuario escribe el código del nuevo comportamiento, ingresa un nombre para el mismo y confirma la creación.
+  4. El sistema valida el código (sintaxis y seguridad), y guarda el comportamiento.
 - **Escenarios excepcionales:**
-  5. a) No se ingresa ningún nombre:
-  - El sistema informa al usuario que la casilla de nombre está vacía y debe escribir un nombre.
-  5. b) Se ingresa un nombre ya existente:
+  4. a) No se ingresa ningún nombre:
+  - El sistema informa al usuario que la casilla de nombre está vacía y solicita escribirlo.
+  4. b) Se ingresa un nombre ya existente:
   - El sistema informa al usuario que ese nombre de comportamiento ya existe, y solicita cambiarlo.
-  6. a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
+  4. a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
   - El sistema informa los errores detectados en el editor y solicita corregirlos.
 
 ### Caso de Uso 13: Editar comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y tiene al menos un comportamiento previamente creado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el apartado comportamientos desde el menú principal.
-  2. El sistema despliega una lista con los comportamientos creados, y las acciones que puede realizar con ellos.
-  3. El usuario selecciona el comportamiento que desea cambiar y elige la opción editar.
-  4. El sistema verifica que el comportamiento no esté en uso y abre la interfaz de edición del comportamiento.
-  5. El usuario edita los datos del comportamiento y confirma la edición.
-  6. El sistema verifica que el comportamiento sea válido y lo actualiza en la base de datos.
+  1. El usuario selecciona editar comportamiento.
+  2. El sistema verifica que el comportamiento no esté en uso y permite su edición.
+  3. El usuario edita los datos del comportamiento y confirma la edición.
+  4. El sistema valida el comportamiento y lo actualiza en la base de datos.
 - **Escenarios excepcionales:**
-  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  2. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
   - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible editarlo.
-  5. a) El usuario cancela la edición del comportamiento:
-  - El sistema descarta los cambios y vuelve al comportamiento elegido.
-  6. a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
+  4. a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
   - El sistema informa los errores detectados en el editor y solicita corregirlos.
 
 ### Caso de Uso 14: Eliminar comportamiento
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y tiene al menos un comportamiento previamente creado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el apartado comportamientos desde el menú principal.
-  2. El sistema despliega una lista con los comportamientos creados y las acciones que puede realizar con ellos.
-  3. El usuario selecciona el comportamiento que desea borrar y elige la opción eliminar.
-  4. El sistema verifica que el comportamiento no esté en uso y pide confirmación para eliminar el comportamiento.
-  5. El usuario confirma la eliminación del comportamiento.
-  6. El sistema lo elimina y desasocia el comportamiento de los jugadores que lo tienen guardado.
+  1. El usuario selecciona eliminar comportamiento.
+  2. El sistema verifica que el comportamiento no esté en uso y solicita confirmación para eliminar el comportamiento.
+  3. El usuario confirma la eliminación del comportamiento.
+  4. El sistema elimina el comportamiento elegido. <!-- y lo desasocia de los jugadores que lo tienen asociado -->
 - **Escenarios excepcionales:**
-  4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
+  2. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
   - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible eliminarlo.
-  5. a) El usuario cancela la eliminación del comportamiento:
-  - El sistema vuelve a mostrar el comportamiento elegido.
 
 ## Club y perfil
 
@@ -229,112 +217,78 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado ranking.
-  2. El sistema muestra el ranking de clubes.
-  3. El usuario selecciona el club de interés.
-  4. El sistema recolecta la información del usuario correspondiente y actualiza a la vista del club.
+  1. El usuario selecciona ver club.
+  2. El sistema muestra la vista del club elegido.
 
 ### Caso de Uso 16: Ver historial de mi club
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado mi cuenta.
-  2. El sistema muestra las opciones de mi cuenta. 
-  3. El usuario selecciona la sección historial.
-  4. El sistema recolecta la información, actualiza la vista y muestra el historial.
+  1. El usuario selecciona el historial.
+  2. El sistema actualiza la vista y muestra el historial.
 
-### Caso de Uso 17: Ver historial compartido (revisar caso excepcional)
+### Caso de Uso 17: Ver historial compartido <!-- revisar caso excepcional)-->
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado ranking.
-  2. El sistema muestra el ranking de clubes.
-  3. El usuario selecciona el club de interés.
-  4. El sistema muestra la vista del club elegido.
-  5. El usuario selecciona el apartado historial compartido con el club.
-  6. El sistema recolecta la información, actualiza la vista y muestra el historial compartido.
+  1. El usuario selecciona ver historial compartido con el club.
+  2. El sistema actualiza la vista y muestra el historial compartido.
 - **Escenarios excepcionales:**
-  5. a) No se puede visualizar el historial compartido de tu propio club:
+  2. a) No se puede visualizar el historial compartido de tu propio club:
   - El sistema informa la imposibilidad y se rechaza la operación.
 
 ## Partidos amistosos
 
-### Caso de Uso 18: Enviar desafío amistoso privado
+### Caso de Uso 18: Enviar desafío amistoso
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y tiene al menos seis jugadores, cada uno con un comportamiento asignado.
+- **Precondición:** El usuario está logueado y tiene al menos la mínima cantidad de jugadores para jugar un partido, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el ranking desde el menú principal.
-  2. El sistema muestra los clubes en el ranking.
-  3. El usuario selecciona un club del ranking y elige la opción desafío amistoso privado.
-  4. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
-  5. El usuario elige sus titulares y suplentes, y confirma el envío del desafío amistoso privado.
-  6. El sistema valida la elección, envía el desafío al usuario del club seleccionado y avisa que el desafío fue enviado con éxito.
+  1. El usuario desafía un club del ranking.
+  2. El sistema solicita elegir los jugadores titulares y suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
+  3. El usuario elige sus titulares y suplentes, y confirma el desafío amistoso.
+  4. El sistema valida la elección, envía el desafío al club seleccionado y avisa que el desafío fue enviado con éxito.
 - **Escenarios excepcionales:**
-  5. a) El usuario cancela el envío del desafío amistoso privado:
-  - El sistema vuelve a mostrar el club elegido.
-  6. a) El usuario elige menos de 6 jugadores:
-  - El sistema avisa que deben elegirse 6 jugadores, y vuelve a pedir que elija 6 jugadores que tengan comportamiento asignado.
+  4. a) El usuario no elige suficientes jugadores:
+  - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
 
-### Caso de Uso 19: Aceptar desafío amistoso privado
+### Caso de Uso 19: Aceptar desafío amistoso
 - **Actor primario:** Usuario desafiado
 - **Precondición:** 
- El usuario está logueado, viendo el apartado mi club, y tiene al menos seis jugadores, cada uno con un comportamiento asignado, y un desafío amistoso privado pendiente de aceptar.
+ El usuario está logueado, tiene al menos la mínima cantidad de jugadores para jugar un partido, cada uno con un comportamiento asignado, y un desafío amistoso pendiente.
 - **Escenario exitoso principal:**
-  1. El usuario abre la sección desafíos pendientes.
-  2. El sistema muestra los desafíos amistosos privados pendientes.
-  3. El usuario elige, en un desafío pendiente, la opción aceptar desafío amistoso.
-  4. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
-  5. El usuario elige sus titulares y suplentes, y confirma la aceptación del desafío amistoso privado.
-  6. El sistema valida la elección, e ingresa a los usuarios al lobby del partido si están conectados, mostrando la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y suplentes que jugarán el partido, así como sus comportamientos.
+  1. El usuario acepta un desafío amistoso.
+  2. El sistema solicita elegir los jugadores titulares y suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
+  3. El usuario elige sus titulares y suplentes, y confirma la aceptación del desafío amistoso.
+  4. El sistema valida la elección e inicia el partido.
 - **Escenarios excepcionales:**
-  3. a) El usuario rechaza el desafío amistoso:
-  - El sistema elimina el desafío amistoso de la sección desafíos pendientes.
-  3. b) El desafio amistoso expiró:
-  - El sistema informa que el desafio ya no esta disponible y lo elimina de la seccion pendientes.
-  4. a) El usuario decide cancelar la acción:
-  - El sistema vuelve a la sección de desafíos pendientes sin eliminar el desafío.
+  4. a) El usuario no elige suficientes jugadores:
+  - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
 
-### Caso de Uso 20: Cancelar desafío amistoso privado enviado
+### Caso de Uso 20: Cancelar desafío amistoso enviado
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado,  y tiene un desafío enviado que aún no ha sido aceptado.
+- **Precondición:** El usuario está logueado, y tiene al menos un desafío enviado que aún no ha sido aceptado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el apartado jugar.
-  2. El sistema muestra las opciones de ver ligas, partido amistoso público, desafíos pendientes y enviados.
-  3. El usuario abre la sección desafíos enviados.
-  4. El sistema muestra los desafíos amistosos enviados.
-  5. El usuario elige, en un desafío enviado, la opción eliminar desafío.
-  6. El sistema registra la eliminación y expira el desafío.
+  1. El usuario selecciona cancelar desafío en un desafío enviado.
+  2. El sistema registra la cancelación y elimina el desafío.
 
-### Caso de uso 21: Buscar partido amistoso público
-- **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado viendo el apartado mi club y tiene al menos 6 jugadores, cada uno con un comportamiento asignado.
-- **Escenario exitoso principal:**
-  1. El usuario abre el apartado jugar.
-  2. El sistema muestra las opciones de ver ligas, partido amistoso público, desafíos pendientes y enviados.
-  3. El usuario abre la sección partido amistoso público.
-  4. El sistema muestra un menú con las opciones buscar partido.
-  5. El usuario elige la opción crear desafío amistoso público.
-  6. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
-  7. El usuario elige sus titulares y suplentes, y confirma el desafío amistoso público.
-  8. El sistema agrega el nuevo desafío al menú de desafíos públicos disponibles.
-- **Escenarios excepcionales:**
-  7. a) El usuario cancela el inicio de la búsqueda:
-  - El sistema regresa al menú con todos los desafíos públicos disponibles.
-
-### Caso de uso 21: Iniciar partido amistoso público
+### Caso de uso 21: Buscar partido amistoso 
 - **Actor primario:** Usuario
 - **Actor secundario:** Oponente
-- **Precondición:** El usuario está logueado y buscando un partido amistoso público.
+- **Precondición:** El usuario está logueado viendo el apartado mi club y tiene al menos la mínima cantidad de jugadores para jugar un partido, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
-  1. Un oponente selecciona la opción de buscar partido amistoso público.
-  2. El sistema empareja este oponente contra el usuario, y crea una instancia de partido amistoso para ambos. Los ingresa al lobby del partido si están conectados, mostrando la cuenta regresiva y la plantilla disponible, permitiendo modificar los titulares y suplentes que jugarán el partido, así como sus comportamientos y formaciones.
+  1. El usuario selecciona buscar partido amistoso.
+  2. El sistema solicita elegir los jugadores titulares y suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
+  3. El usuario elige sus titulares y suplentes, y confirma la acción.
+  4. El sistema comienza a buscar un oponente para emparejar con el usuario.  
+  5. Aparece un oponente.
+  6. El sistema empareja este oponente con el usuario y crea un partido amistoso para ambos.
 
 ### Caso de uso 22: Cancelar busqueda
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y está buscando partido amistoso público.
+- **Precondición:** El usuario está logueado y está buscando partido amistoso.
 - **Escenario exitoso principal:**
-  1. El usuario cancela la búsqueda de partido amistoso público.
-  2. El sistema frena el emparejamiento y devuelve al usuario a la sección partido amistoso público.
+  1. El usuario cancela la búsqueda iniciada.
+  2. El sistema finaliza la búsqueda, cancelando el emparejamiento.
 
 ## Partidos (gestión en vivo)
 
