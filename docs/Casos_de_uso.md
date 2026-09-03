@@ -224,14 +224,16 @@
   1. El usuario abre el apartado comportamientos desde el menú principal.
   2. El sistema despliega una lista con los comportamientos creados, y las acciones que puede realizar con ellos.
   3. El usuario selecciona el comportamiento que desea cambiar y elige la opción editar.
-  4. El sistema verifica que el comportamiento no esté en uso, lo elimina y abre la interfaz de edición del comportamiento.
+  4. El sistema verifica que el comportamiento no esté en uso y abre la interfaz de edición del comportamiento.
   5. El usuario edita los datos del comportamiento y confirma la edición.
   6. El sistema verifica que el comportamiento sea válido y lo actualiza en la base de datos.
 - **Escenarios excepcionales:**
   4. a) El comportamiento se encuentra en uso por un jugador jugando un partido:
   - El sistema informa al usuario que el comportamiento se encuentra en uso y no es posible editarlo.
-  6. a) El comportamiento no es válido:
-  - El sistema informa al usuario que el comportamiento no es válido y pide al usuario actualizarlo.
+  5. a) El usuario cancela la edición del comportamiento:
+  - El sistema descarta los cambios y vuelve al comportamiento elegido.
+  6. a) El código contiene errores de sintaxis o usa instrucciones prohibidas.
+  - El sistema informa los errores detectados en el editor y solicita corregirlos.
 
 ### Caso de Uso 14: Eliminar comportamiento
 - **Actor primario:** Usuario
@@ -253,36 +255,44 @@
 
 ### Caso de Uso 15: Ver club de un usuario
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, visualizando el ranking global.
+- **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el club de interés.
-  2. El sistema recolecta la información del usuario correspondiente y actualiza a la vista del club.
+  1. El usuario selecciona el apartado ranking.
+  2. El sistema muestra el ranking de clubes.
+  3. El usuario selecciona el club de interés.
+  4. El sistema recolecta la información del usuario correspondiente y actualiza a la vista del club.
 
 ### Caso de Uso 16: Ver historial de mi club
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, en la vista del apartado mi club.
+- **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado historial.
-  2. El sistema recolecta la información, actualiza la vista y muestra el historial.
+  1. El usuario selecciona el apartado mi cuenta.
+  2. El sistema muestra las opciones de mi cuenta. 
+  3. El usuario selecciona la sección historial.
+  4. El sistema recolecta la información, actualiza la vista y muestra el historial.
 
-### Caso de Uso 17: Ver historial compartido
+### Caso de Uso 17: Ver historial compartido (revisar caso excepcional)
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, en la vista de un club.
+- **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona el apartado historial compartido con el club.
-  2. El sistema recolecta la información, actualiza la vista y muestra el historial compartido.
+  1. El usuario selecciona el apartado ranking.
+  2. El sistema muestra el ranking de clubes.
+  3. El usuario selecciona el club de interés.
+  4. El sistema muestra la vista del club elegido.
+  5. El usuario selecciona el apartado historial compartido con el club.
+  6. El sistema recolecta la información, actualiza la vista y muestra el historial compartido.
 - **Escenarios excepcionales:**
-  2. a) No se puede visualizar el historial compartido de tu propio club:
+  5. a) No se puede visualizar el historial compartido de tu propio club:
   - El sistema informa la imposibilidad y se rechaza la operación.
 
 ## Partidos amistosos
 
 ### Caso de Uso 18: Enviar desafío amistoso privado
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y tiene al menos seis jugadores, cada uno con un comportamiento asignado
+- **Precondición:** El usuario está logueado y tiene al menos seis jugadores, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
-  1. El usuario abre el ranking global desde el menú principal.
-  2. El sistema muestra los clubes en el ranking global.
+  1. El usuario abre el ranking desde el menú principal.
+  2. El sistema muestra los clubes en el ranking.
   3. El usuario selecciona un club del ranking y elige la opción desafío amistoso privado.
   4. El sistema solicita elegir 3 jugadores titulares y 3 jugadores suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
   5. El usuario elige sus titulares y suplentes, y confirma el envío del desafío amistoso privado.
@@ -290,7 +300,7 @@
 - **Escenarios excepcionales:**
   5. a) El usuario cancela el envío del desafío amistoso privado:
   - El sistema vuelve a mostrar el club elegido.
-  6. a) El usuario elige menos de 5 jugadores:
+  6. a) El usuario elige menos de 6 jugadores:
   - El sistema avisa que deben elegirse 6 jugadores, y vuelve a pedir que elija 6 jugadores que tengan comportamiento asignado.
 
 ### Caso de Uso 19: Aceptar desafío amistoso privado
@@ -314,7 +324,7 @@
 
 ### Caso de Uso 20: Cancelar desafío amistoso privado enviado
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado, viendo el apartado mi club, y tiene un desafío enviado que aun no ha sido aceptado
+- **Precondición:** El usuario está logueado, viendo el apartado mi club, y tiene un desafío enviado que aun no ha sido aceptado.
 - **Escenario exitoso principal:**
   1. El usuario abre la sección desafíos enviados.
   2. El sistema muestra los desafíos amistosos enviados.
