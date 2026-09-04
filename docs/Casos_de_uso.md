@@ -1,47 +1,5 @@
 ﻿﻿
 # <center> Casos de Uso: FutBot </center>
-### Índice de Contenidos
-  - [Cuenta y sesión](#cuenta-y-sesión)
-    - [CU1: Registrar usuario y club](#caso-de-uso-1-registrar-usuario-y-club)
-    - [CU2: Iniciar sesión](#caso-de-uso-2-iniciar-sesión)
-    - [CU3: Cerrar sesión](#caso-de-uso-3-cerrar-sesión)
-    - [CU4: Cambiar contraseña](#caso-de-uso-4-cambiar-contraseña)
-  - [Jugadores](#jugadores)
-    - [CU5: Crear jugador](#caso-de-uso-5-crear-jugador)
-    - [CU6: Ver mis jugadores](#caso-de-uso-6-ver-mis-jugadores)
-    - [CU7: Editar comportamiento asignado a un jugador](#caso-de-uso-7-editar-comportamiento-asignado-a-un-jugador)
-    - [CU8: Eliminar jugador](#caso-de-uso-8-eliminar-jugador)
-  - [Comportamientos](#comportamientos)
-    - [CU9: Ver comportamientos](#caso-de-uso-9-ver-comportamientos)
-    - [CU10: Crear nuevo comportamiento](#caso-de-uso-10-crear-nuevo-comportamiento)
-    - [CU11: Editar comportamiento](#caso-de-uso-11-editar-comportamiento)
-    - [CU12: Eliminar comportamiento](#caso-de-uso-12-eliminar-comportamiento)
-  - [Club y perfil](#club-y-perfil)
-    - [CU13: Ver club de un usuario](#caso-de-uso-13-ver-club-de-un-usuario)
-    - [CU14: Ver historial de un club](#caso-de-uso-14-ver-historial-de-un-club)
-    - [CU15: Ver historial compartido](#caso-de-uso-15-ver-historial-compartido)
-  - [Partidos amistosos](#partidos-amistosos)
-    - [CU16: Enviar desafío amistoso](#caso-de-uso-16-enviar-desafío-amistoso)
-    - [CU17: Aceptar desafío amistoso](#caso-de-uso-17-aceptar-desafío-amistoso)
-    - [CU18: Cancelar desafío amistoso enviado](#caso-de-uso-18-cancelar-desafío-amistoso-enviado)
-  - [Partidos (gestión en vivo)](#partidos-gestión-en-vivo)
-    - [CU19: Gestionar alineación pre-partido](#caso-de-uso-19-gestionar-alineación-pre-partido)
-    - [CU20: Programar sustitución de jugador](#caso-de-uso-20-programar-sustitución-de-jugador)
-    - [CU21: Cancelar sustitución de jugador](#caso-de-uso-21-cancelar-sustitución-de-jugador)
-    - [CU22: Cambiar comportamiento durante el partido](#caso-de-uso-22-cambiar-comportamiento-durante-el-partido)
-    - [CU23: Observar partido como espectador](#caso-de-uso-23-observar-partido-como-espectador)
-    - [CU24: Abandonar partido como espectador](#caso-de-uso-24-abandonar-partido-como-espectador)
-  - [Ligas](#ligas)
-    - [CU25: Crear liga](#caso-de-uso-25-crear-liga)
-    - [CU26: Buscar ligas](#caso-de-uso-26-buscar-ligas)
-    - [CU27: Unirse a liga privada](#caso-de-uso-27-unirse-a-liga-privada)
-    - [CU28: Unirse a liga pública](#caso-de-uso-28-unirse-a-liga-pública)
-    - [CU29: Abandonar liga](#caso-de-uso-29-abandonar-liga)
-    - [CU30: Cancelar liga](#caso-de-uso-30-cancelar-liga)
-    - [CU31: Iniciar liga](#caso-de-uso-31-iniciar-liga)
-    - [CU32: Consultar fixture y tabla de posiciones](#caso-de-uso-32-consultar-fixture-y-tabla-de-posiciones)
-  - [Ranking](#ranking)
-    - [CU33: Consultar ranking global](#caso-de-uso-33-consultar-ranking-global)
 
 ## Cuenta y sesión
 
@@ -49,7 +7,7 @@
 - **Actor primario:** Usuario visitante
 - **Precondición:** El usuario se encuentra en la pantalla de ingreso del sistema.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona registrarse.
+  1. El usuario inicia el proceso de registro.
   2. El sistema solicita ingresar nombre de usuario, email, contraseña, avatar y el nombre del club.
   3. El usuario ingresa los datos solicitados y confirma la operación.
   4. El sistema valida los datos y crea la nueva cuenta.
@@ -324,7 +282,7 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
-  1. El usuario cambia el comportamiento de un jugador activo.
+  1. El usuario selecciona cambiar el comportamiento de un jugador activo.
   2. El sistema solicita elegir el comportamiento a reasignar.
   3. El usuario selecciona el nuevo comportamiento y confirma el cambio.
   4. El sistema lo asigna al jugador, y actualiza sus acciones para el siguiente "tick" del simulador.
@@ -405,28 +363,24 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y se encuentra inscripto en una liga.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción abandonar.
+  1. El usuario ingresa a los detalles de una liga en la que participa y la abandona.
   2. El sistema solicita confirmación para darse de baja.
   3. El usuario confirma la operación.
-  4. El sistema valida que la liga se encuentre en estado "No iniciada", retira al club del torneo y actualiza la vista de ligas del usuario.
+  4. El sistema valida que la liga se encuentre en estado "No iniciada" y retira al club del torneo.
 - **Escenarios excepcionales:**
   4. a) La liga ya comenzó o está en curso:
   - El sistema informa que no es posible abandonar una competencia iniciada y bloquea la acción.
 
 ### Caso de Uso 33: Cancelar liga
 - **Actor primario:** Usuario
-- **Precondición:** El usuario está logueado y creó una liga, y está en el apartado ligas
+- **Precondición:** El usuario está logueado y tiene al menos una liga creada.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a la sección mis ligas.
-  2. El sistema muestra las ligas asociadas al usuario.
-  3. El usuario selecciona una de las ligas creadas por él y elige la opción de cancelar liga.
-  4. El sistema solicita confirmación para cancelar la liga.
-  5. El usuario confirma la cancelación.
-  6. El sistema informa a los usuarios participantes que la liga fue cancelada, los retira de la misma y elimina la liga de la base de datos.
+  1. El usuario cancela una de sus ligas creadas.
+  2. El sistema valida la acción y solicita confirmación para cancelar la liga.
+  3. El usuario confirma la cancelación.
+  4. El sistema informa a los usuarios participantes que la liga fue cancelada, los retira de la misma y elimina la liga de la base de datos.
 - **Escenarios excepcionales:**
-  5. a) El usuario cancela la confirmación:
-  - El sistem avuelve a mostrar las ligas creadas por el usuario.
-  6. a) La liga comenzó o está en curso:
+  2. a) La liga ya comenzó:
   - El sistema informa que no es posible eliminar una liga ya iniciada y bloquea la acción.
 
 ### Caso de Uso 34: Iniciar liga
@@ -447,21 +401,21 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y es miembro de al menos una liga.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de consultar fixture.
-  2. El sistema valida que la liga esté iniciada, solicita la información y actualiza la vista del usuario al fixture de la misma.
+  1. El usuario ingresa a los detalles de una liga en la que participa y consulta el fixture.
+  2. El sistema valida que la liga esté iniciada, solicita la información y muestra el fixture.
 - **Escenarios excepcionales:**
   2. a) La liga no comenzó:
   - El sistema informa que no es posible visualizar el fixture de una competencia no iniciada y bloquea la acción.
 
-### Caso de Uso 36: Consultar tabla de puntos
+### Caso de Uso 36: Consultar tabla de posiciones
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y es miembro de al menos una liga.
 - **Escenario exitoso principal:**
-  1. El usuario ingresa a los detalles de una liga en la que participa y selecciona la opción de consultar tabla de puntos.
-  2. El sistema valida que la liga esté iniciada, solicita la información y actualiza la vista del usuario a la tabla de puntos de la misma.
+  1. El usuario selecciona la tabla de posiciones de una liga a la pertenece.
+  2. El sistema valida que la liga esté iniciada, solicita la información y muestra la tabla de posiciones.
 - **Escenarios excepcionales:**
   2. a) La liga no comenzó:
-  - El sistema informa que no es posible visualizar la tabla de puntos de una competencia no iniciada y bloquea la acción.
+  - El sistema informa que no es posible visualizar la tabla de posiciones de una competencia no iniciada y bloquea la acción.
 
 ## Ranking
 
@@ -469,5 +423,5 @@
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
-  1. El usuario selecciona la opción ranking.
-  2. El sistema solicita la información y actualiza la vista del usuario mostrando el ranking de clubes.
+  1. El usuario selecciona ver el ranking global.
+  2. El sistema solicita la información y actualiza la vista del usuario mostrando el ranking.
