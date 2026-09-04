@@ -89,6 +89,8 @@ paths:
       responses:
         '200':
           description: Sesión cerrada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /usuarios/me/password:
     patch:
@@ -112,6 +114,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   # -----------------------------------------------------------------------------
   # Club
@@ -134,7 +138,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Club'
-        '409':
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':  
           description: El usuario ya tiene un club creado
           content:
             application/json:
@@ -152,6 +158,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Club'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   
   /club/avatar:
     patch:
@@ -171,6 +179,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Club'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
 
   /club/formacion:
     patch:
@@ -190,6 +200,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Club'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /clubes/{club_id}:
     get:
@@ -210,6 +222,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Club'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound' 
   
@@ -241,6 +255,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
     get:
       tags: [Jugadores]
       summary: Listar jugadores del club
@@ -254,6 +270,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Jugador'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
 
   /club/jugadores/{jugador_id}:
     parameters:
@@ -274,6 +292,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Jugador'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           description: Jugador no encontrado
           content:
@@ -287,6 +307,8 @@ paths:
       responses:
         '200':
           description: Jugador eliminado
+        '401':
+           $ref: '#/components/responses/Unauthorized'
         '404':
           description: Jugador no encontrado
           content:
@@ -321,6 +343,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Jugador'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
     
   # lo mismo este, pero puede servir para cuando tenes que ver los datos del jugador de otro en un partido (eliminar jugador lo saco, no tiene sentido si usamos el de arriba)
   /clubes/{club_id}/jugadores/{jugador_id}:
@@ -346,6 +370,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Jugador'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
 
 # ----------------------------------------------------------------------------- 
 # Comportamiento
@@ -364,6 +390,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Comportamiento'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     post:
       tags: [Comportamientos]
       summary: Crear nuevo Comportamiento
@@ -387,6 +415,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /club/comportamientos/{comportamiento_id}:
     parameters:
@@ -407,6 +437,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comportamiento'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           description: Comportamiento no encontrado
           content:
@@ -430,6 +462,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comportamiento'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           description: Comportamiento no encontrado
           content:
@@ -449,6 +483,8 @@ paths:
       responses:
         '200':
           description: Comportamiento eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           description: Comportamiento no encontrado
           content:
@@ -490,6 +526,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     get:
       tags: [Ligas]
       summary: Listar ligas
@@ -515,6 +553,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Liga'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /ligas/{liga_id}:
     parameters:
@@ -535,6 +575,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Liga'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           description: Liga no encontrada
           content:
@@ -549,6 +591,8 @@ paths:
       responses:
         '200':
           description: Liga cancelada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '403':
           description: El usuario no es el creador de la liga
           content:
@@ -584,6 +628,8 @@ paths:
       responses:
         '200':
           description: Inscripción registrada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '400':
           description: La contraseña de la liga privada es incorrecta, o no se enviaron exactamente 3 titulares y 3 suplentes.
           content:
@@ -603,6 +649,8 @@ paths:
       responses:
         '200':
           description: Inscripción eliminada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '409':
           description: La liga ya se encuentra iniciada
           content:
@@ -630,6 +678,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Liga'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '403':
           description: El usuario no es el creador de la liga
           content:
@@ -657,6 +707,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FixtureResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '409':
           description: La liga aún no fue iniciada
           content:
@@ -685,6 +737,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TablaPosicionesItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '409':
           description: La liga aún no fue iniciada
           content:
@@ -720,6 +774,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Partido'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
 # -----------------------------------------------------------------------------
 # Amistosos
@@ -743,6 +799,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Desafio'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     get:
       tags: [Amistosos]
       summary: Listar desafíos propios
@@ -763,6 +821,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Desafio'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /amistosos/desafios/{desafio_id}:
     parameters:
@@ -780,6 +840,8 @@ paths:
       responses:
         '200':
           description: Desafío cancelado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '409':
           description: El desafío ya fue respondido
           content:
@@ -804,6 +866,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Desafio'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '409':
           description: El desafío ya no está disponible
           content:
@@ -830,6 +894,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Busqueda'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
     delete:
       tags: [Amistosos]
       summary: Cancelar búsqueda de rival
@@ -837,6 +903,8 @@ paths:
       responses:
         '200':
           description: Búsqueda cancelada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
 # -----------------------------------------------------------------------------
 # Partidos
@@ -873,6 +941,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /partidos/{partido_id}/jugadores/{jugador_id}:
     parameters:
@@ -913,6 +983,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /partidos/{partido_id}/sustituciones:
     parameters:
@@ -940,6 +1012,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sustitucion'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '409':
           description: Ya se agotaron los 3 cambios permitidos
           content:
@@ -954,6 +1028,8 @@ paths:
       responses:
         '200':
           description: Sustitución cancelada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           description: No hay ninguna sustitución pendiente
           content:
@@ -979,6 +1055,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RankingItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
 components:
   securitySchemes:
@@ -996,6 +1074,18 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: No se proporcionó un token, o el token es inválido o expiró
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+     Forbidden:
+      description: El usuario no tiene permisos para realizar esta operación
       content:
         application/json:
           schema:
