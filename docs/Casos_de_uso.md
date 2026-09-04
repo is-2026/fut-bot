@@ -1,6 +1,54 @@
 ﻿﻿
 # <center> Casos de Uso: FutBot </center>
 
+### Índice de Contenidos
+  - [Cuenta y sesión](#cuenta-y-sesión)
+    - [CU1: Registrar usuario y club](#caso-de-uso-1-registrar-usuario-y-club)
+    - [CU2: Iniciar sesión](#caso-de-uso-2-iniciar-sesión)
+    - [CU3: Cerrar sesión](#caso-de-uso-3-cerrar-sesión)
+    - [CU4: Cambiar contraseña](#caso-de-uso-4-cambiar-contraseña)
+    - [CU5: Cambiar avatar del club](#caso-de-uso-5-cambiar-avatar-del-club)
+  - [Jugadores](#jugadores)
+    - [CU6: Crear jugador](#caso-de-uso-6-crear-jugador)
+    - [CU7: Ver mis jugadores](#caso-de-uso-7-ver-mis-jugadores)
+    - [CU8: Asignar comportamiento a un jugador](#caso-de-uso-8-asignar-comportamiento-a-un-jugador)
+    - [CU9: Eliminar jugador](#caso-de-uso-9-eliminar-jugador)
+    - [CU10: Elegir nueva formación](#caso-de-uso-10-elegir-nueva-formación)
+  - [Comportamientos](#comportamientos)
+    - [CU11: Ver comportamientos](#caso-de-uso-11-ver-comportamientos)
+    - [CU12: Crear nuevo comportamiento](#caso-de-uso-12-crear-nuevo-comportamiento)
+    - [CU13: Editar comportamiento](#caso-de-uso-13-editar-comportamiento)
+    - [CU14: Eliminar comportamiento](#caso-de-uso-14-eliminar-comportamiento)
+  - [Club y perfil](#club-y-perfil)
+    - [CU15: Ver club de un usuario](#caso-de-uso-15-ver-club-de-un-usuario)
+    - [CU16: Ver historial de mi club](#caso-de-uso-16-ver-historial-de-mi-club)
+    - [CU17: Ver historial compartido <!-- revisar caso excepcional)-->](#caso-de-uso-17-ver-historial-compartido----revisar-caso-excepcional--)
+  - [Partidos amistosos](#partidos-amistosos)
+    - [CU18: Enviar desafío amistoso](#caso-de-uso-18-enviar-desafío-amistoso)
+    - [CU19: Aceptar desafío amistoso](#caso-de-uso-19-aceptar-desafío-amistoso)
+    - [CU20: Cancelar desafío amistoso enviado](#caso-de-uso-20-cancelar-desafío-amistoso-enviado)
+    - [CU21: Buscar partido amistoso](#caso-de-uso-21-buscar-partido-amistoso)
+    - [CU22: Cancelar busqueda](#caso-de-uso-22-cancelar-busqueda)
+  - [Partidos (gestión en vivo)](#partidos-gestión-en-vivo)
+    - [CU23: Gestionar alineación pre-partido](#caso-de-uso-23-gestionar-alineación-pre-partido)
+    - [CU24: Programar sustitución de jugador](#caso-de-uso-24-programar-sustitución-de-jugador)
+    - [CU25: Cancelar sustitución de jugador](#caso-de-uso-25-cancelar-sustitución-de-jugador)
+    - [CU26: Cambiar comportamiento durante el partido](#caso-de-uso-26-cambiar-comportamiento-durante-el-partido)
+    - [CU27: Observar partido como espectador](#caso-de-uso-27-observar-partido-como-espectador)
+    - [CU28: Abandonar partido como espectador](#caso-de-uso-28-abandonar-partido-como-espectador)
+  - [Ligas](#ligas)
+    - [CU29: Crear liga](#caso-de-uso-29-crear-liga)
+    - [CU30: Ver ligas disponibles](#caso-de-uso-30-ver-ligas-disponibles)
+    - [CU31: Unirse a liga privada](#caso-de-uso-31-unirse-a-liga-privada)
+    - [CU32: Unirse a liga pública](#caso-de-uso-32-unirse-a-liga-pública)
+    - [CU33: Abandonar liga](#caso-de-uso-33-abandonar-liga)
+    - [CU34: Cancelar liga](#caso-de-uso-34-cancelar-liga)
+    - [CU35: Iniciar liga](#caso-de-uso-35-iniciar-liga)
+    - [CU36: Consultar fixture](#caso-de-uso-36-consultar-fixture)
+    - [CU37: Consultar tabla de posiciones](#caso-de-uso-37-consultar-tabla-de-posiciones)
+  - [Ranking](#ranking)
+    - [CU38: Consultar ranking global](#caso-de-uso-38-consultar-ranking-global)
+
 ## Cuenta y sesión
 
 ### Caso de Uso 1: Registrar usuario y club
@@ -250,7 +298,7 @@
 
 ## Partidos (gestión en vivo)
 
-### Caso de Uso 22: Gestionar alineación pre-partido
+### Caso de Uso 23: Gestionar alineación pre-partido
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, por empezar un partido de su liga y convocó previamente sus jugadores con comportamiento asociado.
 - **Escenario exitoso principal:**
@@ -259,7 +307,7 @@
   3. El usuario selecciona los titulares y suplentes, reasigna los comportamientos y confirma su alineación.
   4. El sistema registra las modificaciones realizadas. <!-- La capacidad de modificar elementos se termina al iniciar el partido -->
 
-### Caso de Uso 23: Programar sustitución de jugador
+### Caso de Uso 24: Programar sustitución de jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
@@ -271,14 +319,14 @@
   2. a) El usuario ya agotó los cambios permitidos:
   - El sistema informa que no quedan cambios disponibles y deniega la operación.
 
-### Caso de Uso 24: Cancelar sustitución de jugador
+### Caso de Uso 25: Cancelar sustitución de jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene una solicitud de sustitución registrada.
 - **Escenario exitoso principal:**
   1. El usuario cancela el cambio táctico.
   2. El sistema elimina la solicitud previamente registrada.
 
-### Caso de Uso 25: Cambiar comportamiento durante el partido
+### Caso de Uso 26: Cambiar comportamiento durante el partido
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido en curso de su club.
 - **Escenario exitoso principal:**
@@ -287,14 +335,14 @@
   3. El usuario selecciona el nuevo comportamiento y confirma el cambio.
   4. El sistema lo asigna al jugador, y actualiza sus acciones para el siguiente "tick" del simulador.
 
-### Caso de Uso 26: Observar partido como espectador
+### Caso de Uso 27: Observar partido como espectador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, viendo una liga a la que pertenece y hay al menos un partido en curso en la misma
 - **Escenario exitoso principal:**
   1. El usuario selecciona un partido que se está jugando en vivo.
   2. El sistema muestra el partido con sus jugadores, la pelota y los arcos en tiempo real.
 
-### Caso de Uso 27: Abandonar partido como espectador
+### Caso de Uso 28: Abandonar partido como espectador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido como espectador.
 - **Escenario exitoso principal:**
@@ -303,7 +351,7 @@
 
 ## Ligas
 
-### Caso de Uso 28: Crear liga
+### Caso de Uso 29: Crear liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema y tiene al menos la mínima cantidad de jugadores para jugar un partido, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
@@ -317,14 +365,14 @@
   4. b) No se eligieron suficientes jugadores:
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
 
-### Caso de Uso 29: Ver ligas disponibles
+### Caso de Uso 30: Ver ligas disponibles
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado exitosamente.
 - **Escenario exitoso principal:**
   1. El usuario busca ligas.
   2. El sistema muestra las ligas no iniciadas.
 
-### Caso de Uso 30: Unirse a liga privada
+### Caso de Uso 31: Unirse a liga privada
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema, viendo las ligas disponibles, y tiene al menos la mínima cantidad de jugadores para jugar un partido, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
@@ -344,7 +392,7 @@
   6. a) No se eligieron suficientes jugadores:
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
 
-### Caso de Uso 31: Unirse a liga pública
+### Caso de Uso 32: Unirse a liga pública
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado en el sistema, viendo las ligas disponibles, y tiene al menos la mínima cantidad de jugadores para jugar un partido, cada uno con un comportamiento asignado.
 - **Escenario exitoso principal:**
@@ -359,7 +407,7 @@
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
 
 
-### Caso de Uso 32: Abandonar liga
+### Caso de Uso 33: Abandonar liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y se encuentra inscripto en una liga.
 - **Escenario exitoso principal:**
@@ -371,7 +419,7 @@
   4. a) La liga ya comenzó o está en curso:
   - El sistema informa que no es posible abandonar una competencia iniciada y bloquea la acción.
 
-### Caso de Uso 33: Cancelar liga
+### Caso de Uso 34: Cancelar liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y tiene al menos una liga creada.
 - **Escenario exitoso principal:**
@@ -383,7 +431,7 @@
   2. a) La liga ya comenzó:
   - El sistema informa que no es posible eliminar una liga ya iniciada y bloquea la acción.
 
-### Caso de Uso 34: Iniciar liga
+### Caso de Uso 35: Iniciar liga
 - **Actor primario:** Usuario
 - **Precondición:** El usuario es dueño de al menos una liga, y está viendo sus ligas creadas.
 - **Escenario exitoso principal:**
@@ -397,7 +445,7 @@
   3. a) El usuario cancela la confirmación:
   - El sistema vuelve a mostrar las ligas creadas por el usuario.
 
-### Caso de Uso 35: Consultar fixture
+### Caso de Uso 36: Consultar fixture
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y es miembro de al menos una liga.
 - **Escenario exitoso principal:**
@@ -407,7 +455,7 @@
   2. a) La liga no comenzó:
   - El sistema informa que no es posible visualizar el fixture de una competencia no iniciada y bloquea la acción.
 
-### Caso de Uso 36: Consultar tabla de posiciones
+### Caso de Uso 37: Consultar tabla de posiciones
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado y es miembro de al menos una liga.
 - **Escenario exitoso principal:**
@@ -419,7 +467,7 @@
 
 ## Ranking
 
-### Caso de Uso 37: Consultar ranking global
+### Caso de Uso 38: Consultar ranking global
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado.
 - **Escenario exitoso principal:**
