@@ -594,11 +594,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: El usuario no es el creador de la liga
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: '#/components/schemas/Forbidden'
         '409':
           description: La liga ya se encuentra iniciada
           content:
@@ -631,7 +627,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '400':
-          description: La contraseña de la liga privada es incorrecta, o no se enviaron exactamente 3 titulares y 3 suplentes.
+          description: La contraseña de la liga privada es incorrecta, no hay cupo, o no se enviaron exactamente 3 titulares y 3 suplentes.
           content:
             application/json:
               schema:
@@ -681,11 +677,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          description: El usuario no es el creador de la liga
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: '#/components/responses/Forbidden'
 
   /ligas/{liga_id}/fixture:
     parameters:
@@ -842,6 +834,8 @@ paths:
           description: Desafío cancelado
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '409':
           description: El desafío ya fue respondido
           content:
@@ -868,6 +862,8 @@ paths:
                 $ref: '#/components/schemas/Desafio'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '409':
           description: El desafío ya no está disponible
           content:
@@ -985,6 +981,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   /partidos/{partido_id}/sustituciones:
     parameters:
@@ -1014,6 +1012,8 @@ paths:
                 $ref: '#/components/schemas/Sustitucion'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '409':
           description: Ya se agotaron los 3 cambios permitidos
           content:
@@ -1030,6 +1030,8 @@ paths:
           description: Sustitución cancelada
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           description: No hay ninguna sustitución pendiente
           content:
