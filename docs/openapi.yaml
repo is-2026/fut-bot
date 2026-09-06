@@ -594,7 +594,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/schemas/Forbidden'
+          $ref: '#/components/responses/Forbidden'
         '409':
           description: La liga ya se encuentra iniciada
           content:
@@ -1086,7 +1086,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-     Forbidden:
+    Forbidden:
       description: El usuario no tiene permisos para realizar esta operación
       content:
         application/json:
@@ -1350,7 +1350,7 @@ components:
           maxItems: 6
           description: Exactamente 3 con es_titular_default en true y 3 en false.
           items:
-            $ref: '#components/schemas/ConvocadoInput'
+            $ref: '#/components/schemas/ConvocadoInput'
 
     FixtureResponse:
       type: object
@@ -1361,7 +1361,7 @@ components:
         partidos:
           type: array
           items:
-            $ref: '#/components/schemas/PartidoResumen' # por definir abajo
+            $ref: '#/components/schemas/Partido'
 
     TablaPosicionesItem:
       type: object
