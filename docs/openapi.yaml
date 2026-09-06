@@ -202,6 +202,56 @@ paths:
                 $ref: '#/components/schemas/Club'
         '401':
           $ref: '#/components/responses/Unauthorized'
+  
+  /club/historial:
+    get:
+      tags: [Club]
+      summary: Ver historial de partidos de mi club
+      operationId: obtener_mi_historial
+      responses:
+        '200':
+          description: Historial de partidos jugados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistorialItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /clubes/{club_id}/historial:
+    parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Club]
+      summary: Ver historial compartido con otro club
+      description: Historial de partidos jugados entre el club del usuario autenticado y el club indicado.
+      operationId: obtener_historial_compartido
+      responses:
+        '200':
+          description: Historial de partidos entre ambos clubes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistorialItem'
+        '400':
+          description: No se puede consultar el historial compartido con el propio club
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /clubes/{club_id}:
     get:
@@ -1189,6 +1239,28 @@ components:
       properties:
         formacion_default_id:
           $ref: '#/components/schemas/FormacionPreset'
+
+    HistorialItem:
+      type: object
+      properties:
+        partido_id:
+          type: string
+          format: uuid
+        fecha:
+          type: string
+          format: date-time
+        club_rival_id:
+          type: string
+          format: uuid
+        nombre_club_rival:
+          type: string
+        resultado_propio:
+          type: integer
+        resultado_rival:
+          type: integer
+        resultado:
+          type: string
+          enum: [ganado, perdido, empatado]
     
     Club:
       type: object
