@@ -128,7 +128,7 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/CrearClubInput'
       responses:
@@ -169,7 +169,7 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/CambiarAvatarInput'
       responses:
@@ -1161,21 +1161,22 @@ components:
     # --- Club ---
     CrearClubInput:
       type: object
-      required: [nombre_club, avatar]
+      required: [nombre_club, avatar_url]
       properties:
         nombre_club:
           type: string
-        avatar:
+        avatar_url:
           type: string
-          format: binary
+          format: uri
+          description: URL pública de la imagen/avatar del club.
 
     CambiarAvatarInput:
       type: object
       required: [avatar]
       properties:
-        avatar:
+        avatar_url:
           type: string
-          format: binary
+          format: uri
 
     FormacionPreset:
       type: string
