@@ -350,6 +350,46 @@ paths:
                 $ref: '#/components/schemas/Jugador'
         '401':
            $ref: '#/components/responses/Unauthorized'
+  
+  /club/jugadores/{jugador_id}/comportamiento:
+    parameters:
+      - name: jugador_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags: [Jugadores]
+      summary: Asignar/reasignar comportamiento por defecto a un jugador
+      operationId: asignar_comportamiento_jugador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AsignarComportamientoInput'
+      responses:
+        '200':
+          description: Comportamiento asignado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jugador'
+        '400':
+          description: El comportamiento indicado no existe o no pertenece al club
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Jugador no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 # ----------------------------------------------------------------------------- 
 # Comportamiento
@@ -1225,6 +1265,14 @@ components:
         strength:
           type: integer
         comportamiento_default:
+          type: string
+          format: uuid
+    
+    AsignarComportamientoInput:
+      type: object
+      required: [comportamiento_id]
+      properties:
+        comportamiento_id:
           type: string
           format: uuid
     
