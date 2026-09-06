@@ -161,8 +161,8 @@
 - **Precondición:** El usuario está logueado en el sistema.
 - **Escenario exitoso principal:**
   1. El usuario selecciona gestionar formaciones.
-  2. El sistema muestra todas las formaciones, indicando cuál está equipada, y la opción equipar.
-  3. El usuario selecciona una formación distinta de la que tiene equipada y selecciona la opción equipar.
+  2. El sistema muestra todas las formaciones, indicando cuál está equipada.
+  3. El usuario selecciona una formación.
   4. El sistema desequipa la formación anterior y equipa la formación elegida.
 
 ## Comportamientos
