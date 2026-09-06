@@ -1,22 +1,21 @@
-asyncapi: 3.0.0
+asyncapi: 3.1.0
 
 info:
-  title: FutBot - API de tiempo real
+  title: FutBot - Especificación de los canales WebSocket de la API de FutBot
   version: 1.0.0
-  description: API realizada para la comunicación en tiempo real de los partidos de FutBot.
+  description: Se definen los eventos que el servidor empuja al cliente en tiempo real durante un partido (movimiento de jugadores y de la pelota, goles, pausas, sustituciones, fin de partido) y para la notificación de emparejamiento de amistosos.
 
 servers:
   desarrollo:
-    host: localhost:8080
+    host: 'localhost:8080'
     protocol: ws
 
 channels:
-
   partidoStream:
-    address: /ws/partidos/{partidoId}/stream
-    description: API realizada para la comunicación en tiempo real de los partidos de FutBot.
+    address: '/ws/partidos/{partido_id}/stream'
+    description: Eventos en tiempo real de un partido puntual.
     parameters:
-      partidoId:
+      partido_id:
         description: ID único del partido en curso.
     messages:
       partidoIniciado:
@@ -31,8 +30,8 @@ channels:
         $ref: '#/components/messages/CoolingBreakInit'
       descansoInit:
         $ref: '#/components/messages/DescansoInit'
-      renaudacionPartido:
-        $ref: '#/components/messages/RenaudacionPartido'
+      reanudacionPartido:
+        $ref: '#/components/messages/ReanudacionPartido'
       cambioRealizado:
         $ref: '#/components/messages/CambioRealizado'
       partidoFinalizado:
@@ -44,47 +43,39 @@ channels:
     messages:
       partidoEncontrado:
         $ref: '#/components/messages/PartidoEncontrado'
-  
-
-
 
 operations:
-
-  recibirEventodePartido:
+  recibirEventoDePartido:
     action: receive
     channel:
       $ref: '#/channels/partidoStream'
     summary: El usuario recibe todos los eventos que ocurren durante la simulación del partido.
-
   recibirEmparejamiento:
     action: receive
-    channel: 
+    channel:
       $ref: '#/channels/busquedaAmistoso'
 
-
 components:
-
   messages:
-    
     PartidoIniciado:
       description: Notifica al usuario que el partido ha comenzado.
       payload:
         type: object
         required:
-          - partidoID
-          - inicioPartido
+          - partido_id
+          - inicio_partido
           - marcador_local
           - marcador_visitante
           - estado
         properties:
-          partidoID:
+          partido_id:
             type: string
             description: ID del partido.
           alineacion_local:
             $ref: '#/components/schemas/Alineacion'
           alineacion_visitante:
             $ref: '#/components/schemas/Alineacion'
-          inicioPartido:
+          inicio_partido:
             type: string
             format: date-time
             description: Fecha y hora de incio del partido.
@@ -96,21 +87,23 @@ components:
             description: Marcador del equipo visitante.
           estado:
             type: string
+            enum:
+              - en_curso
+              - pausado
+              - finalizado
             description: Estado actual del partido.
-          
-    
+
     MovimientoJugador:
       description: Notifica al usaurio el movimiento de un jugador durante el partido.
       payload:
         type: object
         required:
-          - partidoID
-          - jugadorID
+          - jugador_id
           - posicion
         properties:
-          jugadorID:
+          jugador_id:
             type: string
-            description: ID del jugador que marcó.
+            description: ID del jugador que se movió.
           posicion:
             type: object
             description: Posición del jugador actual en el campo.
@@ -118,113 +111,118 @@ components:
               x:
                 type: number
                 description: Coordenada x (horizontal) del jugador.
-              y:
+              'y':
                 type: number
                 description: Coordenada y (vertical) del jugador.
-    
+
     MovimientoPelota:
       description: Notifica al usuario el movimiento de la pelota durante el partido.
       payload:
         type: object
-        required: 
-          - partidoID
+        required:
           - posicion
         properties:
           posicion:
             type: object
             description: Posición actual de la pelota en el campo.
             properties:
-              x: 
+              x:
                 type: number
                 description: Cordenada x (horizontal) de la pelota.
-              y:
+              'y':
                 type: number
                 description: Coordenada y (vertical) de la pelota.
-    
+
     Gol:
       description: Notifica al usuario que se ha marcado un gol en el partido.
       payload:
         type: object
         required:
-          - partidoID
-          - jugadorID
+          - partido_id
+          - jugador_id
           - minuto
-          - equipoID
+          - equipo_id
         properties:
-          jugadorID:
+          partido_id:
+            type: string
+            description: ID del partido.
+          jugador_id:
             type: string
             description: ID del jugador que marcó.
           minuto:
             type: integer
             description: Minuto en el cual ocurrió el gol.
-          equipoID:
+          equipo_id:
             type: string
             description: ID del equipo que marcó.
-          
+
     CoolingBreakInit:
       description: Notifica al usuario que ha iniciado un partido.
       payload:
         type: object
         required:
-          - partidoID
+          - partido_id
           - coolingbreak_numero
           - inicio_cooling
         properties:
-          partidoID:
+          partido_id:
             type: string
             description: ID del partido.
           coolingbreak_numero:
             type: integer
-            description: Numero del cooling break, primero o segundo.
-          inicio_cooling: 
+            description: 'Numero del cooling break, primero o segundo.'
+          inicio_cooling:
             type: string
             format: date-time
             description: Fecha y hora del inicio del cooling break.
-  
+
     DescansoInit:
       payload:
         type: object
         required:
-          - partidoID
+          - partido_id
           - inicio_descanso
         properties:
-          partidoID:
+          partido_id:
             type: string
             description: ID del partido.
           inicio_descanso:
-            type: string 
+            type: string
             format: date-time
             description: Fecha y hora del inicio del descanso.
-    
-    RenaudacionPartido:
-      description: Notifica la renaudación del partido luego de una pausa.
-      payload: 
+
+    ReanudacionPartido:
+      description: Notifica la reanudación del partido luego de una pausa.
+      payload:
         type: object
         required:
-          - partidoID
-          - tipo_renaudacion
-        propierties:
-          partidoID:
+          - partido_id
+          - tipo_reanudacion
+        properties:
+          partido_id:
             type: string
-          tipo_renaudacion:
+            description: ID del partido.
+          tipo_reanudacion:
             type: string
-            enum: [postCooling_1, postCooling_2, postDescanso]
-  
+            enum:
+              - postCooling_1
+              - postCooling_2
+              - postDescanso
     CambioRealizado:
       payload:
         type: object
-        required: 
-          - partidoID
-          - jugadorEntraID
-          - jugadorSaleID
+        required:
+          - partido_id
+          - jugador_entra_id
+          - jugador_sale_id
         properties:
-          partidoID:
+          partido_id:
             type: string
             description: ID del partido.
-          jugadorEntraID: 
+          jugador_entra_id:
             type: string
             description: ID del jugador que entra.
-          jugadorSaleID:
+          jugador_sale_id:
             type: string
             description: ID del jugador que sale.
 
@@ -232,17 +230,17 @@ components:
       description: Notifica al usuario que el partido ha terminado.
       payload:
         type: object
-        required: 
-          - partidoID
-          - finPartido
+        required:
+          - partido_id
+          - fin_partido
           - marcador_local
           - marcador_visitante
           - estado
         properties:
-          partidoID:
+          partido_id:
             type: string
             description: ID del partido.
-          finPartido:
+          fin_partido:
             type: string
             format: date-time
             description: Fecha y hora del final del partido.
@@ -254,6 +252,8 @@ components:
             description: Marcador final del equipo visitante.
           estado:
             type: string
+            enum:
+              - finalizado
             description: Estado final del partido.
 
     PartidoEncontrado:
@@ -261,13 +261,13 @@ components:
       payload:
         type: object
         required:
-          - partidoID
-          - rivalID
+          - partido_id
+          - club_rival_id
         properties:
-          partidoID: 
+          partido_id:
             type: string
             description: ID del partido.
-          rivalID:
+          club_rival_id:
             type: string
             description: ID del usuario rival.
 
@@ -278,45 +278,50 @@ components:
       items:
         type: object
         required:
-          - jugadorID
+          - jugador_id
+          - numero
           - nombre
-          - esTitular
+          - es_titular
         properties:
-          jugadorID:
-              type: string
-              description: ID del jugador que marcó.
-          esTitular:
+          jugador_id:
+            type: string
+            description: ID del jugador.
+          numero:
+            type: integer
+            description: Número de camiseta del jugador
+            minimum: 1
+            maximum: 99
+          es_titular:
             type: boolean
-            description: true si es Titular, false si no.
-          power: 
+            description: 'true si es Titular, false si no.'
+          power:
             type: integer
             description: Atributo Power.
             minimum: 20
             maximum: 100
-          agility: 
+          agility:
             type: integer
             description: Atributo Agility.
             minimum: 20
             maximum: 100
-          control: 
+          control:
             type: integer
             description: Atributo Control.
             minimum: 20
             maximum: 100
-          speed: 
+          speed:
             type: integer
             description: Atributo Speed.
             minimum: 20
             maximum: 100
-          strength: 
+          strength:
             type: integer
             description: Atributo Strength
             minimum: 20
             maximum: 100
-          comportamientoID:
+          comportamiento_id:
             type: string
             description: ID del comportamiento.
           comportamientoNombre:
             type: string
             description: Nombre visible del comportamiento.
-      
