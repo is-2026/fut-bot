@@ -320,35 +320,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'  
 
-  # no estoy seguro que este endpoint lo necesitemos, lo dejo y lo charlamos
-  /clubes/{club_id}/jugadores:
-    parameters:
-      - name: club_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-    get:
-      tags: [Jugadores]
-      summary: Listar jugadores del club
-      description: Muestra los jugadores creados del club.
-      operationId: listar_jugadores
-      responses:
-        '200':
-          description: Listado de jugadores del club
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Jugador'
-        '401':
-           $ref: '#/components/responses/Unauthorized'
-    
-  # lo mismo este, pero puede servir para cuando tenes que ver los datos del jugador de otro en un partido (eliminar jugador lo saco, no tiene sentido si usamos el de arriba)
   /clubes/{club_id}/jugadores/{jugador_id}:
     parameters:
       - name: club_id
@@ -688,9 +661,9 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/Forbidden'
+          $ref: '#/components/responses/Forbidden'     
 
-  /ligas/{liga_id}/fixture:
+  /ligas/{liga_id}/partidos:
     parameters:
       - name: liga_id
         in: path
@@ -700,16 +673,23 @@ paths:
           format: uuid
     get:
       tags: [Ligas]
-      summary: Consultar fixture
-      description: Requiere que la liga esté iniciada.
-      operationId: obtener_fixture
+      summary: Listar partidos de una liga
+      parameters:
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [programado, en_curso, finalizado]
+      operationId: listar_partidos_liga
       responses:
         '200':
-          description: Fixture de la liga
+          description: Partidos de la liga
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FixtureResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partido'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '409':
@@ -718,7 +698,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  
   /ligas/{liga_id}/tabla:
     parameters:
       - name: liga_id
@@ -748,37 +728,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-  /ligas/{liga_id}/partidos:
-    parameters:
-      - name: liga_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-    get:
-      tags: [Ligas]
-      summary: Listar partidos de una liga
-      parameters:
-        - name: estado
-          in: query
-          schema:
-            type: string
-            enum: [programado, en_curso, finalizado]
-      description: Revisar, solapamiento con fixture!!
-      operationId: listar_partidos_liga
-      responses:
-        '200':
-          description: Partidos de la liga
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Partido'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
 
 # -----------------------------------------------------------------------------
 # Amistosos
@@ -1363,17 +1312,6 @@ components:
           description: Exactamente 3 con es_titular_default en true y 3 en false.
           items:
             $ref: '#/components/schemas/ConvocadoInput'
-
-    FixtureResponse:
-      type: object
-      properties:
-        liga_id:
-          type: string
-          format: uuid
-        partidos:
-          type: array
-          items:
-            $ref: '#/components/schemas/Partido'
 
     TablaPosicionesItem:
       type: object
