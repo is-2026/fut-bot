@@ -400,6 +400,12 @@ paths:
                 $ref: '#/components/schemas/Jugador'
         '401':
            $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Jugador no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   
   /club/jugadores/{jugador_id}/comportamiento:
     parameters:
@@ -1146,12 +1152,10 @@ components:
   schemas:
     Error:
       type: object
+      required: [mensaje]
       properties:
-        codigo:
-          type: string
         mensaje:
           type: string
-      required: [codigo, mensaje]
 
     # -- Autenticación / Usuario ---
     UsuarioRegistroInput:
@@ -1194,19 +1198,19 @@ components:
           type: string
           format: password
     
-    Usuario:
-      type: object
-      required: [id, username, email, password]
-      properties:
-        id:
-          type: string
-          format: uuid
-        username:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
+    # Usuario:
+    #   type: object
+    #   required: [id, username, email, password]
+    #   properties:
+    #     id:
+    #       type: string
+    #       format: uuid
+    #     username:
+    #       type: string
+    #     email:
+    #       type: string
+    #     password:
+    #       type: string
     
     # --- Club ---
     CrearClubInput:
