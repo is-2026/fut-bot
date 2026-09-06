@@ -190,7 +190,7 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/CambiarFormacionDefaultInput'
       responses:
@@ -324,16 +324,18 @@ paths:
 
   # no estoy seguro que este endpoint lo necesitemos, lo dejo y lo charlamos
   /clubes/{club_id}/jugadores:
+    parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
     get:
+      tags: [Jugadores]
       summary: Listar jugadores del club
-      description: muestra los jugadores creados del club.
+      description: Muestra los jugadores creados del club.
       operationId: listar_jugadores
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
           description: Listado de jugadores del club
@@ -348,21 +350,24 @@ paths:
     
   # lo mismo este, pero puede servir para cuando tenes que ver los datos del jugador de otro en un partido (eliminar jugador lo saco, no tiene sentido si usamos el de arriba)
   /clubes/{club_id}/jugadores/{jugador_id}:
+    parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: jugador_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
     get:
+      tags: [Jugadores]
       summary: Obtener detalle de un jugador
-      description: obtiene un jugador segun su id.
+      description: Obtiene un jugador segun su id.
       operationId: obtener_jugador
-      parameters:
-        - name: club_id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: jugador_id
-          in: path
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
           description: OK
@@ -417,6 +422,12 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Nombre de comportamiento duplicado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /club/comportamientos/{comportamiento_id}:
     parameters:
@@ -1172,7 +1183,7 @@ components:
 
     CambiarAvatarInput:
       type: object
-      required: [avatar]
+      required: [avatar_url]
       properties:
         avatar_url:
           type: string
@@ -1221,27 +1232,27 @@ components:
           type: string
         numero:
           type: integer
-          minimun: 1
+          minimum: 1
           maximum: 99
         power:
           type: integer
-          minimun: 20
+          minimum: 20
           maximum: 100
         agility:
           type: integer
-          minimun: 20
+          minimum: 20
           maximum: 100
         control:
           type: integer
-          minimun: 20
+          minimum: 20
           maximum: 100
         speed:
           type: integer
-          minimun: 20
+          minimum: 20
           maximum: 100
         strength:
           type: integer
-          minimun: 20
+          minimum: 20
           maximum: 100
 
     Jugador:
@@ -1296,9 +1307,9 @@ components:
     # --- Ligas ---
     CrearLigaInput:
       type: object
-      required: [nombre, min_clubs, max_clubes, duracion_partido_minutos]
+      required: [nombre, min_clubes, max_clubes, duracion_partido_minutos]
       properties:
-        nombre_club:
+        nombre:
           type: string
         password:
           type: [string, "null"]
@@ -1494,31 +1505,9 @@ components:
         resultado_visitante:
           type: [integer, "null"]
 
-    AlineacionJugadorTitular:
-      type: object
-      required: [jugador_id, comportamiento_id]
-      properties:
-        jugador_id:
-          type: string
-          format: uuid
-        comportamiento_id:
-          type: string
-          format: uuid
-
-    AlineacionJugadorSuplente:
-      type: object
-      required: [jugador_id, comportamiento_id]
-      properties:
-        jugador_id:
-          type: string
-          format: uuid
-        comportamiento_id:
-          type: string
-          format: uuid
-
     EnviarAlineacionInput:
       type: object
-      required: [formacion_id, titulares, suplentes]
+      required: [formacion, titulares, suplentes]
       properties:
         formacion:
           $ref: '#/components/schemas/FormacionPreset'
