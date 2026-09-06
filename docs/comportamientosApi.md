@@ -20,7 +20,7 @@ def decidir_accion():
         move(px, py)
 ```
 
-### **Primitivas de posicion (Lectura de Entorno)**
+### **Primitivas de estado (Lectura de Entorno)**
 
 Estas funciones no reciben parámetros y se utilizan para obtener el estado actual del campo de juego.
 
@@ -31,6 +31,9 @@ Estas funciones no reciben parámetros y se utilizan para obtener el estado actu
 | `has_ball()` | Ninguno | `Booleano` | Retorna `true` si el jugador tiene la posesión actual de la pelota, o `false` en caso contrario. |
 | `team_pos()` | Ninguno | `Lista de tuplas` | Retorna una lista con el ID y las coordenadas de los compañeros de equipo, ej: `[(id, x, y), ...]`. |
 | `enemy_pos()`| Ninguno | `Lista de tuplas` | Retorna una lista con el ID y las coordenadas de los jugadores rivales. |
+| `score()` | Ninguno | `(int, int)` | Devuelve el marcador actual del partido con el formato goles (propios, rival). |
+| `time()` | Ninguno | `int` | Retorna el tiempo actual del partido. |
+| `total_time()` | Ninguno | `int` | Retorna la duracion total del partido. |
 
 ### **Primitivas de Acciones**
 
