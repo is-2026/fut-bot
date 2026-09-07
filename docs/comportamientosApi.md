@@ -15,7 +15,7 @@ def decidir_accion():
     
     # 2. Lógica del comportamiento
     if has_ball():
-        shoot()
+        shoot_arco()
     else:
         move(px, py)
 ```
@@ -43,6 +43,7 @@ Estas funciones requieren parámetros de entrada y dictan la próxima acción de
 | :--- | :--- | :--- | :--- |
 | `move(x, y)` | `x`: Destino horizontal.<br>`y`: Destino vertical. | Desplaza al jugador hacia la coordenada especificada en la cancha. | Speed y Agility |
 | `pass(jugador_id)` | `jugador_id`: ID del compañero. | Toca la pelota hacia la posición del compañero seleccionado. | Agility y Power |
-| `shoot()` | Ninguno | Ejecuta un remate al arco rival. | Power |
+| `shoot(x, y, porcentaje_power)` | `x`: Destino horizontal.<br>`y`: Destino vertical. `porcentaje_power`: Porcentaje de fuerza del golpe al balón. | Ejecuta un remate. | Power |
+| `shoot_arco()` | Ninguno | Ejecuta un remate en dirección al arco. | Power |
 | `tackle()` | Ninguno | Intenta quitarle la pelota al jugador rival cercano que tenga la posesión. | Control |
-| `carryball(x, y)` | `x`: Destino horizontal.<br>`y`: Destino vertical. | Avanza hacia las coordenadas manteniendo el control de la pelota. | Speed y Agility |
+
