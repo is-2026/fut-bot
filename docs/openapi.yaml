@@ -1,0 +1,1691 @@
+openapi: 3.2.0
+info:
+  title: FutBot API
+  version: 1.0.0
+  description: API REST para la plataforma FutBot:\ Gestion de usuarios, jugadores, partidos, ligas, comportamientos en Python y datos del ranking
+servers:
+  - url: https://localhost:5000
+    description: Entorno de desarrollo local
+
+tags:
+  - name: Autenticación
+  - name: Usuario
+  - name: Club
+  - name: Jugadores
+  - name: Comportamientos
+  - name: Ligas
+  - name: Amistosos
+  - name: Partido
+  - name: Ranking
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ---------------------------------------------------------------------------
+  # Autenticación y Usuario
+  # ---------------------------------------------------------------------------
+  /auth/registro:
+    post:
+      tags: [Autenticación]
+      summary: Registrar Usuario
+      description: Crea la cuenta de usuario. El club se crea en un paso separado (POST /club) inmediatamente después, dentro del mismo flujo de onboarding del cliente.
+      operationId: registrar_usuario
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioRegistroInput'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: El email ya está registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags: [Autenticación]
+      summary: Iniciar sesion
+      operationId: iniciar_sesion
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthLoginInput'
+      responses:
+        '200':
+          description: Sesión iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Email o contraseña incorrectos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+  /auth/logout:
+    post:
+      tags: [Autenticación]
+      summary: Cerrar sesión
+      operationId: cerrar_sesion
+      responses:
+        '200':
+          description: Sesión cerrada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /user/password:
+    patch:
+      tags: [Usuario]
+      summary: Modificar contraseña
+      operationId: cambiar_password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CambiarPasswordInput'
+      responses:
+        '200':
+          description: Contraseña actualizada
+        '400':
+          description: La contraseña actual es incorrecta, o la nueva coincide con la actual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+
+  # ---------------------------------------------------------------------------
+  # Club
+  # ---------------------------------------------------------------------------
+  /club:
+    post:
+      tags: [Club]
+      summary: Crear club (segundo paso del registro)
+      operationId: crear_club
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearClubInput'
+      responses:
+        '201':
+          description: Club creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':  
+          description: El usuario ya tiene un club creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags: [Club]
+      summary: Obtener mi club
+      operationId: obtener_mi_club 
+      description: Identifica al club mediante el token de sesión.
+      responses:
+        '200':
+          description: Datos del club propio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /club/avatar:
+    patch:
+      tags: [Club]
+      summary: Cambiar avatar del club
+      operationId: cambiar_avatar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CambiarAvatarInput'
+      responses:
+        '200':
+          description: Avatar actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+
+  /club/formacion:
+    patch:
+      tags: [Club]
+      summary: Cambiar formación default del club
+      operationId: cambiar_formacion_default
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CambiarFormacionDefaultInput'
+      responses:
+        '200':
+          description: Formación default actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /club/historial:
+    get:
+      tags: [Club]
+      summary: Ver historial de partidos de mi club
+      operationId: obtener_mi_historial
+      responses:
+        '200':
+          description: Historial de partidos jugados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistorialItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /clubes/{club_id}/historial:
+    parameters:
+      - name: club_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Club]
+      summary: Ver historial compartido con otro club
+      description: Historial de partidos jugados entre el club del usuario autenticado y el club indicado.
+      operationId: obtener_historial_compartido
+      responses:
+        '200':
+          description: Historial de partidos entre ambos clubes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistorialItem'
+        '400':
+          description: No se puede consultar el historial compartido con el propio club
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /clubes/{club_id}:
+    get:
+      tags: [Club]
+      summary: Ver club de un usuario
+      operationId: obtener_club
+      parameters:
+        - name: club_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Datos públicos del club
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound' 
+
+
+  # ---------------------------------------------------------------------------
+  # Jugadores
+  # ---------------------------------------------------------------------------
+  /club/jugadores:
+    post:
+      tags: [Jugadores]
+      summary: Crear jugador
+      description: Crea un nuevo jugador en el club del usuario. Notar que la suma de sus PACSS debe ser exactamente 300.
+      operationId: crear_jugador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearJugadorInput'
+      responses:
+        '201':
+          description: Jugador creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jugador'
+        '400':
+          description: La suma de los PACSS no es 300, o alguno está fuera de rango (20-100)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+    get:
+      tags: [Jugadores]
+      summary: Listar jugadores del club
+      operationId: listar_mis_jugadores
+      responses:
+        '200':
+          description: Plantilla completa del club
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jugador'
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+
+  /club/jugadores/{jugador_id}:
+    parameters:
+      - name: jugador_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Jugadores]
+      summary: Obtener jugador
+      operationId: obtener_mi_jugador
+      responses:
+        '200':
+          description: Datos del jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jugador'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Jugadores]
+      summary: Eliminar jugador
+      operationId: eliminar_jugador
+      responses:
+        '200':
+          description: Jugador eliminado
+        '401':
+           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: El jugador está participando en una liga activa o un partido en curso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'  
+
+  /club/jugadores/{jugador_id}/comportamiento:
+    parameters:
+      - name: jugador_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags: [Jugadores]
+      summary: Asignar/reasignar comportamiento por defecto a un jugador
+      operationId: asignar_comportamiento_jugador
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AsignarComportamientoInput'
+      responses:
+        '200':
+          description: Comportamiento asignado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jugador'
+        '400':
+          description: El comportamiento indicado no existe o no pertenece al club
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+# ----------------------------------------------------------------------------- 
+# Comportamiento
+# -----------------------------------------------------------------------------
+  /club/comportamientos:
+    post:
+      tags: [Comportamientos]
+      summary: Crear nuevo Comportamiento
+      operationId: crear_comportamiento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearComportamientoInput'
+      responses:
+        '201':
+          description: Comportamiento creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comportamiento'
+        '400':
+          description: El código contiene errores de sintaxis o instrucciones prohibidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Nombre de comportamiento duplicado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags: [Comportamientos]
+      summary: Listar comportamientos guardados
+      operationId: listar_comportamientos
+      responses:
+        '200':
+          description: Comportamientos disponibles (OK)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comportamiento'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /club/comportamientos/{comportamiento_id}:
+    parameters:
+      - name: comportamiento_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Comportamientos]
+      summary: Obtener comportamiento por id
+      operationId: obtener_comportamiento
+      responses:
+        '200':
+          description: Detalle del comportamiento (OK)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comportamiento'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Comportamientos]
+      summary: Editar comportamiento
+      operationId: editar_comportamiento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearComportamientoInput'
+      responses:
+        '200':
+          description: Comportamiento editado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comportamiento'
+        '400':
+          description: El código contiene errores de sintaxis o instrucciones prohibidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: El comportamiento está en uso por un jugador en un partido en curso, o el nuevo nombre ya está en uso por otro comportamiento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Comportamientos]
+      summary: Eliminar comportamiento
+      operationId: eliminar_comportamiento
+      responses:
+        '200':
+          description: Comportamiento eliminado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: El comportamiento está en uso por un jugador en un partido en curso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+# -----------------------------------------------------------------------------
+# Ligas
+# -----------------------------------------------------------------------------
+  /ligas:
+    post:
+      tags: [Ligas]
+      summary: Crear liga
+      description: Notar que la cantidad de clubes tiene un mínimo duro de 3. Si se envía password, la liga se considera privada.
+      operationId: crear_liga
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearLigaInput'
+      responses:
+        '201':
+          description: Liga creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liga'
+        '400':
+          description: min_clubes es menor a 3, o max_clubes excede el límite del sistema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      tags: [Ligas]
+      summary: Listar ligas
+      description: Devuelve tanto ligas públicas como privadas. Solo no iniciadas
+      operationId: listar_ligas
+      responses:
+        '200':
+          description: Ligas disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Liga'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /club/ligas:
+    get:
+      tags: [Ligas]
+      summary: Listar ligas de mi club
+      description: Identifica al club mediante el token de sesión. Devuelve las ligas en las que el club está inscripto.
+      operationId: listar_mis_ligas
+      responses:
+        '200':
+          description: Ligas en las que participa mi club
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Liga'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /ligas/{liga_id}:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Ligas]
+      summary: Obtener detalle de una liga
+      operationId: obtener_liga
+      responses:
+        '200':
+          description: Datos de la liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liga'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Ligas]
+      summary: Cancelar liga
+      description: Solo el creador puede cancelarla, y solo si no está iniciada.
+      operationId: cancelar_liga
+      responses:
+        '200':
+          description: Liga cancelada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: La liga ya se encuentra iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ligas/{liga_id}/inscripciones:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Ligas]
+      summary: Unirse a una liga
+      description: Reserva un cupo para la liga. Se definen 6 jugadores convocados para toda la liga (3 marcados como titulares por defecto, 3 como suplentes). Los titulares enviados se usan como fallback si el club no define la alineación antes de alguno de sus partidos.
+      operationId: unirse_liga
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearInscripcionInput'
+      responses:
+        '200':
+          description: Inscripción registrada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          description: La contraseña de la liga privada es incorrecta, no hay cupo, o no se enviaron exactamente 3 titulares y 3 suplentes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: El club ya está inscripto en esta liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Ligas]
+      summary: Abandonar liga
+      operationId: abandonar_liga
+      responses:
+        '200':
+          description: Inscripción eliminada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: La liga indicada no existe, o el club no está inscripto en ella
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: La liga ya se encuentra iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /ligas/{liga_id}/inicio:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Ligas]
+      summary: Iniciar liga
+      description: Solo el creador puede iniciarla. Cambia el estado a "iniciada" y genera el fixture.
+      operationId: iniciar_liga
+      responses:
+        '200':
+          description: Liga iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Liga'
+        '400':
+          description: No hay suficientes clubes inscriptos para iniciar la liga
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: La liga ya se encuentra iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /ligas/{liga_id}/partidos:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Ligas]
+      summary: Listar partidos de una liga
+      parameters:
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [programado, en_curso, finalizado]
+      operationId: listar_partidos_liga
+      responses:
+        '200':
+          description: Partidos de la liga
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partido'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: La liga aún no fue iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /ligas/{liga_id}/tabla:
+    parameters:
+      - name: liga_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Ligas]
+      summary: Tabla de posiciones
+      operationId: obtener_tabla
+      responses:
+        '200':
+          description: Tabla de posiciones de la liga
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TablaPosicionesItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: La liga aún no fue iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+# -----------------------------------------------------------------------------
+# Amistosos
+# -----------------------------------------------------------------------------
+  /amistosos/desafios:
+    post:
+      tags: [Amistosos]
+      summary: Enviar desafío amistoso
+      description: Incluye el pool de 6 convocados del club retador.
+      operationId: enviar_desafio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearDesafioInput'
+      responses:
+        '201':
+          description: Desafío creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desafio'
+        '400':
+          description: No se enviaron exactamente 3 titulares y 3 suplentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: El club rival indicado no existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags: [Amistosos]
+      summary: Listar desafíos propios
+      operationId: listar_desafios
+      parameters:
+        - name: direccion
+          in: query
+          description: Filtra por desafíos enviados o recibidos por el club
+          schema:
+            type: string
+            enum: [enviados, recibidos]
+      responses:
+        '200':
+          description: Desafíos del club
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Desafio'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /amistosos/desafios/{desafio_id}:
+    parameters:
+    - name: desafio_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    delete:
+      tags: [Amistosos]
+      summary: Cancelar desafío enviado
+      description: Solo el club retador puede cancelarlo, y solo si sigue pendiente.
+      operationId: cancelar_desafio
+      responses:
+        '200':
+          description: Desafío cancelado
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: El desafío ya fue respondido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags: [Amistosos]
+      summary: Responder desafío amistoso
+      description: Si se acepta, se debe incluir el pool de 6 convocados del club desafiado, y se crea el partido.
+      operationId: responder_desafio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DesafioRespuestaInput'
+      responses:
+        '200':
+          description: Desafío respondido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Desafio'
+        '400':
+          description: No se enviaron exactamente 3 titulares y 3 suplentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: El desafío ya no está disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /amistosos/busqueda:
+    post:
+      tags: [Amistosos]
+      summary: Iniciar búsqueda de rival (matchmaking público)
+      description: Devuelve el ticket nomás. La notificación de emparejamiento exitoso se recibe de forma asíncrona vía WebSocket en el canal `/ws/amistosos/busqueda` (ver especificación AsyncAPI, mensaje 'PartidoEncontrado').
+      operationId: iniciar_matchmaking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearBusquedaInput'
+      responses:
+        '202':
+          description: Búsqueda iniciada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Busqueda'
+        '400':
+          description: No se enviaron exactamente 3 titulares y 3 suplentes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: El usuario ya está buscando partido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Amistosos]
+      summary: Cancelar búsqueda de rival
+      operationId: cancelar_matchmaking
+      responses:
+        '200':
+          description: Búsqueda cancelada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No hay ninguna búsqueda activa para cancelar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+# -----------------------------------------------------------------------------
+# Partidos
+# -----------------------------------------------------------------------------
+  /partidos/{partido_id}/alineacion:
+    parameters:
+      - name: partido_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Partido]
+      summary: Definir nuevos titulares, sus comportamientos y la formación antes de jugar el partido.
+      description: Ventana de 30 segundos antes de cada partido (liga y amistoso). Los jugadores incluidos deben pertenecer al pool de convocados de la inscripción (liga) o el desafío/búsqueda (amistoso) correspondiente. Si no se completa a tiempo, el sistema asigna automáticamente los titulares/suplentes por defecto enviados al momento de inscribirse, los 3 comportamientos asignados a los jugadores por defecto, y la formación default del club.
+      operationId: definir_alineacion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnviarAlineacionInput'
+      responses:
+        '200':
+          description: Alineación registrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partido'
+        '400':
+          description: Alguno de los jugadores no pertenece al pool de convocados, o no se enviaron exactamente 3 titulares y 3 suplentes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        
+  /partidos/{partido_id}/jugadores/{jugador_id}:
+    parameters:
+      - name: partido_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: jugador_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      tags: [Partido]
+      summary: Cambiar comportamiento en vivo
+      description: Se aplica desde el siguiente tick del simulador.
+      operationId: cambiar_comportamiento_en_vivo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [comportamiento_id]
+              properties:
+                comportamiento_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Comportamiento actualizado
+        '400':
+          description: El comportamiento seleccionado fue eliminado o es inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: El partido o el jugador indicado no existen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /partidos/{partido_id}/sustituciones:
+    parameters:
+      - name: partido_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Partido]
+      summary: Programar sustitución
+      description: Se agenda para la próxima ventana disponible (pausa de hidratación o entretiempo). Solo puede haber una sustitución pendiente por club a la vez.
+      operationId: programar_sustitucion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgramarSustitucionInput'
+      responses:
+        '201':
+          description: Sustitución programada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sustitucion'
+        '400':
+          description: El jugador saliente no es titular actual, el jugador entrante no es suplente o no pertenecen a los 6 convocados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Ya se agotaron los 3 cambios permitidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [Partido]
+      summary: Desprogramar sustitución
+      description: Cancela la sustitución pendiente del club antes de que se alcance la ventana de cambio.
+      operationId: desprogramar_sustitucion
+      responses:
+        '200':
+          description: Sustitución cancelada
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: No hay ninguna sustitución pendiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+# -----------------------------------------------------------------------------
+# Ranking
+# -----------------------------------------------------------------------------
+  /ranking:
+    get:
+      tags: [Ranking]
+      summary: Ver ranking global
+      description: Calculado a partir de los partidos jugados en instancias públicas (ligas públicas y amistosos).
+      operationId: obtener_ranking
+      responses:
+        '200':
+          description: Ranking mundial
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RankingItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    BadRequest:
+      description: Solicitud inválida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: No se proporcionó un token, o el token es inválido o expiró
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: El usuario no tiene permisos para realizar esta operación
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      required: [mensaje]
+      properties:
+        mensaje:
+          type: string
+
+    # -- Autenticación / Usuario ---
+    UsuarioRegistroInput:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    AuthLoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    
+    AuthResponse:
+      type: object
+      required: [token]
+      properties:
+        token:
+          type: string
+        
+  
+    CambiarPasswordInput:
+      type: object
+      required: [password_actual, nueva_password]
+      properties:
+        password_actual:
+          type: string
+          format: password
+        nueva_password:
+          type: string
+          format: password
+    
+    # Usuario:
+    #   type: object
+    #   required: [id, username, email, password]
+    #   properties:
+    #     id:
+    #       type: string
+    #       format: uuid
+    #     username:
+    #       type: string
+    #     email:
+    #       type: string
+    #     password:
+    #       type: string
+    
+    # --- Club ---
+    CrearClubInput:
+      type: object
+      required: [nombre_club, avatar_url]
+      properties:
+        nombre_club:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+          description: URL pública de la imagen/avatar del club.
+
+    CambiarAvatarInput:
+      type: object
+      required: [avatar_url]
+      properties:
+        avatar_url:
+          type: string
+          format: uri
+
+    FormacionPreset:
+      type: string
+      enum: [TRIANGULO, LINEA_OFENSIVA, DEFENSIVO, DIAGONAL] # puede cambiar
+      description: Formaciones predefinidas por el sistema.
+    
+    CambiarFormacionDefaultInput:
+      type: object
+      required: [formacion_default]
+      properties:
+        formacion_default:
+          $ref: '#/components/schemas/FormacionPreset'
+
+    HistorialItem:
+      type: object
+      properties:
+        partido_id:
+          type: string
+          format: uuid
+        fecha:
+          type: string
+          format: date-time
+        club_rival_id:
+          type: string
+          format: uuid
+        nombre_club_rival:
+          type: string
+        resultado_propio:
+          type: integer
+        resultado_rival:
+          type: integer
+        resultado:
+          type: string
+          enum: [ganado, perdido, empatado]
+    
+    Club:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre_club:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        formacion_default_id:
+          type: string
+          format: uuid
+        usuario_id:
+          type: string
+          format: uuid
+        fecha_creacion:
+          type: string
+          format: date-time
+
+    # --- Jugadores ---
+    CrearJugadorInput:
+      type: object
+      required: [nombre, numero, power, agility, control, speed, strength]
+      description: La suma de los 5 atributos debe ser exactamente 300.
+      properties:
+        nombre:
+          type: string
+        numero:
+          type: integer
+          minimum: 1
+          maximum: 99
+        power:
+          type: integer
+          minimum: 20
+          maximum: 100
+        agility:
+          type: integer
+          minimum: 20
+          maximum: 100
+        control:
+          type: integer
+          minimum: 20
+          maximum: 100
+        speed:
+          type: integer
+          minimum: 20
+          maximum: 100
+        strength:
+          type: integer
+          minimum: 20
+          maximum: 100
+
+    Jugador:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        numero:
+          type: integer
+        power:
+          type: integer
+        agility:
+          type: integer
+        control:
+          type: integer
+        speed:
+          type: integer
+        strength:
+          type: integer
+        comportamiento_default:
+          type: string
+          format: uuid
+    
+    AsignarComportamientoInput:
+      type: object
+      required: [comportamiento_id]
+      properties:
+        comportamiento_id:
+          type: string
+          format: uuid
+    
+    # --- Comportamientos ---
+    CrearComportamientoInput:
+      type: object
+      required: [nombre, codigo]
+      properties:
+        nombre:
+          type: string
+        codigo:
+          type: string
+          description: |
+              Código del comportamiento en Python. Se debe verificar. Primitivas válidas: 
+              Entorno: my_pos(), ball_pos(), has_ball(), team_pos(), enemy_pos(),score(),time(),total_time()
+              Acciones: move(x,y), pass(jugador_id), shoot(), tackle(), carryball(x,y)
+
+    Comportamiento:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        codigo:
+          type: string
+    
+    # --- Ligas ---
+    CrearLigaInput:
+      type: object
+      required: [nombre, min_clubes, max_clubes, duracion_partido_minutos]
+      properties:
+        nombre:
+          type: string
+        password:
+          type: [string, "null"]
+        min_clubes:
+          type: integer
+          minimum: 3
+        max_clubes:
+          type: integer
+        duracion_partido_minutos:
+          type: integer
+    
+    Liga:
+      type: object
+      properties: 
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        es_privada:
+          type: boolean
+          description: derivado de si la liga tiene password
+        min_clubes:
+          type: integer
+        max_clubes:
+          type: integer
+        estado:
+          type: string
+          enum: [no_iniciada, iniciada, finalizada]
+    
+    ConvocadoInput:
+      type: object
+      required: [jugador_id, es_titular_default]
+      properties: 
+        jugador_id:
+          type: string
+          format: uuid
+        es_titular_default:
+          type: boolean
+
+    CrearInscripcionInput:
+      type: object
+      required: [jugadores]
+      properties:
+        password:
+          type: string
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          description: Exactamente 3 con es_titular_default en true y 3 en false.
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+
+    TablaPosicionesItem:
+      type: object
+      properties:
+        club_id:
+          type: string
+          format: uuid
+        nombre_club:
+          type: string
+        puntos:
+          type: integer
+        partidos_jugados:
+          type: integer
+        ganados:
+          type: integer
+        empatados:
+          type: integer
+        perdidos:
+          type: integer
+        goles_favor:
+          type: integer
+        goles_contra:
+          type: integer
+      
+    # --- Amistosos ---
+    CrearDesafioInput:
+      type: object
+      required: [club_rival_id, jugadores]
+      properties:
+        club_rival_id:
+          type: string
+          format: uuid
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+
+    DesafioRespuestaInput:
+      type: object
+      required: [estado]
+      properties:
+        estado:
+          type: string
+          enum: [aceptado, rechazado]
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          description: Requerido si estado es "aceptado".
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+    
+    Desafio:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        club_retador_id:
+          type: string
+          format: uuid
+        club_desafiado_id:
+          type: string
+          format: uuid
+        direccion:
+          type: string
+          enum: [enviado, recibido]
+          description: Relativo al club autenticado. Derivado de si club_retador_id o club_desafiado_id coincide con el club del usuario
+        estado:
+          type: string
+          enum: [pendiente, aceptado, rechazado, cancelado]
+        partido_id:
+          type: [string, "null"]
+          format: uuid
+        fecha_creacion:
+          type: string
+          format: date-time
+    
+    CrearBusquedaInput:
+      type: object
+      required: [jugadores]
+      properties:
+        jugadores:
+          type: array
+          minItems: 6
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+    
+    Busqueda:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        club_id:
+          type: string
+          format: uuid
+        jugadores:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConvocadoInput'
+        estado:
+          type: string
+          enum: [buscando, emparejado, cancelada]
+        partido_id:
+          type: [string, "null"]
+          format: uuid
+
+    # --- Partidos ---
+    PartidoEstado:
+      type: string
+      enum: [en_curso, pausado, finalizado]
+
+    Partido:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        club_local_id:
+          type: string
+          format: uuid
+        club_visitante_id:
+          type: string
+          format: uuid
+        estado:
+          $ref: '#/components/schemas/PartidoEstado'
+        resultado_local:
+          type: [integer, "null"]
+        resultado_visitante:
+          type: [integer, "null"]
+
+    EnviarAlineacionInput:
+      type: object
+      required: [formacion, titulares, suplentes]
+      properties:
+        formacion:
+          $ref: '#/components/schemas/FormacionPreset'
+        titulares:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            type: object
+            required: [jugador_id, comportamiento_id]
+            properties:
+              jugador_id:
+                type: string
+                format: uuid
+              comportamiento_id:
+                type: string
+                format: uuid
+        suplentes:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            type: object
+            required: [jugador_id]
+            properties:
+              jugador_id:
+                type: string
+                format: uuid
+    
+    ProgramarSustitucionInput:
+      type: object
+      required: [jugador_sale_id, jugador_entra_id, comportamiento_sustitucion]
+      properties:
+        jugador_sale_id:
+          type: string
+          format: uuid
+        jugador_entra_id:
+          type: string
+          format: uuid
+        comportamiento_sustitucion:
+          type: string
+          format: uuid
+    
+    Sustitucion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        jugador_sale_id:
+          type: string
+          format: uuid
+        jugador_entra_id:
+          type: string
+          format: uuid
+        ventana:
+          type: string
+          enum: [pausa_hidratacion_1, entretiempo, pausa_hidratacion_2]
+        estado:
+          type: string
+          enum: [pendiente, ejecutada, cancelada]
+      
+    # --- Ranking ---
+    RankingItem:
+      type: object
+      properties:
+        posicion:
+          type: integer
+        club_id:
+          type: string
+          format: uuid
+        nombre_club:
+          type: string
+        puntos:
+          type: integer
