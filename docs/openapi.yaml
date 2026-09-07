@@ -399,37 +399,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /clubes/{club_id}/jugadores/{jugador_id}:
-    parameters:
-      - name: club_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-      - name: jugador_id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-    get:
-      tags: [Jugadores]
-      summary: Obtener detalle de un jugador
-      description: Obtiene un jugador segun su id.
-      operationId: obtener_jugador
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Jugador'
-        '401':
-           $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-
 
 # ----------------------------------------------------------------------------- 
 # Comportamiento
@@ -1252,10 +1221,12 @@ components:
     
     AuthResponse:
       type: object
+      required: [token]
       properties:
         token:
           type: string
-    
+        
+  
     CambiarPasswordInput:
       type: object
       required: [password_actual, nueva_password]
