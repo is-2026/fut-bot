@@ -2,10 +2,10 @@ openapi: 3.2.0
 info:
   title: FutBot API
   version: 1.0.0
-  description: API REST para la plataforma FutBot. gestion de usuarios, jugadores, partidos, ligas, gestión y  validación de comportamientos en Python, datos del ranking
+  description: API REST para la plataforma FutBot:\ Gestion de usuarios, jugadores, partidos, ligas, comportamientos en Python y datos del ranking
 servers:
   - url: https://localhost:5000
-    description: placeholder, cambiar luego
+    description: Entorno de desarrollo local
 
 tags:
   - name: Autenticación
@@ -91,7 +91,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /usuarios/me/password:
+  /user/password:
     patch:
       tags: [Usuario]
       summary: Modificar contraseña
@@ -114,9 +114,10 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  # -----------------------------------------------------------------------------
+
+  # ---------------------------------------------------------------------------
   # Club
-  # -----------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
   /club:
     post:
       tags: [Club]
@@ -273,7 +274,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound' 
-  
+
+
   # ---------------------------------------------------------------------------
   # Jugadores
   # ---------------------------------------------------------------------------
@@ -310,7 +312,7 @@ paths:
       operationId: listar_mis_jugadores
       responses:
         '200':
-          description: Plantilla completa del club.
+          description: Plantilla completa del club
           content:
             application/json:
               schema:
@@ -433,21 +435,6 @@ paths:
 # Comportamiento
 # -----------------------------------------------------------------------------
   /club/comportamientos:
-    get:
-      tags: [Comportamientos]
-      summary: Listar comportamientos guardados
-      operationId: listar_comportamientos
-      responses:
-        '200':
-          description: Comportamientos disponibles (OK)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Comportamiento'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
     post:
       tags: [Comportamientos]
       summary: Crear nuevo Comportamiento
@@ -479,6 +466,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      tags: [Comportamientos]
+      summary: Listar comportamientos guardados
+      operationId: listar_comportamientos
+      responses:
+        '200':
+          description: Comportamientos disponibles (OK)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comportamiento'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /club/comportamientos/{comportamiento_id}:
     parameters:
@@ -554,6 +556,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+
 # -----------------------------------------------------------------------------
 # Ligas
 # -----------------------------------------------------------------------------
@@ -587,22 +590,29 @@ paths:
     get:
       tags: [Ligas]
       summary: Listar ligas
-      description: Devuelve tanto ligas públicas como privadas. Hay dos parámetros de query:\ estado y nombre.
+      description: Devuelve tanto ligas públicas como privadas. Solo no iniciadas
       operationId: listar_ligas
-      parameters:
-        - name: estado
-          in: query
-          schema:
-            type: string
-            enum: [no_iniciada, iniciada, finalizada]
-        - name: nombre
-          in: query
-          description: Filtro de búsqueda por nombre
-          schema:
-            type: string
       responses:
         '200':
           description: Ligas disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Liga'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /club/ligas:
+    get:
+      tags: [Ligas]
+      summary: Listar ligas de mi club
+      description: Identifica al club mediante el token de sesión. Devuelve las ligas en las que el club está inscripto.
+      operationId: listar_mis_ligas
+      responses:
+        '200':
+          description: Ligas en las que participa mi club
           content:
             application/json:
               schema:
@@ -742,7 +752,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -984,7 +993,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
     delete:
       tags: [Amistosos]
       summary: Cancelar búsqueda de rival
@@ -1295,14 +1303,14 @@ components:
 
     FormacionPreset:
       type: string
-      enum: [TRIANGULO, LINEA_OFENSIVA, DEFENSIVO, DIAGONAL] 
+      enum: [TRIANGULO, LINEA_OFENSIVA, DEFENSIVO, DIAGONAL] # puede cambiar
       description: Formaciones predefinidas por el sistema.
     
     CambiarFormacionDefaultInput:
       type: object
-      required: [formacion_default_id]
+      required: [formacion_default]
       properties:
-        formacion_default_id:
+        formacion_default:
           $ref: '#/components/schemas/FormacionPreset'
 
     HistorialItem:
@@ -1351,7 +1359,7 @@ components:
     # --- Jugadores ---
     CrearJugadorInput:
       type: object
-      required: [nombre, power, agility, control, speed, strength]
+      required: [nombre, numero, power, agility, control, speed, strength]
       description: La suma de los 5 atributos debe ser exactamente 300.
       properties:
         nombre:
@@ -1424,7 +1432,7 @@ components:
           type: string
           description: |
               Código del comportamiento en Python. Se debe verificar. Primitivas válidas: 
-              Entorno: my-pos(), ball-pos(), has-ball(), team-pos(), enemy-pos(),score(),time(),total_time()
+              Entorno: my_pos(), ball_pos(), has_ball(), team_pos(), enemy_pos(),score(),time(),total_time()
               Acciones: move(x,y), pass(jugador_id), shoot(), tackle(), carryball(x,y)
 
     Comportamiento:
@@ -1563,6 +1571,10 @@ components:
         club_desafiado_id:
           type: string
           format: uuid
+        direccion:
+          type: string
+          enum: [enviado, recibido]
+          description: Relativo al club autenticado. Derivado de si club_retador_id o club_desafiado_id coincide con el club del usuario
         estado:
           type: string
           enum: [pendiente, aceptado, rechazado, cancelado]
@@ -1654,12 +1666,9 @@ components:
           maxItems: 3
           items:
             type: object
-            required: [jugador_id, comportamiento_id]
+            required: [jugador_id]
             properties:
               jugador_id:
-                type: string
-                format: uuid
-              comportamiento_id:
                 type: string
                 format: uuid
     
