@@ -56,12 +56,16 @@
 - **Precondición:** El usuario se encuentra en la pantalla de ingreso del sistema.
 - **Escenario exitoso principal:**
   1. El usuario inicia el proceso de registro.
-  2. El sistema solicita ingresar nombre de usuario, email, contraseña, avatar y el nombre del club.
+  2. El sistema solicita ingresar nombre de usuario, email y contraseña.
   3. El usuario ingresa los datos solicitados y confirma la operación.
-  4. El sistema valida los datos y crea la nueva cuenta.
+  4. El sistema solicita crear club, pidiendo un nombre y un avatar para el mismo, avisando que sólo se puede crear un club por cuenta.
+  5. El usuario crea un club ingresando los datos pedidos y confirmando su creación.
+  6. El sistema valida los datos y crea la nueva cuenta.
 - **Escenarios excepcionales:**
   4. a) El email ingresado ya se encuentra registrado.
-  - El sistema informa al usuario que el email proporcionado ya está en uso.
+  - El sistema informa al usuario que el email proporcionado ya está en uso, y cancela la operación.
+  6. a) El usuario intenta crear más de un club.
+  - El sistema informa al usuario que sólo se puede crear un club por cuenta, guarda sólo el primer club creado, y pide confirmar la creación de la cuenta, avisando que tendrá asociado a su cuenta el primer club que creó.
 
 ### Caso de Uso 2: Iniciar sesión
 - **Actor primario:** Usuario
@@ -256,6 +260,8 @@
 - **Escenarios excepcionales:**
   4. a) No se eligieron suficientes jugadores:
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
+  4. b) Se eligieron jugadores sin comportamiento asignado:
+  - El sistema advierte que se seleccionaron jugadores sin comportamiento asignado, y cancela la acción.
 
 ### Caso de Uso 19: Aceptar desafío amistoso
 - **Actor primario:** Usuario desafiado
@@ -269,6 +275,8 @@
 - **Escenarios excepcionales:**
   4. a) No se eligieron suficientes jugadores:
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
+  4. b) Se eligieron jugadores sin comportamiento asignado:
+  - El sistema advierte que se seleccionaron jugadores sin comportamiento asignado, y cancela la acción.
 
 ### Caso de Uso 20: Cancelar desafío amistoso enviado
 - **Actor primario:** Usuario
@@ -285,9 +293,12 @@
   1. El usuario busca partido amistoso.
   2. El sistema solicita elegir los jugadores titulares y suplentes, cada uno con un comportamiento asignado, y pide confirmar la acción.
   3. El usuario elige sus titulares y suplentes, y confirma la acción.
-  4. El sistema comienza a buscar un oponente para emparejar con el usuario.  
+  4. El sistema valida la elección y comienza a buscar un oponente para emparejar con el usuario.  
   5. Aparece un oponente.
   6. El sistema empareja este oponente con el usuario y crea un partido amistoso para ambos.
+- **Escenarios excepcionales:**
+  4. a) Se eligieron jugadores sin comportamiento asignado:
+  - El sistema advierte que se seleccionaron jugadores sin comportamiento asignado, y cancela la acción.
 
 ### Caso de uso 22: Cancelar busqueda
 - **Actor primario:** Usuario
@@ -304,8 +315,11 @@
 - **Escenario exitoso principal:**
   1. El usuario ingresa a la sala de preparación del partido.
   2. El sistema permite modificar los titulares y jugadores que jugarán el partido, así como sus comportamientos y formación.
-  3. El usuario selecciona los titulares y suplentes, reasigna los comportamientos y confirma su alineación.
+  3. El usuario cambia los titulares y suplentes, reasigna los comportamientos y confirma su alineación.
   4. El sistema registra las modificaciones realizadas. <!-- La capacidad de modificar elementos se termina al iniciar el partido -->
+- **Escenarios excepcionales:**
+  4. a) Se eligieron jugadores sin comportamiento asignado:
+  - El sistema advierte que se seleccionaron jugadores sin comportamiento asignado, y cancela la acción.
 
 ### Caso de Uso 24: Programar sustitución de jugador
 - **Actor primario:** Usuario
@@ -318,7 +332,7 @@
 - **Escenarios excepcionales:**
   2. a) El usuario ya agotó los cambios permitidos:
   - El sistema informa que no quedan cambios disponibles y deniega la operación.
-
+  
 ### Caso de Uso 25: Cancelar sustitución de jugador
 - **Actor primario:** Usuario
 - **Precondición:** El usuario está logueado, visualizando un partido en curso de su club, y tiene una solicitud de sustitución registrada.
@@ -364,6 +378,8 @@
   - El sistema informa los campos faltantes y solicita completarlos para crear la liga.
   4. b) No se eligieron suficientes jugadores:
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
+  4. c) Se eligieron jugadores sin comportamiento asignado:
+  - El sistema advierte que se seleccionaron jugadores sin comportamiento asignado, y cancela la acción.
 
 ### Caso de Uso 30: Ver ligas disponibles
 - **Actor primario:** Usuario
@@ -391,6 +407,8 @@
   - El sistema informa que la contraseña es incorrecta y solicita ingresarla nuevamente.
   6. a) No se eligieron suficientes jugadores:
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
+  6. b) Se eligieron jugadores sin comportamiento asignado:
+  - El sistema advierte que se seleccionaron jugadores sin comportamiento asignado, y cancela la acción.
 
 ### Caso de Uso 32: Unirse a liga pública
 - **Actor primario:** Usuario
@@ -405,7 +423,8 @@
   - El sistema informa al usuario que no se puede unir a la liga pues ésta presenta la cantidad máxima de participantes.
   4. a) No se eligieron suficientes jugadores:
   - El sistema advierte que faltan jugadores por elegir, y vuelve a pedir que elija los jugadores faltantes, avisando que los mismos deben tener un comportamiento asignado.
-
+  4. a) Se eligieron jugadores sin comportamiento asignado:
+  - El sistema advierte que se seleccionaron jugadores sin comportamiento asignado, y cancela la acción.
 
 ### Caso de Uso 33: Abandonar liga
 - **Actor primario:** Usuario
